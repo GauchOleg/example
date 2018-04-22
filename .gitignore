@@ -1,0 +1,33 @@
+# phpstorm project files
+/.idea
+
+# OS cache
+Thumbs.db
+.DS_Store
+
+#for debug panel
+/web/index.php
+
+# composer vendor dir
+/vendor/
+
+# Yii temp directories
+/web/assets/*
+/runtime/*
+/web/error_log
+# Yii config files
+/config/params.php
+/config/db.php
+/config/mailer.php
+
+# Gulp
+package.json
+npm-debug.log
+node_modules/**
+
+# Codeception
+/tests/codeception/_support/_generated/*
+/nbproject/
+/logs/
+/web/uploads
+/web/error_log
