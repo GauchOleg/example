@@ -47,6 +47,10 @@ class CategorytSearch extends Category
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'class' => 'yii\data\Pagination',
+                'pageSizeLimit' => [1, 20],
+            ],
         ]);
 
         $this->load($params);
