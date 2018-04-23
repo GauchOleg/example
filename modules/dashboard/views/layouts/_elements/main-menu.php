@@ -44,7 +44,7 @@ use app\modules\booking\models\Notification;
                 ],
                 [
                     'label' => '<i class="fa fa-list-ul"></i> <span class="title"> ' . Yii::t('app', 'Категории') . '</span>',
-                    'url' => ['/booking/settings/index'],
+                    'url' => ['/dashboard/category/index'],
                     'options' => [
                         'class' => 'start'
                     ],

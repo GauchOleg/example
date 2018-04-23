@@ -1,0 +1,90 @@
+body {
+    background-color: #212121 !important;
+}
+
+.page-sidebar-menu {
+    background-color: #212121 !important;
+}
+
+.page-sidebar .page-sidebar-menu>li.active.open>a, .page-sidebar .page-sidebar-menu>li.active>a,
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.active.open>a,
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.active>a {
+    background-color: #eb605d !important;
+}
+
+.page-logo img {
+    margin-top: 14px;
+    margin-left: 30%;
+}
+
+.page-header.navbar {
+    background-color: #171717 !important;
+}
+
+.portlet-body a {
+    text-shadow: none;
+    color: #171717 /*!important*/;
+}
+
+.portlet-body a:hover {
+    cursor: pointer;
+    color: #171717 /*!important*/;
+}
+
+@media (min-width: 992px) {
+    .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed>li>a {
+        margin-top: 10px;
+    }
+}
+
+.btn-did:hover{
+    color: #fff !important;
+    background-color: #c34d4a !important;
+}
+
+.btn-did:active, .btn-did:visited, .btn-did:focus {
+    color: #fff !important;
+
+}
+
+.btn-did {
+    color: #fff;
+    background-color: #eb605d;
+    border-color: #eb605d;
+}
+
+.btn.btn-outline.did {
+    border-color: #171717 !important;
+    color: #171717 !important;
+    background: 0 0;
+}
+
+.btn.btn-outline.did:hover {
+    border-color: #171717;
+    background-color: #171717;
+    color: #fff !important;
+}
+
+.staff-green {
+    color: green !important;
+}
+
+.staff-blue {
+    color: blue !important;
+}
+
+.staff-orange {
+    color: deeppink !important;
+}
+
+.staff-black {
+    color: black !important;
+}
+
+.staff-red {
+    color: red !important;
+}
+
+.grid-staff-members {
+    border-bottom: none !important;
+}

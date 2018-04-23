@@ -6,7 +6,7 @@ use yii\web\AssetBundle;
 
 class DashboardAsset extends AssetBundle
 {
-    public $sourcePath = '@webroot/backend';
+    public $sourcePath = '@webroot/backend/';
 
     public $css = [
         "global/plugins/font-awesome/css/font-awesome.min.css",
@@ -23,7 +23,9 @@ class DashboardAsset extends AssetBundle
         "layouts/layout/css/layout.min.css",
         "layouts/layout/css/themes/darkblue.min.css",
         "layouts/layout/css/custom.min.css",
+        "custom/style.css",
     ];
+    public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
 
     public $js = [
         "global/plugins/jquery.min.js",

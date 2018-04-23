@@ -51,20 +51,19 @@ DashboardAsset::register($this);
             <div class="page-content">
                 <!-- BEGIN PAGE HEADER-->
                 <!-- BEGIN PAGE BAR -->
-                <?php if(!Yii::$app->user->isGuest) : ?>
                     <div class="page-bar">
                         <?php
                         if (isset($this->params['breadcrumbs']) && count($this->params['breadcrumbs']) > 0) {
                             $this->params['breadcrumbs'] = array_merge([[
-                                'label' => 'Home',
+                                'label' => 'Главная',
                                 'url' => '/dashboard',
-                                'template' => '<li> {link} <i class="fa fa-circle"></i></li>',
+                                'template' => '<li> {link} <i class="fa fa-angle-right"></i></li>',
                             ]], $this->params['breadcrumbs']);
                         } else {
                             $this->params['breadcrumbs'] = [[
-                                'label' => 'Home',
+                                'label' => 'Главная',
                                 'url' => '/dashboard',
-                                'template' => '<li> {link}</li>',
+                                'template' => '<li> {link} <i class="fa fa-angle-right"></i></li>',
                             ]];
                         }
 
@@ -80,7 +79,6 @@ DashboardAsset::register($this);
                         <div class="page-toolbar"></div>
                     </div>
 
-                <?php endif; ?>
                 <!-- END PAGE BAR -->
                 <!-- BEGIN PAGE TITLE-->
                 <h3 class="page-title">

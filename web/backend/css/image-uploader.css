@@ -1,0 +1,58 @@
+/*
+*image loader classes
+*/
+#loaded-images{
+    height: 300px;
+    overflow: auto;
+}
+.load-image{
+    padding: 5px;
+    text-align: center;
+}
+.load-image img{
+    width: 110px;
+}
+.load-image span{
+    display: block;
+    width: 110px;
+}
+.selected-image{
+    background: #286090;
+}
+#uploaded-images{
+    height: 300px;
+    overflow: auto;
+}
+.upload-image{
+    padding: 5px;
+    text-align: center;
+}
+.upload-image img{
+    width: 110px;
+}
+.upload-image span{
+    display: block;
+    width: 110px;
+}
+#image-success-info{
+    display: none;
+}
+#add-image{
+    margin-top: 15px;
+}
+#image-output img{
+    width: 110px;
+}
+.images_div{
+    display: flex;
+}
+.images_div img{
+    float: left;
+    padding: 10px;
+    width: 110px;
+}
+.image-modal{
+    width: auto;
+    max-width: 680px;
+    padding: 0 15px;
+}
