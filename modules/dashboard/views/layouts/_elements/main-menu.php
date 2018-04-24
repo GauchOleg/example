@@ -51,7 +51,7 @@ use app\modules\booking\models\Notification;
                 ],
                 [
                     'label' => '<i class="fa fa-folder-open"></i> <span class="title"> ' . Yii::t('app', 'Товары') . '</span>',
-                    'url' => ['/booking/settings/index'],
+                    'url' => ['/dashboard/product/index'],
                     'options' => [
                         'class' => 'start'
                     ],
