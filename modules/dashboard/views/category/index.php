@@ -38,7 +38,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'headerOptions' => ['style' => 'min-width:60px;width:60px'],
             ],
-            'text:ntext',
+//            'text:ntext',
+            [
+                'attribute' => 'text',
+                'value' => function($model) {
+                    return trim(strip_tags(mb_strimwidth(trim(strip_tags($model->text)), 0, 45, "...")));
+                },
+                'format' => 'raw'
+            ],
             //'seo_title',
             //'seo_keywords',
             //'seo_description',

@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+//            'id',
 //            'parent_id',
             'name',
             'alias',
@@ -40,7 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'raw'
             ],
-            'text:ntext',
+            [
+                'attribute' => 'text',
+                'value' => function($model) {
+                    return trim(strip_tags(mb_strimwidth(trim(strip_tags($model->text)), 0, 45, "...")));
+                },
+                'format' => 'raw'
+            ],
+//            'text:ntext',
             'seo_title',
             'seo_keywords',
             'seo_description',

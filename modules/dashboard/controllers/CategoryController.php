@@ -87,7 +87,7 @@ class CategoryController extends BackendController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->uploadImage() && $model->load(Yii::$app->request->post()) && $model->save(false)) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -125,4 +125,17 @@ class CategoryController extends BackendController
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionDeleteImg() {
+        if (Yii::$app->request->isGet) {
+            $id = Yii::$app->request->get('img');
+            $model = Category::findOne($id);
+            if ($model->deleteImage()) {
+                $model->image = null;
+                $model->save(false);
+                return true;
+            }
+        }
+    }
+
 }
