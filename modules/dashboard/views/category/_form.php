@@ -14,10 +14,6 @@ use app\modules\dashboard\assets\BackendGlobalAsset;
 // start crop js
 $this->registerCssFile('/backend/css/image-uploader.css');
 
-$this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js');
-
-$this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js');
-
 $this->registerCssFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css');
 $this->registerCssFile('/backend/global/plugins/jcrop/css/jquery.Jcrop.min.css');
 

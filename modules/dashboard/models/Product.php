@@ -31,6 +31,8 @@ class Product extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $images;
+
     public static function tableName()
     {
         return '{{%product}}';
@@ -50,6 +52,8 @@ class Product extends \yii\db\ActiveRecord
             [['code'], 'string', 'max' => 60],
             [['new', 'sale'], 'string', 'max' => 1],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
+
+            [['images'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 5],
         ];
     }
 
@@ -61,6 +65,7 @@ class Product extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'category_id' => 'Категория',
+            'images' => 'Фото',
             'name' => 'Название',
             'alias' => 'Alias',
             'code' => 'Код',
