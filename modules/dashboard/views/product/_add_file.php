@@ -1,6 +1,5 @@
-
-<div id="new-<?=$id?>" class="product-gallery">
-    <div class="col-md-3">
+<div class="col-md-3" data-col="<?=$num?>">
+    <div class="new" data-id="<?=$num?>" class="product-gallery">
         <div class="form-group">
             <div class="portlet light bordered">
                 <div class="portlet-body">
@@ -11,16 +10,11 @@
                         </div>
                     </div>
                 </div>
-                <input type="file" style="display: none;" name="file" />
-                <span class="btn did btn-outline file-btn" id="load-img">Загрузить</span>
-                <span class="btn red btn-outline" id="del-img">Удалить</span>
+                <input type="file" style="display: none;" id="file<?=$num?>" name="file<?=$num?>" />
+                <span class="btn did btn-outline file-btn" data-num="<?=$num?>" id="load-img<?=$num?>">Загрузить</span>
+                <span class="btn red btn-outline file-del-btn" data-del="<?=$num?>">Удалить</span>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    $(".file-btn").click(function(){
-        $("input[type='file'").trigger('click');
-    });
-</script>
+<div class="last"></div>

@@ -30,14 +30,14 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
 
     <div class="row">
         <div class="col-md-12">
-            <span class="btn did btn-outline file-btn" id="add-new"><i class="fa fa-camera-retro"></i></span>
+            <span class="btn did btn-outline" id="add-new"><i class="fa fa-camera-retro"></i></span>
         </div>
     </div><br>
-    <div class="row" id="photo">
-<!--        --><?php
-//            echo $this->render('_add_file')
-//        ?>
 
+    <div class="row">
+        <div id="photo">
+            <div class="last"></div>
+        </div>
     </div>
 
 <!--    --><?//= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
@@ -73,21 +73,45 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
 </div>
 
 <script>
-    $('#add-new').on('click', function(){
-//        var result = $(document).find('.product-gallery');
-        console.log('click');
+    $(document).ready(function () {
+
+        $('#add-new').on('click', function(){
+            var dataId = $(document).find('.new').last().data('id');
+            console.log(dataId);
+//            if (dataId == 'undefined') {
+//                dataId = null;
+//            } else {
+//                dataId = $(document).find('.new').data('id');
+//            }
             $.ajax({
                 url: '/dashboard/product/add-field',
-                data: {_csrf: yii.getCsrfToken()},
+                data: {_csrf: yii.getCsrfToken(), num: dataId},
                 type: 'POST',
                 success: function (res) {
                     if (res) {
-                         console.log(res);
+//                        var id = $(document).find('.new').data('id');
+                        $(document).find('.last').last().after('<div class="last"></div>').html(res);
                     }
                 },
                 error: function () {
                     console.log('global error');
                 }
             });
-    })
+        });
+
+        $("#photo").on('click', '.file-btn', function(){
+            var id = $(this).data('num');
+            var file = $(document).find('#file' + id).trigger('click');
+//        $("input[type='file'").trigger('click');
+//        file.trigger('click');
+        });
+
+        $("#photo").on('click', '.file-del-btn', function(){
+            var id = $(this).data('del');
+            var el = $("[data-col="+ id +"]").remove();
+            console.log(el);
+//            el.remove();
+        });
+
+    });
 </script>

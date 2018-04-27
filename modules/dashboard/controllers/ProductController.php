@@ -6,6 +6,7 @@ use Yii;
 use app\modules\dashboard\models\Product;
 use app\modules\dashboard\searchModels\ProductSearch;
 use yii\web\Controller;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -130,6 +131,12 @@ class ProductController extends Controller
     }
 
     public function actionAddField() {
-        return 'dawd';
+        if (Yii::$app->request->isPost) {
+            $num = Yii::$app->request->post('num');
+            ($num == false) ? $num = 1 : $num = $num + 1;
+            return $this->renderPartial('_add_file',compact('num'));
+        } else {
+            throw new HttpException(400);
+        }
     }
 }
