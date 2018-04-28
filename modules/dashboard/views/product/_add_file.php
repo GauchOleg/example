@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <a href="javascript:;" class="thumbnail">
-                                <img src="http://www.placehold.it/320x200/EFEFEF/AAAAAA&amp;text=no+image" alt="Новое фото" style="display: block;"> </a>
+                                <img class="preload-img-<?=$num?>" src="http://www.placehold.it/320x200/EFEFEF/AAAAAA&amp;text=no+image" alt="Новое фото" style="display: block; max-height: 200px;"> </a>
                         </div>
                     </div>
                 </div>

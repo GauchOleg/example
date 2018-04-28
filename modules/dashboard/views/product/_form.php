@@ -78,11 +78,6 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
         $('#add-new').on('click', function(){
             var dataId = $(document).find('.new').last().data('id');
             console.log(dataId);
-//            if (dataId == 'undefined') {
-//                dataId = null;
-//            } else {
-//                dataId = $(document).find('.new').data('id');
-//            }
             $.ajax({
                 url: '/dashboard/product/add-field',
                 data: {_csrf: yii.getCsrfToken(), num: dataId},
@@ -102,15 +97,33 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
         $("#photo").on('click', '.file-btn', function(){
             var id = $(this).data('num');
             var file = $(document).find('#file' + id).trigger('click');
-//        $("input[type='file'").trigger('click');
-//        file.trigger('click');
+                file.on('change', function (element) {
+                   console.log(file);
+                   var input = file[0];
+                    if (input.files && input.files[0]) {
+                        if (input.files[0].type.match('image.*')) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('.preload-img-' + id).attr('src', e.target.result);
+                                // $.test.attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(input.files[0]);
+                        } else {
+                            console.log('ошибка, не изображение');
+                        }
+                    } else {
+                        console.log('хьюстон у нас проблема');
+                    }
+                });
         });
+
+//        $('#photo').on('change', '.file-btn', function () {
+//           console.log('adwawd');
+//        });
 
         $("#photo").on('click', '.file-del-btn', function(){
             var id = $(this).data('del');
             var el = $("[data-col="+ id +"]").remove();
-            console.log(el);
-//            el.remove();
         });
 
     });
