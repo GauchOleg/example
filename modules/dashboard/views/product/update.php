@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\modules\dashboard\models\Product */
 
 $this->title = 'Обновить товар: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Products', 'url' => ['index'], 'template' => '<li> {link} <i class="fa fa-angle-right"></i></li>'];
+$this->params['breadcrumbs'][] = ['label' => 'Товары', 'url' => ['index'], 'template' => '<li> {link} <i class="fa fa-angle-right"></i></li>'];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id],'template' => '<li> {link} <i class="fa fa-angle-right"></i></li>'];
 $this->params['breadcrumbs'][] = 'Обновление товара "' .$model->name . '"';
 ?>
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = 'Обновление товара "' .$model->
 
     <?= $this->render('_form', [
         'model' => $model,
+        'categoryList' => $categoryList,
+        'imgs' => $imgs,
     ]) ?>
 
 </div>

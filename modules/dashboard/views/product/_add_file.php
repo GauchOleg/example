@@ -10,7 +10,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="file" style="display: none;" id="file<?=$num?>" name="file<?=$num?>" />
+                <input type="file" style="display: none;" id="file<?=$num?>" name="ProductImg[<?=$num?>]" />
                 <span class="btn did btn-outline file-btn" data-num="<?=$num?>" id="load-img<?=$num?>">Загрузить</span>
                 <span class="btn red btn-outline file-del-btn" data-del="<?=$num?>">Удалить</span>
             </div>

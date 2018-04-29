@@ -13,10 +13,13 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
 
 <div class="product-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(
+        ['options' => ['enctype' => 'multipart/form-data']]
+    ); ?>
 
     <?= $form->field($model, 'category_id')->dropDownList($categoryList,[
         'prompt' => '-- Не выбрано --',
+        'selected' => ($model->category_id) ? $model->category_id : '',
 //        'disabled' => ($model->isNewRecord) ? false : true
     ]) ?>
 
@@ -33,10 +36,33 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
             <span class="btn did btn-outline" id="add-new"><i class="fa fa-camera-retro"></i></span>
         </div>
     </div><br>
-
     <div class="row">
         <div id="photo">
             <div class="last"></div>
+            <?php if ($imgs): ?>
+                <?php foreach ($imgs as $img): ?>
+                    <div class="col-md-3" data-col="<?=$img->sort_id?>">
+                        <div class="new" data-id="<?=$img->sort_id?>" class="product-gallery">
+                            <div class="form-group">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-body">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <a href="javascript:;" class="thumbnail">
+                                                    <img class="preload-img-<?=$img->sort_id?>" src="<?= ($img->alias) ? $img->alias : 'http://www.placehold.it/320x200/EFEFEF/AAAAAA&amp;text=no+image'?>" alt="Новое фото" style="display: block; max-height: 200px;"> </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="file" style="display: none;" id="file<?=$img->sort_id?>" name="ProductImg[<?=$img->sort_id?>]" />
+                                    <span class="btn did btn-outline file-btn" data-num="<?=$img->sort_id?>" id="load-img<?=$img->sort_id?>">Загрузить</span>
+                                    <span class="btn red btn-outline file-del-btn" data-model="<?=$model->id?>" data-del="<?=$img->sort_id?>">Удалить</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="last"></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -65,7 +91,7 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
 <!--    --><?//= $form->field($model, 'update_at')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn did btn-outline']) ?>
+        <?= Html::submitButton(($model->isNewRecord) ? 'Сохранить' : 'Обновить', ['class' => 'btn did btn-outline']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -117,12 +143,19 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
                 });
         });
 
-//        $('#photo').on('change', '.file-btn', function () {
-//           console.log('adwawd');
-//        });
-
         $("#photo").on('click', '.file-del-btn', function(){
             var id = $(this).data('del');
+            var model = $(this).data('model');
+            $.ajax({
+                url: '/dashboard/product/delete-img',
+                data: {_csrf: yii.getCsrfToken(), id: id, modelId: model},
+                type: 'POST',
+                success: function (res) {
+                },
+                error: function () {
+                    console.log('global error');
+                }
+            });
             var el = $("[data-col="+ id +"]").remove();
         });
 

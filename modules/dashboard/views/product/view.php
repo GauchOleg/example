@@ -29,8 +29,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'category_id',
+//            'category_id',
+            [
+                'attribute' => 'category_id',
+                'value' => function($model){
+                    return $model->getCategoryName();
+                }
+            ],
             'name',
+            [
+                'attribute' => 'images',
+                'value' => function($model) use ($productImg) {
+                    return $productImg->getFirstImg($model->id);
+                },
+                'format' => 'raw'
+
+            ],
             'alias',
             'code',
             'price',
@@ -38,8 +52,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'seo_title',
             'seo_keywords',
             'seo_description',
-            'new',
-            'sale',
+//            'new',
+            [
+                'attribute' => 'new',
+                'value' => function($model) {
+                    return $model->checkNew();
+                },
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'new',
+                'value' => function($model) {
+                    return $model->checkSale();
+                },
+                'format' => 'raw',
+            ],
+//            'sale',
             'create_at',
             'update_at',
         ],

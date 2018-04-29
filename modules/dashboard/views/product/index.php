@@ -35,8 +35,32 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => $categoryList
             ],
             'name',
-            'alias',
+//            'alias',
             'code',
+            [
+                'attribute' => 'images',
+                'value' => function($model) use ($productImg) {
+                    return $productImg->getFirstImg($model->id);
+                },
+                'format' => 'raw'
+
+            ],
+            [
+                'headerOptions' => ['style' => 'width:50px'],
+                'attribute' => 'new',
+                'value' => function($model) {
+                    return $model->checkNew();
+                },
+                'format' => 'raw',
+            ],
+            [
+                'headerOptions' => ['style' => 'width:50px'],
+                'attribute' => 'new',
+                'value' => function($model) {
+                    return $model->checkSale();
+                },
+                'format' => 'raw',
+            ],
             //'price',
             //'text:ntext',
             //'seo_title',
@@ -51,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{notifications} {view} {update} {delete}',
                 'headerOptions' => ['style' => 'min-width:320px;width:320px'],
-                'header' => 'Actions',
+                'header' => '',
                 'buttons' => [
                     'view' => function($url, $model, $key) {
                         return Html::a('Просмотр', $url, ['class' => 'btn did btn-outline view-modal-btn']);

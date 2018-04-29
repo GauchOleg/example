@@ -81,10 +81,18 @@ class Product extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeDelete()
+    {
+        $this->checkImg();
+        return parent::beforeDelete();
+    }
+
     public function beforeSave($insert)
     {
         $this->name = trim($this->name);
         $this->alias = $this->checkAlias();
+        $this->create_at = ($this->isNewRecord) ? date('Y-m-d H:i:s') : $this->create_at;
+        $this->update_at = ($this->isNewRecord) ? '' : date('Y-m-d H:i:s');
         return parent::beforeSave($insert);
     }
 
@@ -108,6 +116,56 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getCategoryName() {
         return self::getCategoryList()[$this->category_id];
+    }
+
+    public function checkSale() {
+        if ($this->sale) {
+            return '<span style="color: green">Да</span>';
+        } else {
+            return '<span style="color: red">Нет</span>';
+        }
+    }
+
+    public function checkNew() {
+        if ($this->new) {
+            return '<span style="color: green">Да</span>';
+        } else {
+            return '<span style="color: red">Нет</span>';
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkImg() {
+        $imgs = ProductImg::find()->where(['product_id' => $this->id])->indexBy('id')->asArray()->all();
+        $ids = array_keys($imgs);
+        $this->deleteAllImagesFromDb($ids);
+        $this->unsetAllImages($imgs);
+        return true;
+    }
+
+    /**
+     * @param $data
+     */
+    private function unsetAllImages($data) {
+        if (!empty($data) && is_array($data)) {
+            $path = Yii::getAlias('@webroot');
+            foreach ($data as $item) {
+                if (is_file($link = $path . $item['alias'])) {
+                    unlink($link);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $ids
+     */
+    private function deleteAllImagesFromDb($ids) {
+        if (!empty($ids) && is_array($ids)) {
+            ProductImg::deleteAll(['id' => $ids]);
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace app\modules\dashboard\controllers;
 
+use app\modules\dashboard\models\ProductImg;
 use Yii;
 use app\modules\dashboard\models\Product;
 use app\modules\dashboard\searchModels\ProductSearch;
@@ -9,6 +10,7 @@ use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ProductController implements the CRUD actions for Product model.
@@ -39,11 +41,13 @@ class ProductController extends Controller
         $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $categoryList = $searchModel->getCategoryList();
+        $productImg = new ProductImg();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'categoryList' => $categoryList,
+            'productImg' => $productImg,
         ]);
     }
 
@@ -55,8 +59,10 @@ class ProductController extends Controller
      */
     public function actionView($id)
     {
+        $productImg = new ProductImg();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'productImg' => $productImg,
         ]);
     }
 
@@ -68,15 +74,20 @@ class ProductController extends Controller
     public function actionCreate()
     {
         $model = new Product();
+        $productImg = new ProductImg();
         $categoryList = $model->getCategoryList();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load($post = Yii::$app->request->post()) && $model->save(false)) {
+            $alias = $productImg->upload($_FILES,$model->id);
+            if ($productImg->saveAll($alias, $model->id)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
             'categoryList' => $categoryList,
+            'productImg' => $productImg,
         ]);
     }
 
@@ -90,13 +101,21 @@ class ProductController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $productImg = new ProductImg();
+        $imgs = $productImg->checkImg($id);
+        $categoryList = $model->getCategoryList();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
+            $alias = $productImg->upload($_FILES,$model->id);
+            if ($productImg->saveAll($alias, $model->id)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'categoryList' => $categoryList,
+            'imgs' => $imgs,
         ]);
     }
 
@@ -131,12 +150,25 @@ class ProductController extends Controller
     }
 
     public function actionAddField() {
+
         if (Yii::$app->request->isPost) {
+            $model = new Product();
+            $productImg = new ProductImg();
             $num = Yii::$app->request->post('num');
             ($num == false) ? $num = 1 : $num = $num + 1;
-            return $this->renderPartial('_add_file',compact('num'));
+            return $this->renderPartial('_add_file',compact('num','productImg','model'));
         } else {
             throw new HttpException(400);
+        }
+    }
+
+    public function actionDeleteImg() {
+        if (Yii::$app->request->isPost) {
+            $productImg = new ProductImg();
+            $productImg->deleteByModelIdSortId(Yii::$app->request->post('modelId'),Yii::$app->request->post('id'));
+            return true;
+        } else {
+            throw new HttpException(403);
         }
     }
 }
