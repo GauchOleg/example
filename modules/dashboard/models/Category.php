@@ -66,6 +66,10 @@ class Category extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getAllCategory() {
+        return self::find()->asArray()->all();
+    }
+
     /**
      * @param bool $insert
      * @return bool
@@ -103,7 +107,7 @@ class Category extends \yii\db\ActiveRecord
 
         $image = UploadedFile::getInstance($this, 'imageFile');
         if ($image instanceof UploadedFile) {
-            if (null !== $image = FileUploaderHelper::saveAs($image, 'uploads' . DIRECTORY_SEPARATOR . 'category', explode('x', '60x60'), Yii::$app->request->post('img'))) {
+            if (null !== $image = FileUploaderHelper::saveAs($image, 'uploads' . DIRECTORY_SEPARATOR . 'category', explode('x', '200x200'), Yii::$app->request->post('img'))) {
                 $this->setAttribute('image',$image['thumbSrc']);
                 $basePath = Yii::getAlias('@webroot');
                 if (is_file($basePath . $image['imgSrc'])) {

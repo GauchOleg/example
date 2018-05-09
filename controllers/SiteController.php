@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\modules\dashboard\models\Category;
+use app\modules\dashboard\models\Product;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -61,7 +63,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+//        dd($allCategory);
         return $this->render('index');
+    }
+
+    public function actionCatalog() {
+        $allCategory = Category::getAllCategory();
+
+        return $this->render('catalog',[
+                'allCategory' => $allCategory,
+            ]);
     }
 
     /**

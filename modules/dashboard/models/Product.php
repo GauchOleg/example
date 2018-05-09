@@ -31,7 +31,6 @@ class Product extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public $images;
 
     public static function tableName()
     {
@@ -53,7 +52,7 @@ class Product extends \yii\db\ActiveRecord
             [['new', 'sale'], 'string', 'max' => 1],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
 
-            [['images'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 5],
+//            [['images'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 5],
         ];
     }
 
@@ -118,6 +117,9 @@ class Product extends \yii\db\ActiveRecord
         return self::getCategoryList()[$this->category_id];
     }
 
+    /**
+     * @return string
+     */
     public function checkSale() {
         if ($this->sale) {
             return '<span style="color: green">Да</span>';
@@ -126,6 +128,9 @@ class Product extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * @return string
+     */
     public function checkNew() {
         if ($this->new) {
             return '<span style="color: green">Да</span>';
