@@ -15,7 +15,7 @@ use yii\web\UploadedFile;
 /**
  * ProductController implements the CRUD actions for Product model.
  */
-class ProductController extends Controller
+class ProductController extends BackendController
 {
     /**
      * @inheritdoc
@@ -77,10 +77,12 @@ class ProductController extends Controller
         $productImg = new ProductImg();
         $categoryList = $model->getCategoryList();
 
-        if ($model->load($post = Yii::$app->request->post()) && $model->save(false)) {
-            $alias = $productImg->upload($_FILES,$model->id);
-            if ($productImg->saveAll($alias, $model->id)) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load($post = Yii::$app->request->post()) && $model->validate() && $model->save(false)) {
+            if (!empty($_FILES)) {
+                $alias = $productImg->upload($_FILES,$model->id);
+                if ($productImg->saveAll($alias, $model->id)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         }
 

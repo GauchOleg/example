@@ -20,12 +20,19 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
     <?= $form->field($model, 'category_id')->dropDownList($categoryList,[
         'prompt' => '-- Не выбрано --',
         'selected' => ($model->category_id) ? $model->category_id : '',
+        'id' => 'change-category'
 //        'disabled' => ($model->isNewRecord) ? false : true
     ]) ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="all-check">
+                dwdwd
+            </div>
+        </div>
+    </div><br>
 
-<!--    --><?//= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
 
@@ -39,7 +46,7 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
     <div class="row">
         <div id="photo">
             <div class="last"></div>
-            <?php if ($imgs): ?>
+            <?php if (isset($imgs) && !empty($imgs)): ?>
                 <?php foreach ($imgs as $img): ?>
                     <div class="col-md-3" data-col="<?=$img->sort_id?>">
                         <div class="new" data-id="<?=$img->sort_id?>" class="product-gallery">
@@ -66,7 +73,6 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
         </div>
     </div>
 
-<!--    --><?//= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
     <?php
     echo $form->field($model, 'text')->widget(CKEditor::className(),[
         'editorOptions' => [
@@ -85,10 +91,6 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
     <?= $form->field($model, 'new')->checkbox() ?>
 
     <?= $form->field($model, 'sale')->checkbox() ?>
-
-<!--    --><?//= $form->field($model, 'create_at')->textInput() ?>
-
-<!--    --><?//= $form->field($model, 'update_at')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton(($model->isNewRecord) ? 'Сохранить' : 'Обновить', ['class' => 'btn did btn-outline']) ?>
@@ -149,7 +151,7 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
             $.ajax({
                 url: '/dashboard/product/delete-img',
                 data: {_csrf: yii.getCsrfToken(), id: id, modelId: model},
-                type: 'POST',
+                type: 'json',
                 success: function (res) {
                 },
                 error: function () {
@@ -157,6 +159,21 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
                 }
             });
             var el = $("[data-col="+ id +"]").remove();
+        });
+
+        $("#change-category").on('change', function(element){
+            var categoryId = $(this).val();
+            $.ajax({
+                url: '/dashboard/product-data/get-checkboxes',
+                data: {_csrf: yii.getCsrfToken(), catId: categoryId},
+                type: 'POST',
+                success: function(res){
+                    console.log(res);
+                },
+                error: function(){
+                    console.log('_form.php have some error or productDataController');
+                }
+            });
         });
 
     });

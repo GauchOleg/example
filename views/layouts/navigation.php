@@ -19,7 +19,7 @@ $url = Yii::$app->request->url;
             <div class="nav-collapse collapse pull-right">
                 <ul class="nav" id="top-navigation">
                     <li class="active"><a data-id="home" href="#home">Главная</a></li>
-                    <li><a data-id="catalog" href="<?= Url::to(['site/catalog'])?>">Каталог</a></li>
+                    <li><a data-id="catalog" href="#catalog">Категории</a></li>
                     <li><a data-id="service" href="#service">Сервис</a></li>
                     <li><a data-id="portfolio" href="#portfolio">Акция!</a></li>
 <!--                    <li><a href="#about">About</a></li>-->

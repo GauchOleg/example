@@ -79,6 +79,9 @@ class ProductImg extends \yii\db\ActiveRecord
      */
     public function getFirstImg($product_id) {
         $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
+        if (is_null($img)) {
+            return null;
+        }
         return Html::img($img->alias,['style' => 'width:60px']);
     }
 

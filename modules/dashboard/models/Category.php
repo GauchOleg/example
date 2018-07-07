@@ -87,16 +87,33 @@ class Category extends \yii\db\ActiveRecord
         return parent::beforeDelete();
     }
 
+    private function getCategoryByAliasAsArray($alias) {
+        return self::find()->where(['alias' => $alias])->asArray()->all();
+    }
+
     /**
      * @return mixed|string
      *  if find equals alias, concat random char else return translit string @alias
      */
     private function checkAlias() {
         $alias = Translit::str2url($this->name);
-        if (self::find()->where(['alias' => $alias])->all()) {
-            return $alias . '-' . strtolower(Yii::$app->security->generateRandomString(1));
+        if ($this->isNewRecord) {
+            if (empty($this->getCategoryByAliasAsArray($alias))) {
+                return $alias;
+            } else {
+                return $alias . '-' . strtolower(Yii::$app->security->generateRandomString(1));
+            }
         } else {
-            return $alias;
+            $current = $this->getCategoryByAliasAsArray($alias);
+            if (!empty($current)) {
+                if ($current[0]['id'] == $this->id) {
+                    return $alias;
+                } else {
+                    return $this->alias;
+                }
+            } else {
+                return $alias;
+            }
         }
     }
 
@@ -118,7 +135,7 @@ class Category extends \yii\db\ActiveRecord
                 return false;
             }
         } else {
-            return false;
+            return true;
         }
     }
 
@@ -141,6 +158,19 @@ class Category extends \yii\db\ActiveRecord
         if (is_file($basePath . $this->image)) {
             unlink($basePath . $this->image);
             return true;
+        }
+    }
+
+    public static function getCategoryByAlias($alias) {
+        if (!empty($alias)) {
+            $category = self::find()->where(['alias' => $alias])->one();
+            if ($category != null) {
+                return $category;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }

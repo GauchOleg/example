@@ -51,6 +51,7 @@ class Product extends \yii\db\ActiveRecord
             [['code'], 'string', 'max' => 60],
             [['new', 'sale'], 'string', 'max' => 1],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['name'], 'required', 'message' => '{attribute} не может быть пустым'],
 
 //            [['images'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 5],
         ];
@@ -114,6 +115,9 @@ class Product extends \yii\db\ActiveRecord
      * @return mixed
      */
     public function getCategoryName() {
+        if (is_null($this->category_id)) {
+            return null;
+        }
         return self::getCategoryList()[$this->category_id];
     }
 

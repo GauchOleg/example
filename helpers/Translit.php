@@ -41,7 +41,7 @@ class Translit
         // заменям все ненужное нам на "-"
         $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
         // удаляем начальные и конечные '-'
-        $str = trim($str, "-");
+        $str = trim(trim($str, "-"));
         return $str;
     }
 }

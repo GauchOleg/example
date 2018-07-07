@@ -38,6 +38,7 @@ use app\modules\booking\models\Notification;
                 [
                     'label' => '<i class="icon-home"></i> <span class="title"> ' . Yii::t('app', 'Главная') . '</span>',
                     'url' => ['/dashboard/backend/index'],
+                    'active' => $module == 'dashboard' && $controller == 'backend',
                     'options' => [
                         'class' => 'start'
                     ],
@@ -45,6 +46,15 @@ use app\modules\booking\models\Notification;
                 [
                     'label' => '<i class="fa fa-list-ul"></i> <span class="title"> ' . Yii::t('app', 'Категории') . '</span>',
                     'url' => ['/dashboard/category/index'],
+                    'active' => $module == 'dashboard' && $controller == 'category',
+                    'options' => [
+                        'class' => 'start'
+                    ],
+                ],
+                [
+                    'label' => '<i class="fa fa-check-square"></i> <span class="title"> ' . Yii::t('app', 'Метки') . '</span>',
+                    'url' => ['/dashboard/checkbox/index'],
+                    'active' => $module == 'dashboard' && $controller == 'checkbox',
                     'options' => [
                         'class' => 'start'
                     ],
@@ -52,13 +62,15 @@ use app\modules\booking\models\Notification;
                 [
                     'label' => '<i class="fa fa-folder-open"></i> <span class="title"> ' . Yii::t('app', 'Товары') . '</span>',
                     'url' => ['/dashboard/product/index'],
+                    'active' => $module == 'dashboard' && $controller == 'product',
                     'options' => [
                         'class' => 'start'
                     ],
                 ],
                 [
                     'label' => '<i class="fa fa-cogs"></i> <span class="title"> ' . Yii::t('app', 'Настройки') . '</span>',
-                    'url' => ['/booking/settings/index'],
+                    'url' => ['/dashboard/settings/index'],
+                    'active' => $module == 'dashboard' && $controller == 'settings',
                     'options' => [
                         'class' => 'start'
                     ],

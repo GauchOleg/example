@@ -103,13 +103,7 @@ $this->registerJs("
         ['options' => ['enctype' => 'multipart/form-data']]
     ); ?>
 
-<!--    --><?//= $form->field($model, 'parent_id')->textInput() ?>
-
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-<!--    --><?//= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
-
-<!--    --><?//= $form->field($model, 'image')->textInput(['maxlength' => true]) ?>
 
     <!-- block img -->
     <div class="form-group">
@@ -135,7 +129,6 @@ $this->registerJs("
         </div>
     </div>
     <!-- end block img -->
-<!--    --><?//= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
     <?php
     echo $form->field($model, 'text')->widget(CKEditor::className(),[
@@ -162,7 +155,7 @@ $this->registerJs("
 
 <div id="static" class="modal fade bs-modal-lg" tabindex="-1" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">в
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title"><?= Yii::t('app', 'Image Cropping') ?></h4> </div>

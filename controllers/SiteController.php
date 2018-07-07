@@ -63,8 +63,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-//        dd($allCategory);
-        return $this->render('index');
+        $allCategory = Category::getAllCategory();
+        return $this->render('index',compact([
+            'allCategory',
+        ]));
     }
 
     public function actionCatalog() {

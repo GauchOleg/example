@@ -71,7 +71,7 @@
     $(window).scroll(function () {
 
         //Display or hide scroll to top button
-        if ($(this).scrollTop() > 100) {
+        if ($(this).scrollTop() > 80) {
             $('.scrollup').fadeIn();
         } else {
             $('.scrollup').fadeOut();
