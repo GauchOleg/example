@@ -27,10 +27,11 @@ class FrontendAsset extends AssetBundle
         'css/pluton-ie7.css',
         'css/jquery.cslider.css',
         'css/jquery.bxslider.css',
-        'css/animate.css'
+        'css/animate.css',
+        'css/custom.css'
     ];
 
-//    public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
+    public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
     public $js = [
 //        '//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js',
         'js/jquery.js',
@@ -46,7 +47,7 @@ class FrontendAsset extends AssetBundle
         'js/app.js',
     ];
     public $depends = [
-//        'yii\web\YiiAsset',
+        'yii\web\YiiAsset',
 //        'yii\bootstrap\BootstrapAsset',
     ];
 }

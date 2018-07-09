@@ -11,7 +11,7 @@
 <!-- ScrollUp button end -->
 <!-- Include javascript -->
 
-<script async="" defer="" type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeMap"></script>
+
 <!-- css3-mediaqueries.js for IE8 or older -->
 <!--[if lt IE 9]>
 

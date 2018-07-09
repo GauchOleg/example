@@ -38,6 +38,14 @@ $this->params['breadcrumbs'][] = $this->title;
 //            'alias',
             'code',
             [
+                'attribute' => 'checkboxes',
+                'value' => function($model){
+                    return $model->getCheckboxById();
+                },
+                'format' => 'raw'
+
+            ],
+            [
                 'attribute' => 'images',
                 'value' => function($model) use ($productImg) {
                     return $productImg->getFirstImg($model->id);
@@ -55,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'headerOptions' => ['style' => 'width:50px'],
-                'attribute' => 'new',
+                'attribute' => 'sale',
                 'value' => function($model) {
                     return $model->checkSale();
                 },

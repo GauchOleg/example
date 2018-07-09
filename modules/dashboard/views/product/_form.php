@@ -8,7 +8,11 @@ use kartik\file\FileInput;
 /* @var $this yii\web\View */
 /* @var $model app\modules\dashboard\models\Product */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $checkboxesList \app\modules\dashboard\models\Checkbox */
+/* @var $categoryList \app\modules\dashboard\models\Product */
+
 $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js');
+$this->registerCssFile('/backend/css/custom.css');
 ?>
 
 <div class="product-form">
@@ -27,7 +31,13 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
     <div class="row">
         <div class="col-md-12">
             <div id="all-check">
-                dwdwd
+                <?php if (!$model->isNewRecord): ?>
+                    <?php foreach ($checkboxesList as $item): ?>
+                        <label><input type='checkBox' name='Product[checkboxes][<?php echo $item['id']?>]' <?php echo ($item['active'] == 1) ? 'checked' : '' ?> value='<?php echo $item['id']?>'><?php echo $item['name']?></label>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                <p>Для отображения меток (чекбоксов) выберите категорию</p>
+                <?php endif; ?>
             </div>
         </div>
     </div><br>
@@ -72,6 +82,8 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
             <?php endif; ?>
         </div>
     </div>
+
+    <?= $form->field($model, 'small_text')->textarea(['rows' => 3]) ?>
 
     <?php
     echo $form->field($model, 'text')->widget(CKEditor::className(),[
@@ -168,7 +180,16 @@ $this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fil
                 data: {_csrf: yii.getCsrfToken(), catId: categoryId},
                 type: 'POST',
                 success: function(res){
-                    console.log(res);
+                    var checkBox = '<p>Добавить метки (чекбоксы) к товару</p><div class="check-menu">';
+                    if (res) {
+                        var ob = JSON.parse(res);
+                        $.each(ob, function(index, value) {
+                            checkBox += "<label><input type='checkBox' name='Product[checkboxes]["+ index +"]'  value='"+ index +"'>"+ value +"</label>"
+                        });
+                        $('#all-check').html(checkBox);
+                    }
+                    $('#all-check').css('display','');
+                    $('#all-check').html(checkBox);
                 },
                 error: function(){
                     console.log('_form.php have some error or productDataController');

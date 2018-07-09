@@ -70,6 +70,15 @@ class Checkbox extends \yii\db\ActiveRecord
         }
     }
 
+    public static function getAllCheckboxByCatId($id) {
+        $allCheckboxes = self::find()->where(['category_id' => $id])->andWhere(['active' => 1])->all();
+        if (!is_null($allCheckboxes)) {
+            return $allCheckboxes;
+        } else {
+            return false;
+        }
+    }
+
     private function addInAllCategory(){
         $ids = $this->getAllIdsCategory();
         if ($this->autoAddCategory($ids)) {

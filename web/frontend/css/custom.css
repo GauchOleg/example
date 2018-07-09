@@ -1,0 +1,67 @@
+.category-title {
+    color: black;
+    padding: 30px 0 30px;
+}
+.product-cart {
+    border: solid 2px #fece1a;
+}
+.product-cart:hover {
+    border-bottom: solid 3px #000;
+}
+
+.cart-product-title {
+    font-size: 17px;
+    background-color: #ffffff;
+    border-top: solid 1px #fece1b;
+}
+
+.cart-product-title h3{
+    color: #000;
+    line-height: 20px;
+}
+.cart-product-title p {
+    margin: 0;
+    margin-bottom: 20px;
+    color: #000;
+    margin-top: 20px;
+}
+.btn-did:hover{
+    color: #fff !important;
+    background-color: #c34d4a !important;
+}
+
+.btn-did:active, .btn-did:visited, .btn-did:focus {
+    color: #fff !important;
+
+}
+
+.btn-did {
+    color: #fff;
+    background-color: #eb605d;
+    border-color: #eb605d;
+    border-radius: 0;
+}
+
+.btn.btn-outline.did {
+    border-color: #171717 !important;
+    color: #171717 !important;
+    background: 0 0;
+    border-radius: 0;
+    width: 30%;
+}
+
+.btn.btn-outline.did:hover {
+    border-color: #171717;
+    background-color: #171717;
+    color: #fff !important;
+    width: 30%;
+}
+.checkbox-menu {
+    color: #000;
+    list-style-type: none;
+    border: solid 1px black;
+    padding: 10px 20px 10px 10px;
+}
+.checkbox-name {
+    font-size: 17px;
+}

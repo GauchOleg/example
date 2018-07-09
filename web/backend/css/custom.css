@@ -1,0 +1,14 @@
+#all-check {
+    background: #dedede;
+    padding: 22px;
+}
+#all-check p {
+    font-size: 15px;
+    color: #eb605d;
+    margin: 0;
+    padding-bottom: 5px;
+}
+#all-check .check-menu label {
+    padding-right: 10px;
+    font-size: 16px;
+}

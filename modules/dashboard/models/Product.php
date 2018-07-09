@@ -19,6 +19,8 @@ use app\helpers\Translit;
  * @property string $seo_title
  * @property string $seo_keywords
  * @property string $seo_description
+ * @property string $checkboxes
+ * @property string $small_text
  * @property int $new
  * @property int $sale
  * @property string $create_at
@@ -45,13 +47,14 @@ class Product extends \yii\db\ActiveRecord
         return [
             [['category_id'], 'integer'],
             [['price'], 'number'],
-            [['text'], 'string'],
+            [['text','small_text'], 'string'],
             [['create_at', 'update_at'], 'safe'],
             [['name', 'alias', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
             [['code'], 'string', 'max' => 60],
             [['new', 'sale'], 'string', 'max' => 1],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
             [['name'], 'required', 'message' => '{attribute} не может быть пустым'],
+            [['checkboxes'], 'safe'],
 
 //            [['images'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 5],
         ];
@@ -71,11 +74,13 @@ class Product extends \yii\db\ActiveRecord
             'code' => 'Код',
             'price' => 'Цена',
             'text' => 'Описание',
+            'small_text' => 'Краткое описание',
             'seo_title' => 'Seo Title',
             'seo_keywords' => 'Seo Keywords',
             'seo_description' => 'Seo Description',
             'new' => 'Новинка',
             'sale' => 'Распродажа',
+            'checkboxes' => 'Чекбоксы',
             'create_at' => 'Create At',
             'update_at' => 'Update At',
         ];
@@ -93,6 +98,7 @@ class Product extends \yii\db\ActiveRecord
         $this->alias = $this->checkAlias();
         $this->create_at = ($this->isNewRecord) ? date('Y-m-d H:i:s') : $this->create_at;
         $this->update_at = ($this->isNewRecord) ? '' : date('Y-m-d H:i:s');
+        $this->checkboxes = $this->prepareCheckboxValue();
         return parent::beforeSave($insert);
     }
 
@@ -188,5 +194,65 @@ class Product extends \yii\db\ActiveRecord
         } else {
             return $alias;
         }
+    }
+
+    private function prepareCheckboxValue() {
+        if (!empty($this->checkboxes)) {
+            return implode(',',array_keys($this->checkboxes));
+        } else {
+            return;
+        }
+    }
+
+    public function getCheckboxesListByCategoryId() {
+        $allCheckbox = Checkbox::find()->where(['category_id' => $this->category_id])->andWhere(['active' => 1])->asArray()->all();
+        return $this->prepareArrayCheckboxes($allCheckbox);
+    }
+
+    private function prepareArrayCheckboxes($allCheckbox) {
+        $checkboxes = array_flip($this->checkboxesToArray());
+        $data = ArrayHelper::map($allCheckbox,'id','name');
+        $result = [];
+        foreach ($data as $key => $value) {
+            $result[$key] = [
+                'id' => $key,
+                'name' => $value,
+                'active' => (key_exists($key,$checkboxes)) ? 1 : 0
+            ];
+        }
+        return $result;
+    }
+
+    public function getCheckboxByProductId() {
+        $ids = $this->checkboxesToArray();
+        return Checkbox::find()->where(['id' => $ids])->asArray()->all();
+    }
+
+    private function getCheckboxByIdAsArray($ids) {
+        return Checkbox::find()->where(['id' => $ids])->asArray()->all();
+    }
+
+    public function getCheckboxById() {
+        if ($checkboxes = $this->checkboxes){
+            $ids = $this->checkboxesToArray();
+            $models = $this->getCheckboxByIdAsArray($ids);
+            if (!is_null($models)) {
+                return implode(',',ArrayHelper::map($models,'name','name'));
+            } else {
+                return 'метки не заданы';
+            }
+        }
+    }
+
+    private function checkboxesToArray() {
+        return explode(',',$this->checkboxes);
+    }
+
+    public static function getAllProductByCategoryId($category_id) {
+        return Product::find()->where(['category_id' => $category_id])->all();
+    }
+
+    public static function getAllProductByCheckboxId($checkbox_id) {
+        return self::find()->filterWhere(['like', 'checkboxes', $checkbox_id])->asArray()->all();
     }
 }

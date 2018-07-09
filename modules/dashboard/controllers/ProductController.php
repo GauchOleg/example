@@ -84,6 +84,7 @@ class ProductController extends BackendController
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -106,6 +107,7 @@ class ProductController extends BackendController
         $productImg = new ProductImg();
         $imgs = $productImg->checkImg($id);
         $categoryList = $model->getCategoryList();
+        $checkboxesList = $model->getCheckboxesListByCategoryId();
 
         if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
             $alias = $productImg->upload($_FILES,$model->id);
@@ -118,6 +120,7 @@ class ProductController extends BackendController
             'model' => $model,
             'categoryList' => $categoryList,
             'imgs' => $imgs,
+            'checkboxesList' => $checkboxesList,
         ]);
     }
 
@@ -165,7 +168,7 @@ class ProductController extends BackendController
     }
 
     public function actionDeleteImg() {
-        if (Yii::$app->request->isPost) {
+        if (Yii::$app->request->isAjax) {
             $productImg = new ProductImg();
             $productImg->deleteByModelIdSortId(Yii::$app->request->post('modelId'),Yii::$app->request->post('id'));
             return true;
