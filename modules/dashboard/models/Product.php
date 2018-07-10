@@ -252,7 +252,8 @@ class Product extends \yii\db\ActiveRecord
         return Product::find()->where(['category_id' => $category_id])->all();
     }
 
-    public static function getAllProductByCheckboxId($checkbox_id) {
-        return self::find()->filterWhere(['like', 'checkboxes', $checkbox_id])->asArray()->all();
+    public static function getAllProductByCheckboxId($checkbox_id,$category_id) {
+        $checkbox_id = implode(',',$checkbox_id);
+        return self::find()->filterWhere(['like', 'checkboxes', $checkbox_id])->andWhere(['category_id' => $category_id])->all();
     }
 }

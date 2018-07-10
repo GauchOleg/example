@@ -181,4 +181,8 @@ class Category extends \yii\db\ActiveRecord
     public static function noImage() {
         return Yii::getAlias('@web') .'/default/img/category_no_img.png';
     }
+
+    public static function getCategoryAlias(){
+        return substr(Yii::$app->request->referrer,strpos(Yii::$app->request->referrer,'=') + 1);
+    }
 }
