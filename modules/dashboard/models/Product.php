@@ -249,11 +249,46 @@ class Product extends \yii\db\ActiveRecord
     }
 
     public static function getAllProductByCategoryId($category_id) {
-        return Product::find()->where(['category_id' => $category_id])->all();
+        return Product::find()->where(['category_id' => $category_id])->limit(9)->all();
     }
 
-    public static function getAllProductByCheckboxId($checkbox_id,$category_id) {
-        $checkbox_id = implode(',',$checkbox_id);
-        return self::find()->filterWhere(['like', 'checkboxes', $checkbox_id])->andWhere(['category_id' => $category_id])->all();
+    public static function getAllProductByCheckboxId($checked,$category_id) {
+
+        if (empty($checked)) {
+            return self::getAllProductByCategoryId($category_id);
+        } else {
+            $allProducts = self::find()->where(['category_id' => $category_id])->asArray()->all();
+            $ids = self::getProductIdByCheckboxes($allProducts,$checked);
+            return self::find()->where(['in','id', $ids])->all();
+        }
+    }
+
+    private function getProductIdByCheckboxes($productBySetCategory,$checked) {
+        $ids = [];
+        foreach ($productBySetCategory as $product) {
+            if (isset($product['checkboxes']) && !empty($product['checkboxes'])) {
+                $checkboxes = explode(',',$product['checkboxes']);
+                if (array_intersect($checkboxes,$checked)) {
+                    $ids[] = $product['id'];
+                }
+            }
+        }
+        return $ids;
+    }
+
+    public static function getCheckedCheckbox($sessionIds,$postId) {
+        $checked = [];
+        if (is_array($sessionIds)) {
+            if (in_array($postId,$sessionIds)) {
+                $unset = array_search($postId,$sessionIds);
+                unset($sessionIds[$unset]);
+            } else {
+                array_push($sessionIds,$postId);
+            }
+            $checked = $sessionIds;
+        } else {
+            array_push($checked,$postId);
+        }
+        return $checked;
     }
 }

@@ -129,4 +129,15 @@ class Checkbox extends \yii\db\ActiveRecord
             return '<span style="color: red">Нет</span>';
         }
     }
+
+    public static function checkChecked($checkboxId,$checked) {
+        if (!is_array($checked)) {
+            return false;
+        }
+        if (in_array($checkboxId,$checked)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -13,24 +13,27 @@ use yii\helpers\Json;
 
 class CategoryController extends \yii\web\Controller
 {
-    public function actionIndex($id)
-    {
+    public function actionIndex($id) {
         if ($id != Yii::$app->session->get('alias')) {
             Yii::$app->session->destroy();
         }
 
-        $ids = Yii::$app->session->get('id');
-        $checked = empty($ids) ? [null => null] : $ids;
+        $checked = Yii::$app->session->get('id');
         $category = Category::getCategoryByAlias($id);
         if (!$category) {
             throw new NotFoundHttpException();
         }
-        $allCheckboxes = Checkbox::getAllCheckboxByCatId($category->id);
-        $allProduct = Product::getAllProductByCategoryId($category->id);
 
-        return $this->render('index',compact(
-            'allProduct','category','allCheckboxes','checked'
-        ));
+        $allCheckboxes = Checkbox::getAllCheckboxByCatId($category->id);
+        $allProduct = Product::getAllProductByCheckboxId($checked, $category->id);
+
+        return $this->render('index',
+            [
+                'allProduct'    => $allProduct,
+                'category'      => $category,
+                'allCheckboxes' => $allCheckboxes,
+                'checked'       => $checked
+            ]);
     }
 
     public function actionView($alias) {
@@ -47,33 +50,25 @@ class CategoryController extends \yii\web\Controller
         $id = Yii::$app->request->post('id');
         $sessionAlias = Yii::$app->session->get('alias');
         $sessionIds = Yii::$app->session->get('id');
-        $checked = [];
+        $checked = Product::getCheckedCheckbox($sessionIds,$id);
 
         if (!$sessionAlias) {
             Yii::$app->session->set('alias',$alias);
         }
 
-        if (is_null($sessionIds)) {
-            array_push($checked, $id);
-            Yii::$app->session->set('id',$checked);
-        } else {
-            if (!in_array($id,$sessionIds)) {
-                array_push($sessionIds,$id);
-            } else {
-                $unset = array_search($id,$sessionIds);
-                unset($sessionIds[$unset]);
-            }
-            Yii::$app->session->set('id',$sessionIds);
-        }
+        Yii::$app->session->set('id',$checked);
 
-        $category = Category::findOne(['alias' => $alias]);
-        $allProduct = Product::getAllProductByCheckboxId($checked,$category->id);
+        $category = Category::getCategoryByAlias($alias);
+        $allProduct = Product::getAllProductByCheckboxId($checked, $category->id);
         $allCheckboxes = Checkbox::getAllCheckboxByCatId($category->id);
 
-        return $this->renderPartial('index',compact(
-            'allProduct','category','allCheckboxes','checked'
-        ));
-//        return Json::encode($allProduct);
+        return $this->renderPartial('catalog',
+            [
+                'allProduct'    => $allProduct,
+                'category'      => $category,
+                'allCheckboxes' => $allCheckboxes,
+                'checked'       => $checked,
+            ]);
     }
 
 }
