@@ -2,6 +2,7 @@
 
 /* @var $allCategory \app\modules\dashboard\models\Category */
 use yii\helpers\Url;
+use app\modules\dashboard\models\Category;
 
 $countCategory = count($allCategory);
 ?>
@@ -12,7 +13,7 @@ $countCategory = count($allCategory);
             <div class="span3 pb-3 category-tab category-tab-phone">
                 <div class="animated fadeInDown image-category">
                     <a href="<?= Url::to(['/category', 'id' => $category['alias']])?>">
-                        <img src="<?= $category['image']; ?>" alt="team 1" class="img-circle">
+                        <img src="<?= (empty($category['image']) ? Category::noImage() : $category['image']); ?>" alt="team 1" class="img-circle">
                     </a>
                     <h4 class="center pt-category-title"><?= $category['name']?></h4>
                 </div>

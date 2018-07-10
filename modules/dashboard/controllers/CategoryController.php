@@ -131,8 +131,6 @@ class CategoryController extends BackendController
             $id = Yii::$app->request->get('img');
             $model = Category::findOne($id);
             if ($model->deleteImage()) {
-                $model->image = null;
-                $model->save(false);
                 return true;
             }
         }

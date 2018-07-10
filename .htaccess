@@ -13,6 +13,7 @@ RewriteRule ^images/(.*)$ web/images/$1 [L]
 RewriteRule ^uploads/(.*)$ web/uploads/$1 [L]
 RewriteRule ^backend/(.*)$ web/backend/$1 [L]
 RewriteRule ^frontend/(.*)$ web/frontend/$1 [L]
+RewriteRule ^default/(.*)$ web/default/$1 [L]
 RewriteRule (.*) /web/$1
 
 RewriteCond %{REQUEST_FILENAME} !-f

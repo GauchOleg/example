@@ -157,8 +157,12 @@ class Category extends \yii\db\ActiveRecord
         $basePath = Yii::getAlias('@webroot');
         if (is_file($basePath . $this->image)) {
             unlink($basePath . $this->image);
-            return true;
+            $this->image = null;
+        } else {
+            $this->image = null;
         }
+        $this->save(false);
+        return true;
     }
 
     public static function getCategoryByAlias($alias) {
@@ -172,5 +176,9 @@ class Category extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    public static function noImage() {
+        return Yii::getAlias('@web') .'/default/img/category_no_img.png';
     }
 }

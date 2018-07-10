@@ -68,7 +68,7 @@ class ProductImg extends \yii\db\ActiveRecord
         $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
 
         if (is_null($img)) {
-            return null;
+            return Html::img(Yii::getAlias('@web') .'/default/img/product_no_image.png',['style' => 'width:100%; height:100%']);
         }
         return Html::img($img->alias,['style' => 'width:350px; height:200px']);
     }
@@ -100,6 +100,11 @@ class ProductImg extends \yii\db\ActiveRecord
      * @return bool
      */
     public function saveAll($data, $product_id) {
+        if (!$data) {
+            $this->alias = null;
+            $this->save(false);
+            return true;
+        }
         $imgs = $this->checkImg($product_id);
         if ($imgs) {
             $img = end($imgs);
@@ -126,6 +131,9 @@ class ProductImg extends \yii\db\ActiveRecord
     public function upload($post,$product_id) {
 
         $files = $this->prepareDataFiles($post);
+        if (empty($files)) {
+            return false;
+        }
         $filesData = $this->sortDataFiles($files);
         $fileAlias = $this->saveAllImg($filesData,$product_id);
         $this->resizeImg($fileAlias);
