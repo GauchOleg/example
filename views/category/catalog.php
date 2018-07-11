@@ -7,6 +7,7 @@
 
 use app\modules\dashboard\models\ProductImg;
 use app\modules\dashboard\models\Checkbox;
+use yii\helpers\Html;
 ?>
 <div id="content">
     <input id="cat_alias" type="hidden" name="alias" value="<?php echo $category->alias; ?>">
@@ -18,12 +19,25 @@ use app\modules\dashboard\models\Checkbox;
     <div class="row">
         <div class="span3">
             <?php if (isset($allCheckboxes) && !empty($allCheckboxes)) :?>
+                <p>Фильтры:</p>
                 <ul class="checkbox-menu">
                     <?php foreach ($allCheckboxes as $checkbox): ?>
                         <li>
                             <label class="checkbox">
                                 <span class="checkbox-name"><input class="checked" type="checkbox" value="<?php echo $checkbox->id?>" <?php echo Checkbox::checkChecked($checkbox->id,$checked) ? 'checked' : '' ?> > <?php echo $checkbox->name; ?></span>
                             </label>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            <?php if (isset($allCategory) && !empty($allCategory)) :?>
+                <p>Категории:</p>
+                <ul class="checkbox-menu">
+                    <?php foreach ($allCategory as $category): ?>
+                        <li>
+                            <span class="checkbox-name">
+                                - <?php echo Html::a($category->name,['/category', 'id' => $category->alias])?>
+                            </span>
                         </li>
                     <?php endforeach; ?>
                 </ul>

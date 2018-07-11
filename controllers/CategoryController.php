@@ -26,13 +26,15 @@ class CategoryController extends \yii\web\Controller
 
         $allCheckboxes = Checkbox::getAllCheckboxByCatId($category->id);
         $allProduct = Product::getAllProductByCheckboxId($checked, $category->id);
+        $allCategory = Category::find()->all();
 
         return $this->render('index',
             [
                 'allProduct'    => $allProduct,
                 'category'      => $category,
                 'allCheckboxes' => $allCheckboxes,
-                'checked'       => $checked
+                'checked'       => $checked,
+                'allCategory'   => $allCategory,
             ]);
     }
 
@@ -61,6 +63,7 @@ class CategoryController extends \yii\web\Controller
         $category = Category::getCategoryByAlias($alias);
         $allProduct = Product::getAllProductByCheckboxId($checked, $category->id);
         $allCheckboxes = Checkbox::getAllCheckboxByCatId($category->id);
+        $allCategory = Category::find()->all();
 
         return $this->renderPartial('catalog',
             [
@@ -68,6 +71,7 @@ class CategoryController extends \yii\web\Controller
                 'category'      => $category,
                 'allCheckboxes' => $allCheckboxes,
                 'checked'       => $checked,
+                'allCategory'   => $allCategory,
             ]);
     }
 

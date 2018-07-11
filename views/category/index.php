@@ -8,10 +8,11 @@
 <div id="catalog-product">
     <div class="container" id="catalog">
         <?php echo $this->render('catalog',[
-            'category' => $category,
+            'category'      => $category,
             'allCheckboxes' => $allCheckboxes,
-            'checked' => $checked,
-            'allProduct' => $allProduct,
+            'checked'       => $checked,
+            'allProduct'    => $allProduct,
+            'allCategory'   => $allCategory,
         ]);?>
     </div>
 </div>

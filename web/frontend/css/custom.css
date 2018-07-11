@@ -68,4 +68,17 @@
 #catalog-product {
     background: url(../images/catalog_bg.jpg) no-repeat center center fixed;
     background-size: cover;
+    min-height: 100%;
+}
+.checkbox-menu a {
+    color: #fece1a;
+    list-style-type: none;
+}
+.checkbox-menu a:hover {
+    color: #6bbde6;;
+}
+footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
 }
