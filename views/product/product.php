@@ -30,8 +30,8 @@ if (isset($product) && !empty($product)) {
 <div id="content">
     <input id="cat_alias" type="hidden" name="alias" value="<?php echo $category->alias; ?>">
     <div class="row">
-        <div class="span12 center category-title">
-            <h4><?php echo $category->name?></h4>
+        <div class="span12 category-title">
+            главная -> <?php echo $category->name?> -> <?php echo $product->name?>
         </div>
     </div>
     <div class="row">
@@ -56,9 +56,15 @@ if (isset($product) && !empty($product)) {
                 <div class="description-product">
                     <?php echo Product::checkSaleNewOption($product); ?>
                     <p class="product-label"><span class="product-property">Название:</span> <?php echo $product->name;?></p>
-                    <p class="product-label"><span class="product-property">Категория:</span> <?php echo $category->name;?></p>
+                    <p class="product-label"><span class="product-property">Категория:</span> <?php echo Html::a($category->name,['/category', 'id' => $category['alias']],['class' => 'product-label']);?></p>
                     <p class="product-label"><span class="product-property">Код:</span> <?php echo $product->code;?></p>
-                    <p class="product-label"><span class="product-property">Цена:</span> <?php echo $product->price;?></p>
+                    <p class="product-label"><span class="product-property">Цена:</span> <?php echo Product::getPrice($product)?></p>
+                    <span class="button-count">
+                        <a href="#" id="minus" class="btn count-product">-</a>
+                        <input id="count" class="form-control" name="quantity" type="text" value="1" />
+                        <a href="#" id="plus" class="btn count-product">+</a>
+                    </span>
+                    <span class="btn button-cart">Добавить в корзину</span>
                 </div>
             </div>
         </div>
@@ -67,6 +73,25 @@ if (isset($product) && !empty($product)) {
 
 <script>
     $(document).ready(function () {
+
+        $('#minus').on('click', function(){
+            var count = $('#count').val();
+            if (count == 1) {
+                return false;
+            } else {
+                $('#count').val(count-1);
+                $('#minus').css({'background':0,'color':'white'});
+            }
+            console.log(count);
+            return false;
+        });
+
+        $("#plus").on('click', function () {
+            var count = parseInt($('#count').val());
+            $('#count').val(count+1);
+            $('#plus').css({'background':0,'color':'white'});
+            return false;
+        });
 
         $('.product-img').magnificPopup({
             type: 'image',

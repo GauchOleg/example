@@ -294,9 +294,9 @@ class Product extends \yii\db\ActiveRecord
 
     public static function getPrice(self $product) {
         if ($product->price) {
-            return $product->price . 'грн.';
+            return $product->price . ' грн.';
         } else {
-            return 'Нет цены';
+            return 'нет';
         }
     }
 

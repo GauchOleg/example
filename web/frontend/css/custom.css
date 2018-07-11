@@ -99,7 +99,7 @@
     list-style-type: none;
 }
 .checkbox-menu a:hover {
-    color: #6bbde6;;
+    color: #6bbde6;
 }
 .price {
     color: green;
@@ -118,12 +118,56 @@
     color: white;
     list-style-type: none;
     border: dashed 1px #ffffff;
+    padding-bottom: 15px;
 }
 .product-label {
     margin: 0px;
+    color: white;
+}
+
+.product-label a {
+    text-decoration: underline #6bbde6 ;
+}
+
+.product-label a:hover {
+    color: #6bbde6;
 }
 
 .description-product .product-property {
     color: #ffce1a;
     font-size: 18px;
+}
+.button-count {
+    padding-left: 10px;
+    display: block;
+    padding-bottom: 10px;
+}
+
+#count {
+    width: 20px;
+    margin: 0;
+    border-radius: 0;
+    text-align: center;
+}
+
+.count-product {
+    border-color: white;
+    color: white;
+    background: 0 0;
+    border-radius: 0;
+}
+
+.btn.button-cart {
+    border-color: white;
+    color: white;
+    background: 0 0;
+    border-radius: 0;
+    margin-left: 9px;
+}
+
+.btn.button-cart:hover {
+    border-color: white;
+    color: white;
+    background: green;
+    border-radius: 0;
 }
