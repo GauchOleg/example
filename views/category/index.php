@@ -5,14 +5,16 @@
 /* @var $allCheckboxes \app\modules\dashboard\models\Checkbox */
 /* @var $checked \app\modules\dashboard\models\Checkbox */
 ?>
-<div id="catalog-product">
-    <div class="container" id="catalog">
-        <?php echo $this->render('catalog',[
-            'category'      => $category,
-            'allCheckboxes' => $allCheckboxes,
-            'checked'       => $checked,
-            'allProduct'    => $allProduct,
-            'allCategory'   => $allCategory,
-        ]);?>
+<div class="wrapper">
+    <div id="catalog-product">
+        <div class="container" id="catalog">
+            <?php echo $this->render('catalog',[
+                'category'      => $category,
+                'allCheckboxes' => $allCheckboxes,
+                'checked'       => $checked,
+                'allProduct'    => $allProduct,
+                'allCategory'   => $allCategory,
+            ]);?>
+        </div>
     </div>
 </div>

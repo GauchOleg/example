@@ -8,6 +8,24 @@
 use app\modules\dashboard\models\ProductImg;
 use app\modules\dashboard\models\Checkbox;
 use yii\helpers\Html;
+
+if (isset($category) && !empty($category)) {
+    $this->title = $category->name;
+
+    $this->registerMetaTag([
+        'name' => 'title',
+        'content' => $category->seo_title,
+    ]);
+    $this->registerMetaTag([
+        'name' => 'keywords',
+        'content' => $category->seo_keywords,
+    ]);
+    $this->registerMetaTag([
+        'name' => 'description',
+        'content' => $category->seo_description,
+    ]);
+}
+
 ?>
 <div id="content">
     <input id="cat_alias" type="hidden" name="alias" value="<?php echo $category->alias; ?>">
@@ -67,7 +85,7 @@ use yii\helpers\Html;
                 <?php endforeach; ?>
             </div>
             <?php else :?>
-
+                <p class="center">В категории еще нет товаров</p>
             <?php endif;?>
         </div>
     </div>
@@ -98,5 +116,18 @@ use yii\helpers\Html;
             });
 //       console.log(id);
         });
+
+        $('[data-id="home"]').attr('href','/');
+        $('[data-id="home"]').parent('li').removeClass('active');
+        $('[data-id="catalog"]').attr('href','/#catalog');
+        $('[data-id="catalog"]').parent('li').addClass('active');
+
+        $('[data-id="service"]').attr('href','/#service');
+        $('[data-id="portfolio"]').attr('href','/#portfolio');
+        $('[data-id="clients"]').attr('href','/#clients');
+        $('[data-id="contact"]').attr('href','/#contact');
+
+
+//        console.log();
     })
 </script>
