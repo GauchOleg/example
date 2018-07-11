@@ -11,7 +11,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
 
-class CategoryController extends \yii\web\Controller
+class CategoryController extends FrontendController
 {
     public function actionIndex($id) {
         if ($id != Yii::$app->session->get('alias')) {

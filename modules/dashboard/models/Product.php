@@ -299,4 +299,33 @@ class Product extends \yii\db\ActiveRecord
             return 'Нет цены';
         }
     }
+
+    public static function getProductByAlias($alias) {
+        $product = self::find()->where(['alias' => $alias])->one();
+        if (!is_null($product)) {
+            return $product;
+        } else {
+            return false;
+        }
+    }
+
+    public static function getCategoryByProductId($productId) {
+        if (!is_null($productId) && $productId) {
+            $product = self::findOne($productId);
+            return Category::findOne(['id' => $product->category_id]);
+        } else {
+            return false;
+        }
+    }
+
+    public static function checkSaleNewOption(self $product) {
+        $data = '';
+        if (!is_null($product->sale) && $product->sale) {
+            $data .= "<span class='label label-warning product-action'>Товар со скидой!</span>";
+        }
+        if (!is_null($product->new) && $product->new) {
+            $data .= "<br><span class='label label-info product-action'>Новинка!</span>";
+        }
+        return $data;
+    }
 }

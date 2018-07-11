@@ -64,13 +64,17 @@ class ProductImg extends \yii\db\ActiveRecord
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 
-    public static function getImgByProductId($product_id) {
+    public static function getImgByProductId($product_id,$product = false) {
         $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
+
+        if ($product) {
+            return Html::img($img->alias,['style' => 'width:370px; height:290px', 'alt' => 'магазин тренажеров евроспорт']);
+        }
 
         if (is_null($img)) {
             return Html::img(Yii::getAlias('@web') .'/default/img/product_no_image.png',['style' => 'width:100%; height:100%']);
         }
-        return Html::img($img->alias,['style' => 'width:350px; height:200px']);
+        return Html::img($img->alias,['style' => 'width:350px; height:200px','alt' => 'магазин тренажеров евроспорт']);
     }
 
     public static function getLinkImgByProductId($product_id) {

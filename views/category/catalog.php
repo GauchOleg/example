@@ -9,6 +9,7 @@ use app\modules\dashboard\models\Product;
 use app\modules\dashboard\models\ProductImg;
 use app\modules\dashboard\models\Checkbox;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 if (isset($category) && !empty($category)) {
     $this->title = $category->name;
@@ -81,8 +82,8 @@ if (isset($category) && !empty($category)) {
                         <div class="caption cart-product-title">
                             <h3><?php echo $product->name?></h3>
                             <p><?php echo $product->small_text; ?></p>
-                            <span><?php echo Product::getPrice($product)?></span>
-                            <p><a href="#" class="btn did btn-outline">Просмотр</a> <a href="#" class="btn did btn-outline">В корзину</a></p>
+                            <span class="price"><?php echo Product::getPrice($product)?></span>
+                            <p><a href="<?php echo Url::to(['product/view','alias' => $product->alias])?>" class="btn did btn-outline">Просмотр</a> <a href="#" class="btn btn-outline did cart">В корзину</a></p>
                         </div>
                     </div>
                 </div>
