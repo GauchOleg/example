@@ -73,6 +73,15 @@ class ProductImg extends \yii\db\ActiveRecord
         return Html::img($img->alias,['style' => 'width:350px; height:200px']);
     }
 
+    public static function getLinkImgByProductId($product_id) {
+        $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
+        if (!is_null($img)) {
+            return $img->alias;
+        } else {
+            return Yii::getAlias('@web') .'/default/img/product_no_image.png';
+        }
+    }
+
     public function checkImg($product_id) {
         $imgs = self::find()->where(['product_id' => $product_id])->all();
         if ($imgs) {

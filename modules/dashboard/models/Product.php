@@ -291,4 +291,12 @@ class Product extends \yii\db\ActiveRecord
         }
         return $checked;
     }
+
+    public static function getPrice(self $product) {
+        if ($product->price) {
+            return $product->price . 'грн.';
+        } else {
+            return 'Нет цены';
+        }
+    }
 }

@@ -28,7 +28,8 @@ class FrontendAsset extends AssetBundle
         'css/jquery.cslider.css',
         'css/jquery.bxslider.css',
         'css/animate.css',
-        'css/custom.css'
+        'css/custom.css',
+        'magnific-popup/dist/magnific-popup.css'
     ];
 
     public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
@@ -45,6 +46,7 @@ class FrontendAsset extends AssetBundle
         'js/respond.min.js',
 //        '//maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap',
         'js/app.js',
+        'magnific-popup/dist/jquery.magnific-popup.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

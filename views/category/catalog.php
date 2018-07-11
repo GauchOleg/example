@@ -5,6 +5,7 @@
 /* @var $allCheckboxes \app\modules\dashboard\models\Checkbox */
 /* @var $checked \app\modules\dashboard\models\Checkbox */
 
+use app\modules\dashboard\models\Product;
 use app\modules\dashboard\models\ProductImg;
 use app\modules\dashboard\models\Checkbox;
 use yii\helpers\Html;
@@ -73,10 +74,14 @@ if (isset($category) && !empty($category)) {
                 <?php endif;?>
                 <div class="span3 pb-3">
                     <div class="thumbnail product-cart">
-                        <?php echo ProductImg::getImgByProductId($product->id)?>
+                        <a href="<?php echo ProductImg::getLinkImgByProductId($product->id)?>" class="product-img">
+                            <?php echo ProductImg::getImgByProductId($product->id)?>
+                        </a>
+
                         <div class="caption cart-product-title">
                             <h3><?php echo $product->name?></h3>
                             <p><?php echo $product->small_text; ?></p>
+                            <span><?php echo Product::getPrice($product)?></span>
                             <p><a href="#" class="btn did btn-outline">Просмотр</a> <a href="#" class="btn did btn-outline">В корзину</a></p>
                         </div>
                     </div>
@@ -93,6 +98,29 @@ if (isset($category) && !empty($category)) {
 
 <script>
     $(document).ready(function () {
+
+        $('.product-img').magnificPopup({
+            type: 'image',
+            mainClass: 'mfp-with-zoom', // this class is for CSS animation below
+
+            zoom: {
+                enabled: true, // By default it's false, so don't forget to enable it
+
+                duration: 300, // duration of the effect, in milliseconds
+                easing: 'ease-in-out', // CSS transition easing function
+
+                // The "opener" function should return the element from which popup will be zoomed in
+                // and to which popup will be scaled down
+                // By defailt it looks for an image tag:
+                opener: function(openerElement) {
+                    // openerElement is the element on which popup was initialized, in this case its <a> tag
+                    // you don't need to add "opener" option if this code matches your needs, it's defailt one.
+                    return openerElement.is('img') ? openerElement : openerElement.find('img');
+                }
+            }
+        })
+
+
         $('.checked').on('click', function(){
 //        $(this).attr('checked', true);
             var id = $(this).val();
