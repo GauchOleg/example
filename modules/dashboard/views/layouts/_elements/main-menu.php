@@ -1,7 +1,6 @@
 <?php
 /* @var \yii\web\View $this */
 
-use app\modules\booking\models\Notification;
 ?>
 
 <div class="page-sidebar-wrapper">

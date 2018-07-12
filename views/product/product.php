@@ -52,7 +52,7 @@ if (isset($product) && !empty($product)) {
                     <?php $i = 1; foreach (ProductImg::getGalleryImageByProductId($product->id) as $item): ?>
                         <div class="media <?php echo ($i != 6 ) ? 'gallery' : '' ?>">
                             <a class="pull-left product-img" href="<?php echo $item?>" >
-                                <img class="media-object" alt="магазин трнажеров" src="<?php echo $item?>" style="width: 64px; height: 64px;">
+                                <img class="media-object" alt="магазин трнажеров" src="<?php echo $item?>" style="width: 80px; height: 64px;">
                             </a>
                         </div>
                     <?php $i++; endforeach;?>
@@ -170,5 +170,6 @@ if (isset($product) && !empty($product)) {
         $('[data-id="portfolio"]').attr('href','/#portfolio');
         $('[data-id="clients"]').attr('href','/#clients');
         $('[data-id="contact"]').attr('href','/#contact');
+        $('[data-id="cart"]').attr('href','/cart');
     })
 </script>

@@ -94,3 +94,6 @@
     </div>
 </div>
 <script async="" defer="" type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeMap"></script>
+<script>
+    $('[data-id="cart"]').attr('href','/cart');
+</script>

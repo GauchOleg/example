@@ -155,7 +155,7 @@ if (isset($category) && !empty($category)) {
         $('[data-id="portfolio"]').attr('href','/#portfolio');
         $('[data-id="clients"]').attr('href','/#clients');
         $('[data-id="contact"]').attr('href','/#contact');
-
+        $('[data-id="cart"]').attr('href','/cart');
 
 //        console.log();
     })

@@ -227,3 +227,12 @@
 .gallery {
     float: right;
 }
+
+#cart-view {
+    background: url(../images/cart_bg-min.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: calc(100vh - 80px);
+}
