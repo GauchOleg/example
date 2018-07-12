@@ -26,6 +26,7 @@ $url = Yii::$app->request->url;
                     <li><a data-id="clients" href="#clients">О нас</a></li>
 <!--                    <li><a href="#price">Price</a></li>-->
                     <li><a data-id="contact" href="#contact">Контакты</a></li>
+                    <li><a data-id="cart" href="#cart"><i class="fal fa-shopping-cart"></i></a></li>
 <!--                    <li><i class="icon-shopping-cart"></i><a href="#">Корзина</a></li>-->
                 </ul>
             </div>

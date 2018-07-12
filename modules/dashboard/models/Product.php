@@ -5,6 +5,8 @@ namespace app\modules\dashboard\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use app\helpers\Translit;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%product}}".
@@ -327,5 +329,15 @@ class Product extends \yii\db\ActiveRecord
             $data .= "<br><span class='label label-info product-action'>Новинка!</span>";
         }
         return $data;
+    }
+
+    public static function getBredCrumbs(self $product) {
+        $homeUrl = Url::to(['/']);
+        $categoryAlias = Url::to(['/category', 'id' => $product->category->alias]);
+        $current = strtolower($product->name);
+
+        return  Html::a(mb_strtolower('главная'),[$homeUrl],['class' => 'breadcrumbs']) . ' / ' .
+                Html::a(mb_strtolower($product->category->name),$categoryAlias,['class' => 'breadcrumbs']) . ' / ' .
+                Html::a(mb_strtolower($current),false,['class' => 'disabled']);
     }
 }

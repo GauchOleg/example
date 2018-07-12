@@ -31,7 +31,8 @@ if (isset($product) && !empty($product)) {
     <input id="cat_alias" type="hidden" name="alias" value="<?php echo $category->alias; ?>">
     <div class="row">
         <div class="span12 category-title">
-            главная -> <?php echo $category->name?> -> <?php echo $product->name?>
+            <?php echo Product::getBredCrumbs($product);?>
+<!--            главная -> --><?php //echo $category->name?><!-- -> --><?php //echo $product->name?>
         </div>
     </div>
     <div class="row">
@@ -48,8 +49,14 @@ if (isset($product) && !empty($product)) {
                 <a href="<?php echo ProductImg::getLinkImgByProductId($product->id)?>" class="product-img">
                     <?php echo ProductImg::getImgByProductId($product->id,true)?>
                 </a>
+                    <?php $i = 1; foreach (ProductImg::getGalleryImageByProductId($product->id) as $item): ?>
+                        <div class="media <?php echo ($i != 6 ) ? 'gallery' : '' ?>">
+                            <a class="pull-left product-img" href="<?php echo $item?>" >
+                                <img class="media-object" alt="магазин трнажеров" src="<?php echo $item?>" style="width: 64px; height: 64px;">
+                            </a>
+                        </div>
+                    <?php $i++; endforeach;?>
             </div>
-<!--            --><?php //dd($product)?>
         </div>
         <div class="span8">
             <div class="cart-field">
@@ -69,10 +76,48 @@ if (isset($product) && !empty($product)) {
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="span12">
+            <div class="product-description">
+                <snan class="tab-title" data-id="reviews"> Отзывы </snan>
+                <snan class="tab-title activate" data-id="product-descripton" activate"> Описание </snan>
+                <div id="product-descripton">
+                    <h3><?php echo mb_strtoupper($product->name)?></h3>
+                    <?php echo $product->text?>
+                </div>
+                <div id="reviews">
+                    <div class="media">
+                        <a class="pull-left" href="#">
+                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACiUlEQVR4Xu2Y64tpYRTGH4Pk8p0h90vxbUhJ/nghGddBTC7f5BK5q1FDTmvV6Eynxpm9R6Os98uOl/Xu51mXH1uzWCxOuOOlEQOkAqQFZAbc8QyEDEGhgFBAKCAUEArcsQOCQcGgYFAwKBi8YwjInyHBoGBQMCgYFAwKBu/YAdUYfH9/R7vdxnw+h16vh9/vh91u/2Rpq9XCeDyG1+vl/a/WT8e7lFvVBjQaDRbvcrn4ut1ukUqlYDAY+Oz1eo1yuYzT6fRfBvx0vKsaQNnKZDLweDzw+Xw4Ho/QaDTQarXnc4vFIkwmEyaTydmAarWKzWaDZDIJnU6HQqHA34tGo8jlct+Od0nkV/uqKmC1WnF2Hx8fMZvNOMtOpxOBQIDPHA6H6Pf7iMfjyOfzZwPe3t5YtNVqhdlsRq/X48/Q95XE+zUDSHS9XucMk2gSTG1AYkgYiaaeJ6HpdPpTCwwGA3Q6Ha4Wh8OBUCjEJiqNp9QEVRVAYmu1GoLBINxuN/d7qVRiMfv9HovFArFYjFuDSpvmBBlCog+HA7LZLO8lEglYLBY2T2m8XzGARH4II9HL5RKVSgXhcBiU4d1u9899ESEikQi63S5GoxHPAKqWp6cnNk1pvF8xgA6lniWhNAin0ylTgIYbDUjKLi26vry8wGazcRtQ9qlSqG2MRiOazSabQuYoiUcGKl2qWoAOpay9vr5y9kkM0YB6/u9Fgj9mABnw/PzMA49K/+HhgauGTKTX9P534l36XXHJGNUGXDrg1vfFAHkgIg9E5IGIPBC59Ul9zfsTCggFhAJCAaHANafsrccWCggFhAJCAaHArU/qa96fUEAoIBQQCggFrjllbz22UEAocOcU+ANVWYGfbgXFLAAAAABJRU5ErkJggg==" style="width: 64px; height: 64px;">
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading">Media heading</h4>
+                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     $(document).ready(function () {
+
+        $('.tab-title').on('click', function(){
+            $('.tab-title').removeClass('activate');
+            $(this).addClass('activate');
+            var id = $(this).data('id').valueOf();
+            if (id == 'reviews') {
+                $('#product-descripton').css('display','none');
+                $('#reviews').css('display','block');
+            } else {
+                $('#product-descripton').css('display','block');
+                $('#reviews').css('display','none');
+            }
+
+            console.log();
+        });
 
         $('#minus').on('click', function(){
             var count = $('#count').val();
@@ -82,7 +127,6 @@ if (isset($product) && !empty($product)) {
                 $('#count').val(count-1);
                 $('#minus').css({'background':0,'color':'white'});
             }
-            console.log(count);
             return false;
         });
 
@@ -95,6 +139,9 @@ if (isset($product) && !empty($product)) {
 
         $('.product-img').magnificPopup({
             type: 'image',
+            gallery: {
+                enabled: true
+            },
             mainClass: 'mfp-with-zoom', // this class is for CSS animation below
 
             zoom: {

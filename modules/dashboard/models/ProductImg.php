@@ -65,16 +65,30 @@ class ProductImg extends \yii\db\ActiveRecord
     }
 
     public static function getImgByProductId($product_id,$product = false) {
+
         $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
 
-        if ($product) {
+        if ($product && !is_null($img)) {
             return Html::img($img->alias,['style' => 'width:370px; height:290px', 'alt' => 'магазин тренажеров евроспорт']);
         }
 
-        if (is_null($img)) {
-            return Html::img(Yii::getAlias('@web') .'/default/img/product_no_image.png',['style' => 'width:100%; height:100%']);
+        if (!$product && !is_null($img)) {
+            return Html::img($img->alias,['style' => 'width:350px; height:200px','alt' => 'магазин тренажеров евроспорт']);
         }
-        return Html::img($img->alias,['style' => 'width:350px; height:200px','alt' => 'магазин тренажеров евроспорт']);
+
+        return Html::img(Yii::getAlias('@web') .'/default/img/product_no_image.png',['style' => 'width:100%; height:100%']);
+
+    }
+
+    public static function getGalleryImageByProductId($product_id) {
+        $imgs = self::find()->where(['product_id' => $product_id])->all();
+
+        if (is_null($imgs)) {
+            return false;
+        }
+        $data = ArrayHelper::map($imgs,'id','alias');
+        array_shift($data);
+        return $data;
     }
 
     public static function getLinkImgByProductId($product_id) {
