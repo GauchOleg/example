@@ -334,7 +334,7 @@ class Product extends \yii\db\ActiveRecord
     public static function getBredCrumbs(self $product) {
         $homeUrl = Url::to(['/']);
         $categoryAlias = Url::to(['/category', 'id' => $product->category->alias]);
-        $current = strtolower($product->name);
+        $current = mb_strtolower($product->name);
 
         return  Html::a(mb_strtolower('главная'),[$homeUrl],['class' => 'breadcrumbs']) . ' / ' .
                 Html::a(mb_strtolower($product->category->name),$categoryAlias,['class' => 'breadcrumbs']) . ' / ' .

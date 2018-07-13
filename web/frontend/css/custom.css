@@ -236,3 +236,24 @@
     background-size: cover;
     min-height: calc(100vh - 80px);
 }
+
+.count-products {
+    /*visibility: hidden;*/
+    position: absolute;
+    margin-top: 7px;
+    margin-left: 25px;
+}
+
+.btn-cart {
+    background: 0;
+    color: #fff !important;
+    width: 37%;
+    border: solid 1px #ffce1a;
+}
+
+.btn-cart:hover {
+    background: 0;
+    color: #fff !important;
+    width: 37%;
+    border: solid 1px red;
+}

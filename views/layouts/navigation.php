@@ -2,7 +2,7 @@
 use yii\helpers\Url;
 
 $url = Yii::$app->request->url;
-//dd(Url::to(['site/catalog']));
+$in_cart = $this->params['in_cart'];
 ?>
 <div class="navbar">
     <div class="navbar-inner">
@@ -26,7 +26,9 @@ $url = Yii::$app->request->url;
                     <li><a data-id="clients" href="#clients">О нас</a></li>
 <!--                    <li><a href="#price">Price</a></li>-->
                     <li><a data-id="contact" href="#contact">Контакты</a></li>
+                    <span class="badge badge-success count-products"><span id="in-cart"><?php echo (isset($in_cart) && !empty($in_cart) ? $in_cart : '')?></span></span>
                     <li><a data-id="cart" href="#cart"><img src="/default/img/cart.png" width="30" height="30" alt="Корзина" /></a></li>
+
 <!--                    <li><i class="icon-shopping-cart"></i><a href="#">Корзина</a></li>-->
                 </ul>
             </div>

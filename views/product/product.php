@@ -114,13 +114,14 @@ if (isset($product) && !empty($product)) {
                 data: {'id' : product_id,'count': count,'_csrf' : yii.getCsrfToken()},
                 type: "POST",
                 success: function(res){
+                    $('.count-products').css('visibility','visible');
+                    $('#in-cart').append().replaceWith(res);
                     console.log(res);
                 },
                 error: function(){
                     
                 }
             });
-            console.log(product_id);
         });
 
         $('.tab-title').on('click', function(){

@@ -42,8 +42,8 @@ class Cart extends \yii\db\ActiveRecord
     {
         return [
             [['status', 'finished'], 'integer'],
-            [['create_at', 'update_at'], 'safe'],
-            [['order_id', 'product_info', 'customer_name', 'customer_phone', 'customer_email', 'session_id'], 'string', 'max' => 255],
+            [['create_at', 'update_at', 'product_info'], 'safe'],
+            [['order_id', 'customer_name', 'customer_phone', 'customer_email', 'session_id'], 'string', 'max' => 255],
         ];
     }
 
@@ -88,7 +88,7 @@ class Cart extends \yii\db\ActiveRecord
     }
 
     private function getOrderBySessionId($sessionId) {
-        $order = self::find()->where(['session_id' => $sessionId])->one();
+        $order = self::findOne(['session_id' => $sessionId]);
         if (!is_null($order) && $order) {
             return $order;
         } else {
@@ -102,12 +102,13 @@ class Cart extends \yii\db\ActiveRecord
         $this->status = self::STATUS_START;
         $this->finished = false;
         $this->save(false);
-        return true;
+        return $sessionId;
     }
 
     private function updateOrder($order,$dataProduct,$count) {
-        $this->product_info = $this->equalOrderInfo($order->product_info,$dataProduct,$count);
-        $this->update(false);
+        $order->product_info = $this->equalOrderInfo($order->product_info,$dataProduct,$count);
+        $order->update();
+        return $order->session_id;
     }
 
     private function equalOrderInfo($orderInfo,$dataProduct,$count) {
@@ -116,29 +117,31 @@ class Cart extends \yii\db\ActiveRecord
     }
 
     private function changeOldOrderInfo($oldOrderInfo,$newOrderInfo) {
-        $old = Json::decode($oldOrderInfo);
-        $new = Json::decode($newOrderInfo);
+        $old = Json::decode($oldOrderInfo,true);
+        $new = Json::decode($newOrderInfo,true);
         return $this->equalArrayData($old,$new);
     }
 
     // TODO дописать метод. 
     private function equalArrayData($old,$new) {
-//        dd($old);
         $result = [];
-        foreach ($old as $value) {
-            if ($value['product_id'] != $new['product_id']) {
-                array_push($result,$value);
-            } else {
-                if ($value['product_count'] != $new['product_count'] || $value['product_price'] != $new['product_price']) {
-                    $updated = [
-                        'product_id' => $new['product_id'],
-                        'product_price' => $new['product_price'],
-                        'product_count' => $new['product_count'],
-                    ];
-                    array_push($result,$updated);
+        if (isset($old[0])) {
+            foreach ($old as $value) {
+                if ($value['product_id'] == $new['product_id']) {
+                    continue;
                 }
+                array_push($result,$value);
+            }
+            array_push($result,$new);
+        } else {
+            if ($old['product_id'] != $new['product_id']) {
+                array_push($result,$new);
+                array_push($result,$old);
+            } else {
+                array_push($result,$new);
             }
         }
+//        dd($result);
         return Json::encode($result);
     }
 
@@ -148,7 +151,7 @@ class Cart extends \yii\db\ActiveRecord
             'product_price' => $data['price'],
             'product_count' => $count,
         ];
-        return Json::encode($orderData);
+        return Json::encode($orderData,true);
     }
 
     public function addToCart($post) {
@@ -171,10 +174,53 @@ class Cart extends \yii\db\ActiveRecord
     private function saveOrder($dataProduct,$sessionId,$count) {
         $order = $this->getOrderBySessionId($sessionId);
         if ($order) {
-            $this->updateOrder($order,$dataProduct,$count);
+            return $this->updateOrder($order,$dataProduct,$count);
         } else {
-            $this->addNewOrder($dataProduct,$sessionId,$count);
+            return $this->addNewOrder($dataProduct,$sessionId,$count);
         }
+    }
+
+    public function getCountProductInBasked($sessionId) {
+        $order = $this->getOrderBySessionId($sessionId);
+        if ($order) {
+            return count(Json::decode($order->product_info));
+        }
+    }
+
+    public function getOrderDataBySessionId($sessionId) {
+        $order = $this->getOrderBySessionId($sessionId);
+        $i = 1;
+        $allProduct = [];
+        if (!is_null($order) && $order) {
+            $orderInfo = Json::decode($order->product_info,true);
+            foreach ($orderInfo as $item) {
+                if ($item['product_id']) {
+                    $product = Product::find()->where(['id' => $item['product_id']])->asArray()->one();
+                    if (!is_null($product) && $product) {
+                        $allProduct[] = [
+                            'num'   => $i,
+                            'id'    => $product['id'],
+                            'code'  => $product['code'],
+                            'alias' => $product['alias'],
+                            'price' => $product['price'],
+                            'count' => $item['product_count'],
+                            'name'  => $product['name'],
+                            'img'   => ProductImg::getImgByProductId($product['id'])
+
+                        ];
+                    }
+                }
+                $i++;
+            }
+        }
+        return $allProduct;
+    }
+
+    public static function deleteItemCart($post) {
+        if (empty($post)) {
+            return false;
+        }
+        // TODO получить id товара из поста, получить ордер id удалить товар с таким ID и апдейт ордер все! завтра ...
     }
 
 }
