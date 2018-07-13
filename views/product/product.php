@@ -29,6 +29,7 @@ if (isset($product) && !empty($product)) {
 ?>
 <div id="content">
     <input id="cat_alias" type="hidden" name="alias" value="<?php echo $category->alias; ?>">
+    <input id="product_id" type="hidden" name="product_id" value="<?php echo $product->id; ?>">
     <div class="row">
         <div class="span12 category-title">
             <?php echo Product::getBredCrumbs($product);?>
@@ -103,6 +104,24 @@ if (isset($product) && !empty($product)) {
 
 <script>
     $(document).ready(function () {
+
+        $('.button-cart').on('click', function () {
+            var product_id = $('#product_id').val();
+            var count = $('#count').val();
+            
+            $.ajax({
+                url: "/cart/add-to-cart",
+                data: {'id' : product_id,'count': count,'_csrf' : yii.getCsrfToken()},
+                type: "POST",
+                success: function(res){
+                    console.log(res);
+                },
+                error: function(){
+                    
+                }
+            });
+            console.log(product_id);
+        });
 
         $('.tab-title').on('click', function(){
             $('.tab-title').removeClass('activate');

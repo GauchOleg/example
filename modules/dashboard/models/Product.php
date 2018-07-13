@@ -340,4 +340,8 @@ class Product extends \yii\db\ActiveRecord
                 Html::a(mb_strtolower($product->category->name),$categoryAlias,['class' => 'breadcrumbs']) . ' / ' .
                 Html::a(mb_strtolower($current),false,['class' => 'disabled']);
     }
+    
+    public static function getProductById($productId) {
+        return self::find()->where(['id' => $productId])->asArray()->one();
+    }
 }

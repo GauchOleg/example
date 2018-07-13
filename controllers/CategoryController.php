@@ -15,7 +15,8 @@ class CategoryController extends FrontendController
 {
     public function actionIndex($id) {
         if ($id != Yii::$app->session->get('alias')) {
-            Yii::$app->session->destroy();
+            Yii::$app->session->remove('alias');
+            Yii::$app->session->remove('id');
         }
 
         $checked = Yii::$app->session->get('id');
