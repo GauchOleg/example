@@ -1,7 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $category \app\modules\dashboard\models\Category */
-/* @var $product \app\modules\dashboard\models\Product */
+/* @var $item$product \app\modules\dashboard\models\Product */
 
 use app\modules\dashboard\models\Product;
 use app\modules\dashboard\models\ProductImg;
@@ -33,7 +33,6 @@ if (isset($product) && !empty($product)) {
     <div class="row">
         <div class="span12 category-title">
             <?php echo Product::getBredCrumbs($product);?>
-<!--            главная -> --><?php //echo $category->name?><!-- -> --><?php //echo $product->name?>
         </div>
     </div>
     <div class="row">
@@ -47,16 +46,16 @@ if (isset($product) && !empty($product)) {
     <div class="row">
         <div class="span4">
             <div>
-                <a href="<?php echo ProductImg::getLinkImgByProductId($product->id)?>" class="product-img">
-                    <?php echo ProductImg::getImgByProductId($product->id,true)?>
+                <a href="<?php echo ProductImg::getImg($product->id,false,true,'product')?>" class="product-img">
+                    <?php echo ProductImg::getImg($product->id,false,false,'product')?>
                 </a>
-                    <?php $i = 1; foreach (ProductImg::getGalleryImageByProductId($product->id) as $item): ?>
-                        <div class="media <?php echo ($i != 6 ) ? 'gallery' : '' ?>">
-                            <a class="pull-left product-img" href="<?php echo $item?>" >
-                                <img class="media-object" alt="магазин трнажеров" src="<?php echo $item?>" style="width: 80px; height: 64px;">
+                    <?php foreach (ProductImg::getGalleryImageByProductId($product->id) as $item): ?>
+                        <span class="media">
+                            <a class="pull-left product-img" href="<?php echo Yii::getAlias('@web') . $item['alias']?>" >
+                                <?php echo ProductImg::getImg(false,$item['id'],false,'gallery') ?>
                             </a>
-                        </div>
-                    <?php $i++; endforeach;?>
+                        </span>
+                    <?php endforeach;?>
             </div>
         </div>
         <div class="span8">
@@ -114,12 +113,11 @@ if (isset($product) && !empty($product)) {
                 data: {'id' : product_id,'count': count,'_csrf' : yii.getCsrfToken()},
                 type: "POST",
                 success: function(res){
-                    $('.count-products').css('visibility','visible');
-                    $('#in-cart').append().replaceWith(res);
-                    console.log(res);
+                    var icon = "<span class='badge badge-success count-products'><span id='in-cart'>"+ res +"</span></span>";
+                    $('#cart-button').before(icon);
                 },
                 error: function(){
-                    
+
                 }
             });
         });
@@ -135,8 +133,6 @@ if (isset($product) && !empty($product)) {
                 $('#product-descripton').css('display','block');
                 $('#reviews').css('display','none');
             }
-
-            console.log();
         });
 
         $('#minus').on('click', function(){

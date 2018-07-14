@@ -2,7 +2,7 @@
 
 return [
     '/' => 'site/index',
-    'category/<id>' => 'category/index/<:id>',
+    'category' => 'category/index/',
     'sort-category' => 'category/sort-category',
     'dashboard' => 'dashboard/backend/index',
     'dashboard/category' => 'dashboard/category/index',

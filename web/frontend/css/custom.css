@@ -4,6 +4,7 @@
 }
 .product-cart {
     border: solid 2px #fece1a;
+    background: white;
 }
 .product-cart:hover {
     border-bottom: solid 3px #000;
@@ -32,7 +33,6 @@
 
 .btn-did:active, .btn-did:visited, .btn-did:focus {
     color: #fff !important;
-
 }
 
 .btn-did {
@@ -247,13 +247,42 @@
 .btn-cart {
     background: 0;
     color: #fff !important;
-    width: 37%;
     border: solid 1px #ffce1a;
 }
 
 .btn-cart:hover {
     background: 0;
     color: #fff !important;
-    width: 37%;
     border: solid 1px red;
 }
+
+.product-img {
+    display: inherit;
+    margin-bottom: 10px;
+}
+
+.cart-link {
+    color: #ffce1a;
+    text-decoration: underline;
+}
+
+.cart-link:hover {
+    color: #00A0D1;
+}
+
+.prod-cunt input {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.count {
+    width: 20px;
+    margin: 0;
+    border-radius: 0;
+    text-align: center;
+}
+
+.in-cart {
+    margin-top: 60px;
+}
+

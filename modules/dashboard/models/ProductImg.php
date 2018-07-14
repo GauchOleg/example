@@ -22,6 +22,15 @@ use yii\web\UploadedFile;
 class ProductImg extends \yii\db\ActiveRecord
 {
     public $file;
+
+    const CART_MULTIPLE = 10;
+    const PRODUCT_MULTIPLE = 2.5;
+    const GALLERY_MULTIPLE = 12;
+    const DEFAULT_MULTIPLE = 1.5;
+    const CATALOG_MULTIPLE = 3.2;
+
+    const DEFAULT_IMG = "/default/img/product_no_image.png";
+
     /**
      * @inheritdoc
      */
@@ -64,40 +73,54 @@ class ProductImg extends \yii\db\ActiveRecord
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 
-    public static function getImgByProductId($product_id,$product = false) {
-
-        $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
-
-        if ($product && !is_null($img)) {
-            return Html::img($img->alias,['style' => 'width:370px; height:290px', 'alt' => 'магазин тренажеров евроспорт']);
+    public static function getImg($product_id,$img_id = false,$link = false,$size) {
+        if ($img_id) {
+            $img = self::find()->where(['id' => $img_id])->one();
+        } else {
+            $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
         }
-
-        if (!$product && !is_null($img)) {
-            return Html::img($img->alias,['style' => 'width:350px; height:200px','alt' => 'магазин тренажеров евроспорт']);
+        if (!is_null($img)) {
+            return self::renderImg($img->alias,$size,$link);
+        } else {
+            return self::renderImg(self::DEFAULT_IMG,$size,$link);
         }
+    }
 
-        return Html::img(Yii::getAlias('@web') .'/default/img/product_no_image.png',['style' => 'width:100%; height:100%']);
+    private function renderImg($alias,$marker,$link) {
+        $root   = Yii::getAlias('@webroot');
+        $web    = Yii::getAlias('@web');
+        $info = getimagesize($root . $alias);
+        $checked = 1;
+        $class = [];
+        switch ($marker) {
+            case 'product'  : $checked = self::PRODUCT_MULTIPLE;
+                break;
+            case 'gallery'  : $checked = self::GALLERY_MULTIPLE; $class = ['class' => 'media-object'];
+                break;
+            case 'cart'     : $checked = self::CART_MULTIPLE;
+                break;
+            case 'catalog'  : $checked = self::CATALOG_MULTIPLE;
+                break;
+            default : $checked = self::DEFAULT_MULTIPLE;
+        }
+        $width = $info[0] / $checked;
+        $height = $info[1] / $checked;
+        if ($link) {
+            return $alias;
+        } else {
+            return Html::img($web . $alias,['style' => 'width:'.$width.'px; height:'.$height.'px','alt' => 'магазин тренажеров евроспорт', $class]);
+        }
 
     }
 
-    public static function getGalleryImageByProductId($product_id) {
-        $imgs = self::find()->where(['product_id' => $product_id])->all();
+    public static function  getGalleryImageByProductId($product_id) {
+        $imgs = self::find()->where(['product_id' => $product_id])->asArray()->all();
 
         if (is_null($imgs)) {
             return false;
         }
-        $data = ArrayHelper::map($imgs,'id','alias');
-        array_shift($data);
-        return $data;
-    }
-
-    public static function getLinkImgByProductId($product_id) {
-        $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
-        if (!is_null($img)) {
-            return $img->alias;
-        } else {
-            return Yii::getAlias('@web') .'/default/img/product_no_image.png';
-        }
+        array_shift($imgs);
+        return $imgs;
     }
 
     public function checkImg($product_id) {
@@ -107,18 +130,6 @@ class ProductImg extends \yii\db\ActiveRecord
         } else {
             return false;
         }
-    }
-
-    /**
-     * @param $product_id
-     * @return string
-     */
-    public function getFirstImg($product_id) {
-        $img = self::find()->where(['product_id' => $product_id])->limit(1)->one();
-        if (is_null($img)) {
-            return null;
-        }
-        return Html::img($img->alias,['style' => 'width:60px']);
     }
 
     /**

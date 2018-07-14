@@ -191,6 +191,18 @@ class Product extends \yii\db\ActiveRecord
      */
     private function checkAlias() {
         $alias = Translit::str2url($this->name);
+        if  ($this->isNewRecord) {
+            return $this->getNewAlias($alias);
+        } else {
+            if ($alias == $this->alias) {
+                return $alias;
+            } else {
+                return $this->getNewAlias($alias);
+            }
+        }
+    }
+
+    private function getNewAlias($alias) {
         if (self::find()->where(['alias' => $alias])->all()) {
             return $alias . '-' . strtolower(Yii::$app->security->generateRandomString(1));
         } else {

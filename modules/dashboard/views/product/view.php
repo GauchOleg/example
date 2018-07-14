@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'images',
                 'value' => function($model) use ($productImg) {
-                    return $productImg->getFirstImg($model->id);
+                    return $productImg->getImg($model->id,false,false,'cart');
                 },
                 'format' => 'raw'
 

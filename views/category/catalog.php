@@ -75,8 +75,8 @@ if (isset($category) && !empty($category)) {
                 <?php endif;?>
                 <div class="span3 pb-3">
                     <div class="thumbnail product-cart">
-                        <a href="<?php echo ProductImg::getLinkImgByProductId($product->id)?>" class="product-img">
-                            <?php echo ProductImg::getImgByProductId($product->id)?>
+                        <a href="<?php echo ProductImg::getImg($product->id,false,true,'catalog')?>" class="product-img">
+                            <?php echo ProductImg::getImg($product->id,false,false,'catalog')?>
                         </a>
 
                         <div class="caption cart-product-title">

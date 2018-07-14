@@ -117,8 +117,8 @@ class Cart extends \yii\db\ActiveRecord
     }
 
     private function changeOldOrderInfo($oldOrderInfo,$newOrderInfo) {
-        $old = Json::decode($oldOrderInfo,true);
-        $new = Json::decode($newOrderInfo,true);
+        $old = Json::decode($oldOrderInfo);
+        $new = Json::decode($newOrderInfo);
         return $this->equalArrayData($old,$new);
     }
 
@@ -151,7 +151,7 @@ class Cart extends \yii\db\ActiveRecord
             'product_price' => $data['price'],
             'product_count' => $count,
         ];
-        return Json::encode($orderData,true);
+        return Json::encode($orderData);
     }
 
     public function addToCart($post) {
@@ -183,7 +183,14 @@ class Cart extends \yii\db\ActiveRecord
     public function getCountProductInBasked($sessionId) {
         $order = $this->getOrderBySessionId($sessionId);
         if ($order) {
-            return count(Json::decode($order->product_info));
+            $productInfo = Json::decode($order->product_info);
+            if (is_array($productInfo[0])) {
+                return count($productInfo);
+            } else {
+                return 1;
+            }
+        } else {
+            return null;
         }
     }
 
@@ -192,35 +199,72 @@ class Cart extends \yii\db\ActiveRecord
         $i = 1;
         $allProduct = [];
         if (!is_null($order) && $order) {
-            $orderInfo = Json::decode($order->product_info,true);
-            foreach ($orderInfo as $item) {
-                if ($item['product_id']) {
-                    $product = Product::find()->where(['id' => $item['product_id']])->asArray()->one();
-                    if (!is_null($product) && $product) {
-                        $allProduct[] = [
-                            'num'   => $i,
-                            'id'    => $product['id'],
-                            'code'  => $product['code'],
-                            'alias' => $product['alias'],
-                            'price' => $product['price'],
-                            'count' => $item['product_count'],
-                            'name'  => $product['name'],
-                            'img'   => ProductImg::getImgByProductId($product['id'])
-
-                        ];
+            $orderInfo = Json::decode($order->product_info);
+            if (is_array($orderInfo[0])) {
+                foreach ($orderInfo as $item) {
+                    if ($item['product_id']) {
+                        $product = Product::find()->where(['id' => $item['product_id']])->asArray()->one();
+                        if (!is_null($product) && $product) {
+                            $allProduct[] = [
+                                'num'   => $i,
+                                'id'    => $product['id'],
+                                'code'  => $product['code'],
+                                'alias' => $product['alias'],
+                                'price' => $product['price'],
+                                'count' => $item['product_count'],
+                                'name'  => $product['name'],
+                                'img'   => ProductImg::getImg($product['id'],false,false,'cart')
+                            ];
+                        }
                     }
+                    $i++;
                 }
-                $i++;
+            } else {
+                $product = Product::find()->where(['id' => $orderInfo['product_id']])->asArray()->one();
+                if (!is_null($product) && $product) {
+                    $allProduct[] = [
+                        'num'   => $i,
+                        'id'    => $product['id'],
+                        'code'  => $product['code'],
+                        'alias' => $product['alias'],
+                        'price' => $product['price'],
+                        'count' => $orderInfo['product_count'],
+                        'name'  => $product['name'],
+                        'img'   => ProductImg::getImgByProductIdForBasket($product['id'])
+
+                    ];
+                }
             }
         }
         return $allProduct;
     }
 
-    public static function deleteItemCart($post) {
+    public function deleteItemCart($post) {
         if (empty($post)) {
             return false;
         }
-        // TODO получить id товара из поста, получить ордер id удалить товар с таким ID и апдейт ордер все! завтра ...
+        $orderId = Yii::$app->session->get('order_id');
+        $newOrderData = [];
+        if (isset($orderId) && !empty($orderId)) {
+            $order = self::getOrderBySessionId($orderId);
+            $orderInfo = Json::decode($order->product_info);
+            if (count($orderInfo) != 1 && is_array($orderInfo[0])) {
+                foreach ($orderInfo as $item) {
+                    if ($item['product_id'] == $post['productId']) {
+                        continue;
+                    } else {
+                        array_push($newOrderData,$item);
+                    }
+                }
+                $order->product_info = Json::encode($newOrderData);
+                $order->update();
+            } else {
+                $order->delete();
+            }
+            return $orderId;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -37,7 +37,12 @@ class CartController extends FrontendController
             throw new BadRequestHttpException();
         }
         $post = Yii::$app->request->post();
-        $result = Cart::deleteItemCart($post);
+        $cart = new Cart();
+        $sessionId = $cart->deleteItemCart($post);
+        $orderData = $cart->getOrderDataBySessionId($sessionId);
+        return $this->renderPartial('cart',[
+            'orderData' => $orderData,
+        ]);
     }
 
 }
