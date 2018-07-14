@@ -123,27 +123,22 @@ if (isset($category) && !empty($category)) {
 
 
         $('.checked').on('click', function(){
-//        $(this).attr('checked', true);
             var id = $(this).val();
             var alias = $('#cat_alias').val();
-//        console.log($('meta[name="csrf-token"]').attr("content"));
             $.ajax({
                 url: 'sort-category',
                 data: {_csrf: yii.getCsrfToken(),id: id,alias: alias},
                 type: 'POST',
                 success: function(res) {
-                    console.log(res);
                     if (res) {
                         $('#content').html(res);
                         return false;
-//                    $('#catalog').fadeOut();
                     }
                 },
                 error: function() {
                     console.log('error');
                 }
             });
-//       console.log(id);
         });
 
         $('[data-id="home"]').attr('href','/');
@@ -157,6 +152,5 @@ if (isset($category) && !empty($category)) {
         $('[data-id="contact"]').attr('href','/#contact');
         $('[data-id="cart"]').attr('href','/cart');
 
-//        console.log();
     })
 </script>

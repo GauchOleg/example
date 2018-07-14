@@ -79,7 +79,8 @@ use yii\helpers\Url;
             } else {
                 count = count - 1;
                 $("#"+id).val(count);
-                $("#price-id-"+ id).html(count * price + ' грн.');
+                var newPrice = count * price;
+                $("#price-id-"+ id).html(newPrice.toFixed(2) + ' грн.');
                 $('.minus').css({'background':0,'color':'white'});
                 return false;
             }
@@ -91,7 +92,7 @@ use yii\helpers\Url;
             var price = $('[data-prices="'+ id +'"]').attr('data-price').valueOf();
             var count = parseInt($("#"+id).val()) + 1;
             $("#"+id).val(count);
-            $("#price-id-"+ id).html(count * price + ' грн.');
+            $("#price-id-"+ id).html((count * price).toFixed(2) + ' грн.');
             $('.plus').css({'background':0,'color':'white'});
             return false;
         });
