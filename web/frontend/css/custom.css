@@ -286,3 +286,36 @@
     margin-top: 60px;
 }
 
+.btn-cart-order {
+    background: 0;
+    color: #fff !important;
+    border: solid 1px #ffce1a;
+}
+
+.btn-cart-order:hover {
+    background: 0;
+    color: #fff !important;
+    border: solid 1px green;
+}
+
+.btn-cart-submit {
+    background: #00A0D1;
+    color: #fff !important;
+    border: solid 1px #ffce1a;
+}
+.btn-cart-submit:hover {
+    background: green;
+    color: #fff !important;
+    border: solid 1px green;
+}
+
+#cartModal {
+    color: black;
+}
+
+.modal-body p{
+    color: black;
+}
+
+
+

@@ -47,13 +47,39 @@ use app\modules\dashboard\models\Cart;
             <div class="span12">
                 <p class="pull-right" style="color: yellow">Всего на сумму: <span id="total"><?php echo Cart::getTotalPrice($orderData)?></span></p>
             </div>
+            <p><span class="pull-right btn btn-cart-order" data-product="<?php echo $item['id']?>">Оформить заказ</span></p>
         </div>
     <?php else: ?>
         <p> Корзина пуста </p>
     <?php endif; ?>
 </div>
+
+<!-- Modal -->
+<div id="cartModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel" class="center">Оформляем заказ</h3>
+    </div>
+    <div class="modal-body">
+        <p>Товар: </p>
+        <table class="table">
+            <th>№</th>
+            <th>Название</th>
+            <th>Кол-во</th>
+            <th>Цена</th>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-cart-submit">Отправить заказ</button>
+    </div>
+</div>
+
 <script>
     $(document).ready(function () {
+
+        $('.btn-cart-order').on('click', function(){
+            $('#cartModal').modal('show')
+        });
 
         $('.btn-cart').on('click', function(){
             var productId = $(this).data('product');
