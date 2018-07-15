@@ -4,6 +4,7 @@ namespace app\modules\dashboard\models;
 
 use Yii;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%cart}}".
@@ -227,7 +228,7 @@ class Cart extends \yii\db\ActiveRecord
                         'id'    => $product['id'],
                         'code'  => $product['code'],
                         'alias' => $product['alias'],
-                        'price' => $product['price'],
+                        'price' => number_format($product['price'],2),
                         'count' => $orderInfo['product_count'],
                         'name'  => $product['name'],
                         'img'   => ProductImg::getImgByProductIdForBasket($product['id'])
@@ -265,6 +266,19 @@ class Cart extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    public static function getTotalPrice($orderData) {
+        $prices = [];
+        if (is_array($orderData[0])) {
+            foreach ($orderData as $item) {
+                if ($item['count'] != 0 && !empty($item['price'])) {
+                    array_push($prices, bcmul($item['count'],$item['price']));
+                }
+            }
+        }
+//        dd($prices);
+        return array_sum($prices) . ' грн.';
     }
 
 }

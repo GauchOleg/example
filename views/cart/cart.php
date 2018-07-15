@@ -2,7 +2,7 @@
 /* @var $orderData \app\modules\dashboard\models\Product (mixed witch model Cart) */
 
 use yii\helpers\Url;
-
+use app\modules\dashboard\models\Cart;
 ?>
 
 <div id="content">
@@ -42,6 +42,12 @@ use yii\helpers\Url;
             <?php endforeach; ?>
             </tbody>
         </table>
+        <hr>
+        <div class="row">
+            <div class="span12">
+                <p class="pull-right" style="color: yellow">Всего на сумму: <span id="total"><?php echo Cart::getTotalPrice($orderData)?></span></p>
+            </div>
+        </div>
     <?php else: ?>
         <p> Корзина пуста </p>
     <?php endif; ?>
@@ -80,7 +86,12 @@ use yii\helpers\Url;
                 count = count - 1;
                 $("#"+id).val(count);
                 var newPrice = count * price;
-                $("#price-id-"+ id).html(newPrice.toFixed(2) + ' грн.');
+                $("#price-id-"+ id).html(newPrice + ' грн.');
+
+                var oldTotal = parseInt($("#total").html());
+                var newTotal = parseInt(oldTotal - price);
+                $("#total").html(newTotal + ' грн.');
+
                 $('.minus').css({'background':0,'color':'white'});
                 return false;
             }
@@ -92,7 +103,12 @@ use yii\helpers\Url;
             var price = $('[data-prices="'+ id +'"]').attr('data-price').valueOf();
             var count = parseInt($("#"+id).val()) + 1;
             $("#"+id).val(count);
-            $("#price-id-"+ id).html((count * price).toFixed(2) + ' грн.');
+            $("#price-id-"+ id).html((count * price) + ' грн.');
+
+            var oldTotal = parseInt($("#total").html());
+            var newTotal = Number(oldTotal) + Number(price);
+            $("#total").html(newTotal + ' грн.');
+
             $('.plus').css({'background':0,'color':'white'});
             return false;
         });
