@@ -13,9 +13,18 @@ use yii\helpers\ArrayHelper;
  * @property string $order_id
  * @property string $product_info
  * @property string $customer_name
+ * @property string $customer_l_name
+ * @property string $customer_o_name
+ * @property string $product_code
+ * @property string $address
  * @property string $customer_phone
  * @property string $customer_email
  * @property int $status
+ * @property int $product_id
+ * @property int $count
+ * @property int $delivery
+ * @property int $prices
+ * @property int $total_price
  * @property string $session_id
  * @property int $finished
  * @property string $create_at
@@ -27,6 +36,11 @@ class Cart extends \yii\db\ActiveRecord
     const STATUS_START          = 1;
     const STATUS_UN_COMPLETED   = 2;
     const STATUS_COMPLETED      = 3;
+    const STATUS_ORDERED        = 4;
+
+    const DELIVERY_SELF         = 1;
+    const DELIVERY_HOME         = 2;
+    const DELIVERY_POST         = 3;
 
     /**
      * {@inheritdoc}
@@ -45,6 +59,12 @@ class Cart extends \yii\db\ActiveRecord
             [['status', 'finished'], 'integer'],
             [['create_at', 'update_at', 'product_info'], 'safe'],
             [['order_id', 'customer_name', 'customer_phone', 'customer_email', 'session_id'], 'string', 'max' => 255],
+
+            [['customer_l_name'], 'string'],
+            [['customer_o_name', 'address', 'delivery', 'product_code'], 'string'],
+            [['product_id','count','delivery', 'prices', 'total_price'], 'integer'],
+
+            [['customer_name', 'customer_phone', 'customer_l_name'],'required', 'message' => '{attribute} не может быть пустым'],
         ];
     }
 
@@ -57,14 +77,26 @@ class Cart extends \yii\db\ActiveRecord
             'id' => 'ID',
             'order_id' => 'Order ID',
             'product_info' => 'Product Info',
-            'customer_name' => 'Customer Name',
-            'customer_phone' => 'Customer Phone',
+            'customer_name' => '* Имя',
+            'customer_o_name' => 'Отчество',
+            'customer_l_name' => '* Фамилия',
+            'delivery' => 'Способ доставки',
+            'address' => 'Адрес',
+            'customer_phone' => '* Телефон',
             'customer_email' => 'Customer Email',
             'status' => 'Status',
             'session_id' => 'Session ID',
             'finished' => 'Finished',
             'create_at' => 'Create At',
             'update_at' => 'Update At',
+        ];
+    }
+
+    public static function getDeliveryList() {
+        return [
+            self::DELIVERY_SELF => 'Самовывоз',
+            self::DELIVERY_HOME => 'Доставка по Харькову',
+            self::DELIVERY_POST => 'Новая Почта',
         ];
     }
 
@@ -107,6 +139,9 @@ class Cart extends \yii\db\ActiveRecord
     }
 
     private function updateOrder($order,$dataProduct,$count) {
+        $order->customer_name = 'null';
+        $order->customer_phone = 'null';
+        $order->customer_l_name = 'null';
         $order->product_info = $this->equalOrderInfo($order->product_info,$dataProduct,$count);
         $order->update();
         return $order->session_id;
@@ -279,6 +314,54 @@ class Cart extends \yii\db\ActiveRecord
         }
 //        dd($prices);
         return array_sum($prices) . ' грн.';
+    }
+
+    private function setJsonData($post, $field=false) {
+        $product_id     = $post['product_id'];
+        $product_code   = $post['product_code'];
+        $count          = $post['count'];
+        $prices         = $post['prices'];
+        $result = [];
+
+        if ($field) {
+            foreach ($product_id as $item) {
+                if (isset($product_code[$item]) && isset($count[$item]) && isset($prices[$item])) {
+                    $result[] = [
+                        "product_id"    => $item,
+                        "product_price" => $count[$item],
+                        "product_count" => $prices[$item],
+                    ];
+                }
+            }
+        } else {
+            foreach ($product_id as $value) {
+                if (isset($product_code[$value])) {
+                    $result[$value] = $product_code[$value];
+                }
+            }
+        }
+        return Json::encode($result);
+    }
+
+    public static function saveNewOrder($post) {
+        if (!empty($post)){
+//            dd($post);
+            $sessionId = Yii::$app->session->get('order_id');
+            $order = self::getOrderBySessionId($sessionId);
+            $order->customer_name = $post['Cart']['customer_name'];
+            $order->customer_l_name = $post['Cart']['customer_l_name'];
+            $order->customer_o_name = $post['Cart']['customer_o_name'];
+            $order->customer_phone = $post['Cart']['customer_phone'];
+            $order->delivery = $post['Cart']['delivery'];
+            $order->address = $post['Cart']['address'];
+            $order->total_price = $post['total_price'];
+//            $order->product_code = self::setJsonData($post);
+            $order->status = self::STATUS_ORDERED;
+            $order->order_id = '#'.time();
+            $order->product_info = self::setJsonData($post,'info');
+            $order->update(false);
+            return $order->order_id;
+        }
     }
 
 }

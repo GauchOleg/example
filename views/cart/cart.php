@@ -1,14 +1,21 @@
 <?php
 /* @var $orderData \app\modules\dashboard\models\Product (mixed witch model Cart) */
+/* @var $model \app\modules\dashboard\models\Product (mixed witch model Cart) */
 
 use yii\helpers\Url;
 use app\modules\dashboard\models\Cart;
+use yii\helpers\Html;
 ?>
 
 <div id="content">
     <?php if (!empty($orderData)): ?>
+        <?php $form = \yii\widgets\ActiveForm::begin([
+            'id' => 'order-form',
+            'enableClientValidation' => true,
+            'action' => 'cart/save'
+        ])?>
         <p class="in-cart"> В корзине: </p>
-        <table class="table">
+        <table class="table" id="cart-table">
             <thead>
             <tr>
                 <th>#</th>
@@ -38,6 +45,10 @@ use app\modules\dashboard\models\Cart;
                     </td>
                     <td data-prices="<?php echo $item['id']?>" data-price="<?php echo $item['price']?>" id="price-id-<?php echo $item['id']?>"><?php echo $item['price'] * $item['count'] ?> грн.</td>
                     <td><span class="btn btn-cart" data-product="<?php echo $item['id']?>">Удалить</span></td>
+                    <?php echo Html::hiddenInput('product_id['. $item['id'].']',$item['id']) ?>
+                    <?php echo Html::hiddenInput('product_code['. $item['id'].']',$item['code']) ?>
+                    <?php echo Html::hiddenInput('count['. $item['id'].']',$item['count']) ?>
+                    <?php echo Html::hiddenInput('prices['. $item['id'].']',$item['price']) ?>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -46,40 +57,53 @@ use app\modules\dashboard\models\Cart;
         <div class="row">
             <div class="span12">
                 <p class="pull-right" style="color: yellow">Всего на сумму: <span id="total"><?php echo Cart::getTotalPrice($orderData)?></span></p>
+                <?php echo Html::hiddenInput('total_price',Cart::getTotalPrice($orderData),['id' => 'model-total']) ?>
             </div>
-            <p><span class="pull-right btn btn-cart-order" data-product="<?php echo $item['id']?>">Оформить заказ</span></p>
         </div>
+        <div class="row">
+            <div class="span4">
+                <?php echo $form->field($model,'customer_l_name')->input('text')?>
+                <?php echo $form->field($model,'customer_name')->input('text')?>
+                <?php echo $form->field($model,'customer_o_name')->input('text')?>
+            </div>
+            <div class="span4">
+                <?php echo $form->field($model,'customer_phone')->input('text')?>
+                <?php echo $form->field($model,'delivery')->dropDownList(Cart::getDeliveryList(),['prompt' => '-- Выбрать --'])?>
+                <?php echo $form->field($model,'address')->input('text')?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <?php echo Html::submitButton('Отправить',['class' => 'pull-right btn btn-cart-order'])?>
+            </div>
+        </div>
+<!--        <p><button type="submit" class="pull-right btn btn-cart-order">Оформить заказ</button></p>-->
+        <?php \yii\widgets\ActiveForm::end()?>
     <?php else: ?>
         <p> Корзина пуста </p>
+
     <?php endif; ?>
 </div>
 
-<!-- Modal -->
-<div id="cartModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel" class="center">Оформляем заказ</h3>
-    </div>
-    <div class="modal-body">
-        <p>Товар: </p>
-        <table class="table">
-            <th>№</th>
-            <th>Название</th>
-            <th>Кол-во</th>
-            <th>Цена</th>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-cart-submit">Отправить заказ</button>
-    </div>
-</div>
 
 <script>
     $(document).ready(function () {
 
-        $('.btn-cart-order').on('click', function(){
-            $('#cartModal').modal('show')
+        $('.btn-cart-order').on('click', function () {
+            $(this).css({'background':'black'});
         });
+
+        $(".field-cart-address").css({'display':'none'});
+
+        $('#cart-delivery').on('change',function () {
+            var selectVal = $(this).val();
+            if (selectVal != 1) {
+                $(".field-cart-address").css({'display':''});
+            } else {
+                $(".field-cart-address").css({'display':'none'});
+            }
+        });
+
 
         $('.btn-cart').on('click', function(){
             var productId = $(this).data('product');
@@ -117,6 +141,8 @@ use app\modules\dashboard\models\Cart;
                 var oldTotal = parseInt($("#total").html());
                 var newTotal = parseInt(oldTotal - price);
                 $("#total").html(newTotal + ' грн.');
+                $("#model-total").val(newTotal);
+                $($.find('input[name="count['+ id +']"]')).val(count);
 
                 $('.minus').css({'background':0,'color':'white'});
                 return false;
@@ -134,6 +160,8 @@ use app\modules\dashboard\models\Cart;
             var oldTotal = parseInt($("#total").html());
             var newTotal = Number(oldTotal) + Number(price);
             $("#total").html(newTotal + ' грн.');
+            $("#model-total").val(newTotal);
+            $($.find('input[name="count['+ id +']"]')).val(count);
 
             $('.plus').css({'background':0,'color':'white'});
             return false;
