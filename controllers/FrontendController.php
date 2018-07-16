@@ -13,6 +13,8 @@ class FrontendController extends \yii\web\Controller
             $cart = new Cart();
             $count = $cart->getCountProductInBasked($sessionId);
             $this->view->params['in_cart'] = $count;
+        } else {
+            $this->view->params['in_cart'] = null;
         }
         return parent::beforeAction($action);
     }

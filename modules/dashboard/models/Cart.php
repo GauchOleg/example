@@ -185,7 +185,7 @@ class Cart extends \yii\db\ActiveRecord
         $order = $this->getOrderBySessionId($sessionId);
         if ($order) {
             $productInfo = Json::decode($order->product_info);
-            if (is_array($productInfo[0])) {
+            if (isset($productInfo[0])) {
                 return count($productInfo);
             } else {
                 return 1;
@@ -201,7 +201,7 @@ class Cart extends \yii\db\ActiveRecord
         $allProduct = [];
         if (!is_null($order) && $order) {
             $orderInfo = Json::decode($order->product_info);
-            if (is_array($orderInfo[0])) {
+            if (isset($orderInfo[0])) {
                 foreach ($orderInfo as $item) {
                     if ($item['product_id']) {
                         $product = Product::find()->where(['id' => $item['product_id']])->asArray()->one();
@@ -231,7 +231,7 @@ class Cart extends \yii\db\ActiveRecord
                         'price' => number_format($product['price'],2),
                         'count' => $orderInfo['product_count'],
                         'name'  => $product['name'],
-                        'img'   => ProductImg::getImgByProductIdForBasket($product['id'])
+                        'img'   => ProductImg::getImg($product['id'],false,false,'cart')
 
                     ];
                 }
@@ -249,7 +249,7 @@ class Cart extends \yii\db\ActiveRecord
         if (isset($orderId) && !empty($orderId)) {
             $order = self::getOrderBySessionId($orderId);
             $orderInfo = Json::decode($order->product_info);
-            if (count($orderInfo) != 1 && is_array($orderInfo[0])) {
+            if (count($orderInfo) != 1 && isset($orderInfo[0])) {
                 foreach ($orderInfo as $item) {
                     if ($item['product_id'] == $post['productId']) {
                         continue;
