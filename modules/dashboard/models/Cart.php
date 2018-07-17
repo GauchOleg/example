@@ -263,7 +263,7 @@ class Cart extends \yii\db\ActiveRecord
                         'id'    => $product['id'],
                         'code'  => $product['code'],
                         'alias' => $product['alias'],
-                        'price' => number_format($product['price'],2),
+                        'price' => $product['price'],
                         'count' => $orderInfo['product_count'],
                         'name'  => $product['name'],
                         'img'   => ProductImg::getImg($product['id'],false,false,'cart')
@@ -359,8 +359,14 @@ class Cart extends \yii\db\ActiveRecord
             $order->status = self::STATUS_ORDERED;
             $order->order_id = '#'.time();
             $order->product_info = self::setJsonData($post,'info');
-            $order->update(false);
-            return $order->order_id;
+            if ($order->update(false)) {
+                Yii::$app->session->remove('order_id');
+                return $order->order_id;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 

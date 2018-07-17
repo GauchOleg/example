@@ -262,18 +262,27 @@ class Product extends \yii\db\ActiveRecord
         return explode(',',$this->checkboxes);
     }
 
-    public static function getAllProductByCategoryId($category_id) {
-        return Product::find()->where(['category_id' => $category_id])->limit(9)->all();
+    public static function getAllProductByCategoryId($category_id,$pagination) {
+        if ($pagination) {
+            return Product::find()->where(['category_id' => $category_id]);
+        } else {
+            return Product::find()->where(['category_id' => $category_id])->limit(9)->all();
+        }
+
     }
 
-    public static function getAllProductByCheckboxId($checked,$category_id) {
+    public static function getAllProductByCheckboxId($checked,$category_id,$pagination = false) {
 
         if (empty($checked)) {
-            return self::getAllProductByCategoryId($category_id);
+            return self::getAllProductByCategoryId($category_id,$pagination);
         } else {
             $allProducts = self::find()->where(['category_id' => $category_id])->asArray()->all();
             $ids = self::getProductIdByCheckboxes($allProducts,$checked);
-            return self::find()->where(['in','id', $ids])->all();
+            if ($pagination) {
+                return self::find()->where(['in','id', $ids]);
+            } else {
+                return self::find()->where(['in','id', $ids])->all();
+            }
         }
     }
 

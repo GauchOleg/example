@@ -12,7 +12,7 @@ use yii\helpers\Html;
         <?php $form = \yii\widgets\ActiveForm::begin([
             'id' => 'order-form',
             'enableClientValidation' => true,
-            'action' => 'cart/save'
+            'action' => 'cart/order'
         ])?>
         <p class="in-cart"> В корзине: </p>
         <table class="table" id="cart-table">
@@ -80,7 +80,7 @@ use yii\helpers\Html;
 <!--        <p><button type="submit" class="pull-right btn btn-cart-order">Оформить заказ</button></p>-->
         <?php \yii\widgets\ActiveForm::end()?>
     <?php else: ?>
-        <p> Корзина пуста </p>
+        <p class="center" style="padding-top: 100px; color: #ffcf00"> Корзина пуста </p>
 
     <?php endif; ?>
 </div>

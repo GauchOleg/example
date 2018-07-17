@@ -12,6 +12,11 @@ class m180712_122557_create_table_cart extends Migration
      */
     public function up()
     {
+        $tableOptions = null;
+        if ('mysql' === $this->db->driverName) {
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
+
         $this->createTable('{{%cart}}',[
             'id'                => $this->primaryKey(),
             'order_id'          => $this->string(255),
@@ -24,7 +29,7 @@ class m180712_122557_create_table_cart extends Migration
             'finished'          => $this->boolean(),
             'create_at'         => $this->dateTime(),
             'update_at'         => $this->dateTime(),
-        ]);
+        ],$tableOptions);
     }
 
     public function down()

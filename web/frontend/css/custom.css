@@ -321,3 +321,17 @@
     color: red;
 }
 
+.custom-pagination {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.pagination ul > li > a{
+    background: 0;
+    color: white;
+}
+
+.pagination ul > li > a:hover{
+    background: 0;
+    color: #ffce1a;
+}

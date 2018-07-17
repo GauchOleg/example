@@ -47,7 +47,7 @@ class CartController extends FrontendController
         ]);
     }
     
-    public function actionSave() {
+    public function actionOrder() {
 
         if (!Yii::$app->request->isPost) {
             throw new BadRequestHttpException('Ой, как вы тут оказались? Вернитесь и оформите заказ', 400);
@@ -55,17 +55,13 @@ class CartController extends FrontendController
         
         $post = Yii::$app->request->post();
         $result = Cart::saveNewOrder($post);
+        if ($result) {
+            return $this->redirect('thank-you');
+        }
+    }
 
-
-//        dd(Yii::$app->request->post());
-
-//        $sessionId = Yii::$app->session->get('order_id');
-//        $cart = new Cart();
-//        $orderData = $cart->getOrderDataBySessionId($sessionId);
-//        return $this->renderPartial('order',[
-//            'orderData' => $orderData,
-//            'model'     => $cart,
-//        ]);
+    public function actionThankYou() {
+        return $this->render('thank-you');
     }
 
 }

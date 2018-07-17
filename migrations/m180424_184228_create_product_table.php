@@ -12,6 +12,11 @@ class m180424_184228_create_product_table extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ('mysql' === $this->db->driverName) {
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
+
         $this->createTable('{{%product}}', [
             'id' => $this->primaryKey(),
             'category_id' => $this->integer()->defaultValue(0),
@@ -27,7 +32,7 @@ class m180424_184228_create_product_table extends Migration
             'sale' => $this->boolean()->defaultValue(false),
             'create_at' => $this->dateTime(),
             'update_at' => $this->dateTime(),
-        ]);
+        ],$tableOptions);
 
         $this->createIndex('idx_cat_id','{{%product}}','category_id');
         $this->addForeignKey('fk_cat_id','{{%product}}','category_id','{{%category}}','id');

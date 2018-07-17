@@ -10,6 +10,9 @@ use app\modules\dashboard\models\ProductImg;
 use app\modules\dashboard\models\Checkbox;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\LinkPager;
+use yii\grid\GridView;
+
 
 if (isset($category) && !empty($category)) {
     $this->title = $category->name;
@@ -83,7 +86,7 @@ if (isset($category) && !empty($category)) {
                             <h3><?php echo $product->name?></h3>
                             <p><?php echo $product->small_text; ?></p>
                             <span class="price"><?php echo Product::getPrice($product)?></span>
-                            <p><a href="<?php echo Url::to(['product/view','alias' => $product->alias])?>" class="btn did btn-outline">Просмотр</a> <a href="#" class="btn btn-outline did cart">В корзину</a></p>
+                            <p><a href="<?php echo Url::to(['product/view','alias' => $product->alias])?>" class="btn did btn-outline">Просмотр</a> <a href="#" class="btn btn-outline did cart" data-id="<?php echo $product->id?>">В корзину</a></p>
                         </div>
                     </div>
                 </div>
@@ -119,8 +122,25 @@ if (isset($category) && !empty($category)) {
                     return openerElement.is('img') ? openerElement : openerElement.find('img');
                 }
             }
-        })
+        });
 
+        $(".cart").on('click', function () {
+            var count = 1;
+            var id = $(this).data('id');
+            $.ajax({
+                url: "/cart/add-to-cart",
+                data: {'id' : id,'count': count,'_csrf' : yii.getCsrfToken()},
+                type: "POST",
+                success: function(res){
+                    var icon = "<span class='badge badge-success count-products'><span id='in-cart'>"+ res +"</span></span>";
+                    $('#cart-button').before(icon);
+                },
+                error: function(){
+
+                }
+            });
+            return false;
+        });
 
         $('.checked').on('click', function(){
             var id = $(this).val();
