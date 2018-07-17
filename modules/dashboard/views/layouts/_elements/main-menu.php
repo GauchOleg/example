@@ -43,6 +43,14 @@
                     ],
                 ],
                 [
+                    'label' => '<i class="fa fa-cart-plus"></i> <span class="title"> ' . Yii::t('app', 'Заказы') . '</span>',
+                    'url' => ['/dashboard/cart/index'],
+                    'active' => $module == 'dashboard' && $controller == 'cart',
+                    'options' => [
+                        'class' => 'start'
+                    ],
+                ],
+                [
                     'label' => '<i class="fa fa-list-ul"></i> <span class="title"> ' . Yii::t('app', 'Категории') . '</span>',
                     'url' => ['/dashboard/category/index'],
                     'active' => $module == 'dashboard' && $controller == 'category',

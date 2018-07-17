@@ -75,7 +75,7 @@ class Cart extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'order_id' => 'Order ID',
+            'order_id' => 'ID',
             'product_info' => 'Product Info',
             'customer_name' => '* Имя',
             'customer_o_name' => 'Отчество',
@@ -84,11 +84,12 @@ class Cart extends \yii\db\ActiveRecord
             'address' => 'Адрес',
             'customer_phone' => '* Телефон',
             'customer_email' => 'Customer Email',
-            'status' => 'Status',
+            'status' => 'Статус',
             'session_id' => 'Session ID',
-            'finished' => 'Finished',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
+            'finished' => 'Завершен',
+            'create_at' => 'Добавлено в карзину',
+            'update_at' => 'Заказан',
+            'total_price' => 'Общая сумма'
         ];
     }
 
@@ -98,6 +99,22 @@ class Cart extends \yii\db\ActiveRecord
             self::DELIVERY_HOME => 'Доставка по Харькову',
             self::DELIVERY_POST => 'Новая Почта',
         ];
+    }
+
+    public function getDelivery() {
+        if (isset($this->delivery) && !is_null($this->delivery)) {
+            return self::getDeliveryList()[$this->delivery];
+        } else {
+            return 'Уточнить';
+        }
+    }
+
+    public function getStatus() {
+        if (isset($this->status) && !is_null($this->status)) {
+            return self::getOrderStatusList()[$this->status];
+        } else {
+            return 'Без статуса';
+        }
     }
 
     public function beforeSave($insert)
