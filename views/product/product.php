@@ -113,14 +113,26 @@ if (isset($product) && !empty($product)) {
                 data: {'id' : product_id,'count': count,'_csrf' : yii.getCsrfToken()},
                 type: "POST",
                 success: function(res){
-                    var icon = "<span class='badge badge-success count-products'><span id='in-cart'>"+ res +"</span></span>";
-                    $('#cart-button').before(icon);
+                    if (res) {
+                        var icon = "<span class='badge badge-success count-products'><span id='in-cart'>"+ res +"</span></span>";
+                        $('#cart-button').before(icon);
+//                        console.log(123);
+                        $('#cart-img').addClass( "wibro" );
+                        setTimeout(deleteClass,500);
+                    }
+
+//                    $('#cart-img').addClass( "wibro" );
+//                    setTimeout('deleteClass',2000);
                 },
                 error: function(){
 
                 }
             });
         });
+
+        function deleteClass(){
+            $('#cart-img').removeClass( "wibro" );
+        }
 
         $('.tab-title').on('click', function(){
             $('.tab-title').removeClass('activate');

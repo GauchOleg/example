@@ -365,4 +365,18 @@ class Product extends \yii\db\ActiveRecord
     public static function getProductById($productId) {
         return self::find()->where(['id' => $productId])->asArray()->one();
     }
+
+    public function getParams($checked,$category) {
+        $params ['ProductSearch'] = [
+            'alias' => Yii::$app->session->get('alias'),
+            'id' => self::getAllProductByCheckboxId($checked, $category->id,true),
+        ];
+//        array_push($params,Yii::$app->session->get('alias'));
+        return $params;
+    }
+
+    public static function addActiveClass() {
+        
+//        return self::addActiveClass();
+    }
 }

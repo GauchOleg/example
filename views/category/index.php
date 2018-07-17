@@ -14,6 +14,8 @@
                 'checked'       => $checked,
                 'allProduct'    => $allProduct,
                 'allCategory'   => $allCategory,
+                'pages' => $pages,
+                'query' => $query,
             ]);?>
         </div>
     </div>

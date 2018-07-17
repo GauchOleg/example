@@ -29,7 +29,7 @@ $in_cart = $this->params['in_cart'];
                     <?php if (isset($in_cart) && !empty($in_cart)) :?>
                         <span class="badge badge-success count-products"><span id="in-cart"><?php echo $in_cart?></span></span>
                     <?php endif;?>
-                    <li id="cart-button"><a data-id="cart" href="#cart"><img src="/default/img/cart.png" width="30" height="30" alt="Корзина" /></a></li>
+                    <li id="cart-button"><a data-id="cart" href="#cart"><img src="/default/img/cart.png" width="30" height="30" alt="Корзина" id="cart-img" class=""/></a></li>
 
 <!--                    <li><i class="icon-shopping-cart"></i><a href="#">Корзина</a></li>-->
                 </ul>

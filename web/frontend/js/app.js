@@ -297,13 +297,16 @@ $("#send-mail").click(function () {
     /************************
     Animate elements
     *************************/
-    
-    //Animate thumbnails 
+
+    //Animate thumbnails
     jQuery('.thumbnail').one('inview', function (event, visible) {
-        if (visible == true) {
-            jQuery(this).addClass("animated fadeInDown");
-        } else {
-            jQuery(this).removeClass("animated fadeInDown");
+        if (!(location.href).indexOf('category')) {
+            if (visible == true) {
+                jQuery(this).addClass("animated fadeInDown");
+            } else {
+                jQuery(this).removeClass("animated fadeInDown");
+            }
+
         }
     });
 

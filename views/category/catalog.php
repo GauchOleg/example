@@ -11,7 +11,6 @@ use app\modules\dashboard\models\Checkbox;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
-use yii\grid\GridView;
 
 
 if (isset($category) && !empty($category)) {
@@ -83,8 +82,8 @@ if (isset($category) && !empty($category)) {
                         </a>
 
                         <div class="caption cart-product-title">
-                            <h3><?php echo $product->name?></h3>
-                            <p><?php echo $product->small_text; ?></p>
+                            <h3><?php echo Html::a($product->name,['product/view','alias' => $product->alias])?></h3>
+                            <p><?php echo Html::a($product->small_text,['product/view','alias' => $product->alias]) ?></p>
                             <span class="price"><?php echo Product::getPrice($product)?></span>
                             <p><a href="<?php echo Url::to(['product/view','alias' => $product->alias])?>" class="btn did btn-outline">Просмотр</a> <a href="#" class="btn btn-outline did cart" data-id="<?php echo $product->id?>">В корзину</a></p>
                         </div>
@@ -98,11 +97,21 @@ if (isset($category) && !empty($category)) {
             <?php endif;?>
         </div>
     </div>
+
+    <div class="custom-pagination">
+        <?php
+        echo LinkPager::widget([
+            'pagination' => $pages,
+            'activePageCssClass' => 'active-page',
+//    'dataProvider' => $query,
+        ]);
+        ?>
+    </div>
+
 </div>
 
 <script>
     $(document).ready(function () {
-
         $('.product-img').magnificPopup({
             type: 'image',
             mainClass: 'mfp-with-zoom', // this class is for CSS animation below
@@ -134,6 +143,8 @@ if (isset($category) && !empty($category)) {
                 success: function(res){
                     var icon = "<span class='badge badge-success count-products'><span id='in-cart'>"+ res +"</span></span>";
                     $('#cart-button').before(icon);
+                    $('#cart-img').addClass( "wibro" );
+                    setTimeout(deleteClass,500);
                 },
                 error: function(){
 
@@ -141,6 +152,10 @@ if (isset($category) && !empty($category)) {
             });
             return false;
         });
+
+        function deleteClass(){
+            $('#cart-img').removeClass( "wibro" );
+        }
 
         $('.checked').on('click', function(){
             var id = $(this).val();

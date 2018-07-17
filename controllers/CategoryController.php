@@ -5,14 +5,15 @@ namespace app\controllers;
 use app\modules\dashboard\models\Category;
 use app\modules\dashboard\models\Checkbox;
 use app\modules\dashboard\models\Product;
-use Yii;
-use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
-use yii\helpers\Json;
+use yii\data\Pagination;
+use Yii;
 
 class CategoryController extends FrontendController
 {
+    const PER_PAGE = 9;
+
     public function actionIndex($id) {
         if ($id != Yii::$app->session->get('alias')) {
             Yii::$app->session->remove('alias');
@@ -26,7 +27,12 @@ class CategoryController extends FrontendController
         }
 
         $allCheckboxes = Checkbox::getAllCheckboxByCatId($category->id);
-        $allProduct = Product::getAllProductByCheckboxId($checked, $category->id);
+        $query = Product::getAllProductByCheckboxId($checked, $category->id,true);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize' => self::PER_PAGE, 'pageSizeParam' => false, 'forcePageParam' => false]);
+        $allProduct = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
         $allCategory = Category::find()->all();
 
         return $this->render('index',
@@ -36,11 +42,9 @@ class CategoryController extends FrontendController
                 'allCheckboxes' => $allCheckboxes,
                 'checked'       => $checked,
                 'allCategory'   => $allCategory,
+                'pages' => $pages,
+                'query' => $query,
             ]);
-    }
-
-    public function actionView($alias) {
-
     }
 
     public function actionSortCategory() {
@@ -62,9 +66,15 @@ class CategoryController extends FrontendController
         Yii::$app->session->set('id',$checked);
 
         $category = Category::getCategoryByAlias($alias);
-        $allProduct = Product::getAllProductByCheckboxId($checked, $category->id);
+        $query = Product::getAllProductByCheckboxId($checked, $category->id,true);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize' => self::PER_PAGE, 'pageSizeParam' => false, 'forcePageParam' => false]);
+
         $allCheckboxes = Checkbox::getAllCheckboxByCatId($category->id);
         $allCategory = Category::find()->all();
+        $allProduct = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
 
         return $this->renderPartial('catalog',
             [
@@ -73,6 +83,8 @@ class CategoryController extends FrontendController
                 'allCheckboxes' => $allCheckboxes,
                 'checked'       => $checked,
                 'allCategory'   => $allCategory,
+                'pages' => $pages,
+                'query' => $query,
             ]);
     }
 

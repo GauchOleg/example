@@ -7,7 +7,7 @@
     background: white;
 }
 .product-cart:hover {
-    border-bottom: solid 3px #000;
+    border: solid 2px #6bbde6;
 }
 
 .cart-product-title {
@@ -26,6 +26,20 @@
     margin-top: 20px;
     font-size: 15px;
 }
+
+.cart-product-title p > a:hover {
+    margin: 0;
+    margin-bottom: 20px;
+    color: #000;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.cart-product-title h3 > a{
+    color: #fece1a;
+    line-height: 20px;
+}
+
 .btn-did:hover{
     color: #fff !important;
     background-color: #c34d4a !important;
@@ -68,6 +82,10 @@
     background-color: green;
     color: #fff !important;
     width: 30%;
+}
+
+.btn.btn-outline:hover {
+    margin: 0;
 }
 .checkbox-menu {
     color: white;
@@ -324,14 +342,96 @@
 .custom-pagination {
     padding-top: 20px;
     padding-bottom: 20px;
+    text-align: center;
 }
 
-.pagination ul > li > a{
+.pagination {
+    list-style: none;
+}
+
+.pagination li {
+    border: 1px solid;
+    display: inline;
+    padding: 5px;
+}
+
+.pagination li > a{
     background: 0;
     color: white;
 }
 
-.pagination ul > li > a:hover{
+.pagination li > a:hover{
     background: 0;
     color: #ffce1a;
+}
+
+.active-page {
+    color: #ffce1a;
+}
+
+.wibro {
+    -webkit-animation: 0.1s tremor ease-out infinite;
+    animation: 0.1s tremor ease-out infinite;
+}
+@-webkit-keyframes tremor {
+    0%, 25% {
+        left: -1px;
+        top:-1px;
+        -webkit-transform: translateX(-4%);
+        transform: translateX(-4%);
+    }
+    50%, 100% {
+        left: 1px;
+        top: 1px;
+        -webkit-transform: translateX(4%);
+        transform: translateX(4%);
+    }
+}
+@-moz-keyframes tremor {
+    0%, 25% {
+        left: -1px;
+        -webkit-transform: translateX(-4%);
+        transform: translateX(-4%);
+    }
+    50%, 100% {
+        left: 1px;
+        -webkit-transform: translateX(4%);
+        transform: translateX(4%);
+    }
+}
+@-ms-keyframes tremor {
+    0%, 25% {
+        left: -1px;
+        -webkit-transform: translateX(-4%);
+        transform: translateX(-4%);
+    }
+    50%, 100% {
+        left: 1px;
+        -webkit-transform: translateX(4%);
+        transform: translateX(4%);
+    }
+}
+@-o-keyframes tremor {
+    0%, 25% {
+        left: -1px;
+        -webkit-transform: translateX(-4%);
+        transform: translateX(-4%);
+    }
+    50%, 100% {
+        left: 1px;
+        -webkit-transform: translateX(4%);
+        transform: translateX(4%);
+    }
+}
+@keyframes tremor {
+    0%, 25% {
+        left: -1px;
+        -webkit-transform: translateX(-4%);
+        transform: translateX(-4%);
+    }
+    50%, 100% {
+        left: 1px;
+        -webkit-transform: translateX(4%);
+        transform: translateX(4%);
+    }
 }
