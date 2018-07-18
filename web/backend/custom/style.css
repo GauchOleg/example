@@ -88,3 +88,79 @@ body {
 .grid-staff-members {
     border-bottom: none !important;
 }
+
+.order-status {
+    cursor: pointer;
+}
+
+.checkbox-status {
+    list-style: none;
+    padding: 0;
+}
+.popover-content {
+    padding: 10px 33px;
+}
+
+.checkbox-status li > input {
+    margin-right: 6px;
+}
+
+.status-ordered {
+    background: #00bfff; width: 100%;
+}
+
+.status-ordered:hover {
+    background: #00bfff; width: 100%;
+}
+
+.status-ordered:focus {
+    background: #00bfff; width: 100%;
+}
+
+.status-completed {
+    background: #77d280; width: 100%;
+}
+
+.status-completed:hover {
+    background: #77d280; width: 100%;
+}
+
+.status-completed:focus {
+    background: #77d280; width: 100%;
+}
+
+.status-in-completed {
+    background: #c5c3ff; width: 100%;
+}
+
+.status-in-completed:hover {
+    background: #c5c3ff; width: 100%;
+}
+
+.status-in-completed:focus {
+    background: #c5c3ff; width: 100%;
+}
+
+.status-refuse {
+    background: #f2645b; width: 100%;
+}
+
+.status-refuse:hover {
+    background: #f2645b; width: 100%;
+}
+
+.status-refuse:focus {
+    background: #f2645b; width: 100%;
+}
+
+.status-pending {
+    background: #efc620; width: 100%;
+}
+
+.status-pending:hover {
+    background: #efc620; width: 100%;
+}
+
+.status-pending:focus {
+    background: #efc620; width: 100%;
+}

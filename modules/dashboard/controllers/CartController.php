@@ -5,6 +5,7 @@ namespace app\modules\dashboard\controllers;
 use Yii;
 use app\modules\dashboard\models\Cart;
 use app\modules\dashboard\searchModels\Cart as CartSearch;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -36,6 +37,8 @@ class CartController extends Controller
     public function actionIndex()
     {
         $searchModel = new CartSearch();
+        $params = Yii::$app->request->queryParams;
+//        dd($params);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -123,5 +126,12 @@ class CartController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    public function actionUpdateStatus() {
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+        return Cart::updateOrderStatus(Yii::$app->request->post());
     }
 }

@@ -3,6 +3,7 @@
 namespace app\modules\dashboard\models;
 
 use Yii;
+use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
 
@@ -29,14 +30,17 @@ use yii\helpers\ArrayHelper;
  * @property int $finished
  * @property string $create_at
  * @property string $update_at
+ * @property string $date_ordered
  */
 class Cart extends \yii\db\ActiveRecord
 {
 
-    const STATUS_START          = 1;
-    const STATUS_UN_COMPLETED   = 2;
-    const STATUS_COMPLETED      = 3;
-    const STATUS_ORDERED        = 4;
+
+    const STATUS_ORDERED        = 1;
+    const STATUS_PENDING        = 2;
+    const STATUS_REFUSE         = 3;
+    const STATUS_IN_PROCESSING  = 4;
+    const STATUS_COMPLETED      = 5;
 
     const DELIVERY_SELF         = 1;
     const DELIVERY_HOME         = 2;
@@ -57,7 +61,7 @@ class Cart extends \yii\db\ActiveRecord
     {
         return [
             [['status', 'finished'], 'integer'],
-            [['create_at', 'update_at', 'product_info'], 'safe'],
+            [['create_at', 'update_at', 'product_info', 'date_ordered'], 'safe'],
             [['order_id', 'customer_name', 'customer_phone', 'customer_email', 'session_id'], 'string', 'max' => 255],
 
             [['customer_l_name'], 'string'],
@@ -74,22 +78,23 @@ class Cart extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'order_id' => 'ID',
-            'product_info' => 'Product Info',
-            'customer_name' => '* Имя',
-            'customer_o_name' => 'Отчество',
-            'customer_l_name' => '* Фамилия',
-            'delivery' => 'Способ доставки',
-            'address' => 'Адрес',
-            'customer_phone' => '* Телефон',
-            'customer_email' => 'Customer Email',
-            'status' => 'Статус',
-            'session_id' => 'Session ID',
-            'finished' => 'Завершен',
-            'create_at' => 'Добавлено в карзину',
-            'update_at' => 'Заказан',
-            'total_price' => 'Общая сумма'
+            'id'                => 'ID',
+            'order_id'          => '№',
+            'product_info'      => 'Product Info',
+            'customer_name'     => '* Имя',
+            'customer_o_name'   => 'Отчество',
+            'customer_l_name'   => '* Фамилия',
+            'delivery'          => 'Способ доставки',
+            'address'           => 'Адрес',
+            'customer_phone'    => '* Телефон',
+            'customer_email'    => 'Customer Email',
+            'status'            => 'Статус',
+            'session_id'        => 'Session ID',
+            'finished'          => 'Завершен',
+            'create_at'         => 'Добавлено в карзину',
+            'update_at'         => 'Заказан',
+            'total_price'       => 'Общая сумма',
+            'date_ordered'      => 'Дата заказа',
         ];
     }
 
@@ -109,11 +114,83 @@ class Cart extends \yii\db\ActiveRecord
         }
     }
 
-    public function getStatus() {
-        if (isset($this->status) && !is_null($this->status)) {
-            return self::getOrderStatusList()[$this->status];
+    public function checkStatus() {
+
+        $class = 'order-status';
+        $button_color = '';
+        $status = '';
+
+        $statusList = self::getOrderStatusList();
+        $statusName = $statusList[$this->status];
+
+        switch ($this->status) {
+            case self::STATUS_ORDERED : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-ordered';
+                break;
+            case self::STATUS_COMPLETED : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-completed';
+                break;
+            case self::STATUS_IN_PROCESSING : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-in-completed';
+                break;
+            case self::STATUS_REFUSE : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-refuse';
+                break;
+            case self::STATUS_PENDING : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-pending';
+                break;
+            default : $status = 'не определен';
+        }
+
+        $checked_ordered = ($this->status == self::STATUS_ORDERED) ? ' checked' : '';
+        $checked_in_processing = ($this->status == self::STATUS_IN_PROCESSING) ? ' checked' : '';
+        $checked_pending = ($this->status == self::STATUS_PENDING) ? ' checked' : '';
+        $checked_refuse = ($this->status == self::STATUS_REFUSE) ? ' checked' : '';
+        $checked_completed = ($this->status == self::STATUS_COMPLETED) ? ' checked' : '';
+
+        $checkbox = "<ul class='checkbox-status' data-product-id='". $this->id ."'>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_ORDERED] ."' name='status' value='". self::STATUS_ORDERED ."'".  $checked_ordered .">" . $statusList[self::STATUS_ORDERED] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_IN_PROCESSING] ."' name='status' value='". self::STATUS_IN_PROCESSING."'".  $checked_in_processing .">" . $statusList[self::STATUS_IN_PROCESSING] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_PENDING] ."' name='status' value='". self::STATUS_PENDING ."'".  $checked_pending .">" . $statusList[self::STATUS_PENDING] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_REFUSE] ."' name='status' value='". self::STATUS_REFUSE ."'".  $checked_refuse .">" . $statusList[self::STATUS_REFUSE] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_COMPLETED] ."' name='status' value='". self::STATUS_COMPLETED ."'".  $checked_completed .">" . $statusList[self::STATUS_COMPLETED] . "</li>
+                    </ul>";
+
+        $proper = "<button type=\"button\"
+                           data-html=\"true\" 
+                           class=\"btn btn-default ". $button_color ."\" 
+                           data-container=\"body\" 
+                           data-toggle=\"popover\" 
+                           data-placement=\"left\" 
+                           data-content=\" ". $checkbox ."\">
+                           ". $status ."
+                           </button>";
+
+        return $proper;
+    }
+
+    public static function updateOrderStatus($postData) {
+        $order = self::getOrderById($postData['product_id']);
+        if (!is_null($order)) {
+            $order->status = $postData['status'];
+            if ($order->update(false)){
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return 'Без статуса';
+            return false;
+        }
+    }
+
+    private function getOrderById($id) {
+        return self::findOne(['id' => $id]);
+    }
+
+    public function getFullName() {
+        return $this->customer_name . ' ' . $this->customer_l_name . ' ' . $this->customer_o_name;
+    }
+
+    public function getTotal() {
+        if (isset($this->total_price)) {
+            return $this->total_price . ' грн.';
+        } else {
+            return 0;
         }
     }
 
@@ -127,9 +204,11 @@ class Cart extends \yii\db\ActiveRecord
 
     public static function getOrderStatusList() {
         return [
-            self::STATUS_START => 'Начят',
-            self::STATUS_UN_COMPLETED => 'Не завершен',
-            self::STATUS_COMPLETED => 'Завершен',
+            self::STATUS_ORDERED        => 'Новый',
+            self::STATUS_IN_PROCESSING  => 'Обрабатывается',
+            self::STATUS_PENDING        => 'В ожидании',
+            self::STATUS_REFUSE         => 'Отказ',
+            self::STATUS_COMPLETED      => 'Завершен',
         ];
     }
 
@@ -149,7 +228,7 @@ class Cart extends \yii\db\ActiveRecord
     private function addNewOrder($dataProduct,$sessionId,$count) {
         $this->session_id = $sessionId;
         $this->product_info = $this->convertToJsonOrderData($dataProduct,$count);
-        $this->status = self::STATUS_START;
+//        $this->status = self::STATUS_START;
         $this->finished = false;
         $this->save(false);
         return $sessionId;
@@ -365,17 +444,18 @@ class Cart extends \yii\db\ActiveRecord
 //            dd($post);
             $sessionId = Yii::$app->session->get('order_id');
             $order = self::getOrderBySessionId($sessionId);
-            $order->customer_name = $post['Cart']['customer_name'];
+            $order->customer_name   = $post['Cart']['customer_name'];
             $order->customer_l_name = $post['Cart']['customer_l_name'];
             $order->customer_o_name = $post['Cart']['customer_o_name'];
-            $order->customer_phone = $post['Cart']['customer_phone'];
-            $order->delivery = $post['Cart']['delivery'];
-            $order->address = $post['Cart']['address'];
-            $order->total_price = $post['total_price'];
+            $order->customer_phone  = $post['Cart']['customer_phone'];
+            $order->delivery        = $post['Cart']['delivery'];
+            $order->address         = $post['Cart']['address'];
+            $order->total_price     = $post['total_price'];
 //            $order->product_code = self::setJsonData($post);
-            $order->status = self::STATUS_ORDERED;
-            $order->order_id = '#'.time();
-            $order->product_info = self::setJsonData($post,'info');
+            $order->status          = self::STATUS_ORDERED;
+            $order->order_id        = '#'.time();
+            $order->product_info    = self::setJsonData($post,'info');
+            $order->date_ordered    = date('Y-m-d H:i:s');
             if ($order->update(false)) {
                 Yii::$app->session->remove('order_id');
                 return $order->order_id;

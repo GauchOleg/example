@@ -80,7 +80,8 @@ class Cart extends CartModel
             ->andFilterWhere(['like', 'customer_l_name', $this->customer_l_name])
             ->andFilterWhere(['like', 'customer_o_name', $this->customer_o_name])
             ->andFilterWhere(['like', 'product_code', $this->product_code])
-            ->andFilterWhere(['like', 'address', $this->address]);
+            ->andFilterWhere(['like', 'address', $this->address])
+            ->andWhere(['not',['order_id' => null]]);
 
         return $dataProvider;
     }
