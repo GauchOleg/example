@@ -6,9 +6,20 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\dashboard\searchModels\Cart */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $statusList \app\modules\dashboard\models\Cart */
+/* @var $model \app\modules\dashboard\models\Cart */
+/* @var $deliveryList \app\modules\dashboard\models\Cart */
 
 $this->title = Yii::t('app', 'Заказы');
 $this->params['breadcrumbs'][] = $this->title;
+
+$js = <<< JS
+    $('.view-modal-btn').click(function(e) {
+        e.preventDefault();
+        $('#order-view-modal').modal('show').find('.modal-body').load($(this).attr('href'));
+    });
+JS;
+$this->registerJs($js);
 ?>
 <div class="cart-index">
 
@@ -45,6 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'delivery',
+                'filter' => $deliveryList,
                 'value' => function($model){
                     return $model->getDelivery();
                 }
@@ -58,9 +70,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'date_ordered',
             [
-                'headerOptions' => ['style' => 'min-width:100px;width:100px'],
+                'headerOptions' => ['style' => 'min-width:160px;width:100px'],
                 'format' => 'raw',
                 'attribute' => 'status',
+                'filter' => $statusList,
                 'value' => function($model) {
                     return $model->checkStatus();
                 },
@@ -82,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a('Удалить', $url, [
                             'class' => 'btn did btn-outline',
                             'data-method' => 'post',
-                            'data-confirm' => Yii::t('yii', 'Удалить категорию?'),
+                            'data-confirm' => Yii::t('yii', 'Удалить заказ?'),
                         ]);
                     },
                 ],
@@ -91,66 +104,10 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     <?php Pjax::end(); ?>
 </div>
-
-<script>
-    $(document).ready(function () {
-
-       $('.btn-default').on('click',function(){
-           $(this).popover('show');
-           var button = $(this);
-           $('.check').change(function(){
-               $('input[name="' + $(this).attr('name') +'"]').removeAttr('checked');
-               $(this).prop('checked', true);
-               var old_checkbox =  $(this).data('name');
-               var status = $(this).val();
-               var label = $(this).data('name');
-               var product_id = $(this).parent().parent('ul').data('product-id');
-               var class_status = checkStatus(status);
-               $.ajax({
-                   url: "update-status",
-                   type: "POST",
-                   data: {_csrf: yii.getCsrfToken(),status: status,product_id: product_id},
-                   success: function (res) {
-                       if (res) {
-                           button.removeAttr('class');
-                           button.addClass('btn btn-default');
-                           button.addClass(class_status);
-                           button.children('span').html(label);
-
-                           $('input[data-name="' + old_checkbox +'"]').attr('checked',false);
-//                           $('input[data-name="' + label +'"]').prop('checked', true);
-
-                           console.log($('input[data-name="' + old_checkbox +'"]'));
-
-                           $('[data-name='+ label +']').prop('checked', true);
-//                           button.prop('checked', true);
-                           button.popover('hide');
-                       }
-                   },
-                   error: function () {
-                       console.log('some error on cart controller .. ');
-                   }
-               });
-           });
-       });
-
-        function checkStatus(status) {
-            var new_class = '';
-            switch (parseInt(status)){
-                case 1 : new_class = 'status-ordered';
-                    break;
-                case 5 : new_class = 'status-completed';
-                    break;
-                case 4 : new_class = 'status-in-completed';
-                    break;
-                case 3 : new_class = 'status-refuse';
-                    break;
-                case 2 : new_class = 'status-pending';
-                    break;
-            }
-            return new_class;
-        }
-
-
-    });
-</script>
+<?php
+yii\bootstrap\Modal::begin([
+//    'header' => 'Просмотр',
+    'id' =>'order-view-modal',
+]);
+yii\bootstrap\Modal::end();
+?>

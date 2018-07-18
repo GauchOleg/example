@@ -80,7 +80,7 @@ class Cart extends \yii\db\ActiveRecord
         return [
             'id'                => 'ID',
             'order_id'          => '№',
-            'product_info'      => 'Product Info',
+            'product_info'      => 'Информация о товарах',
             'customer_name'     => '* Имя',
             'customer_o_name'   => 'Отчество',
             'customer_l_name'   => '* Фамилия',
@@ -114,62 +114,15 @@ class Cart extends \yii\db\ActiveRecord
         }
     }
 
-    public function checkStatus() {
-
-        $class = 'order-status';
-        $button_color = '';
-        $status = '';
-
-        $statusList = self::getOrderStatusList();
-        $statusName = $statusList[$this->status];
-
-        switch ($this->status) {
-            case self::STATUS_ORDERED : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-ordered';
-                break;
-            case self::STATUS_COMPLETED : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-completed';
-                break;
-            case self::STATUS_IN_PROCESSING : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-in-completed';
-                break;
-            case self::STATUS_REFUSE : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-refuse';
-                break;
-            case self::STATUS_PENDING : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-pending';
-                break;
-            default : $status = 'не определен';
-        }
-
-        $checked_ordered = ($this->status == self::STATUS_ORDERED) ? ' checked' : '';
-        $checked_in_processing = ($this->status == self::STATUS_IN_PROCESSING) ? ' checked' : '';
-        $checked_pending = ($this->status == self::STATUS_PENDING) ? ' checked' : '';
-        $checked_refuse = ($this->status == self::STATUS_REFUSE) ? ' checked' : '';
-        $checked_completed = ($this->status == self::STATUS_COMPLETED) ? ' checked' : '';
-
-        $checkbox = "<ul class='checkbox-status' data-product-id='". $this->id ."'>
-                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_ORDERED] ."' name='status' value='". self::STATUS_ORDERED ."'".  $checked_ordered .">" . $statusList[self::STATUS_ORDERED] . "</li>
-                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_IN_PROCESSING] ."' name='status' value='". self::STATUS_IN_PROCESSING."'".  $checked_in_processing .">" . $statusList[self::STATUS_IN_PROCESSING] . "</li>
-                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_PENDING] ."' name='status' value='". self::STATUS_PENDING ."'".  $checked_pending .">" . $statusList[self::STATUS_PENDING] . "</li>
-                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_REFUSE] ."' name='status' value='". self::STATUS_REFUSE ."'".  $checked_refuse .">" . $statusList[self::STATUS_REFUSE] . "</li>
-                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_COMPLETED] ."' name='status' value='". self::STATUS_COMPLETED ."'".  $checked_completed .">" . $statusList[self::STATUS_COMPLETED] . "</li>
-                    </ul>";
-
-        $proper = "<button type=\"button\"
-                           data-html=\"true\" 
-                           class=\"btn btn-default ". $button_color ."\" 
-                           data-container=\"body\" 
-                           data-toggle=\"popover\" 
-                           data-placement=\"left\" 
-                           data-content=\" ". $checkbox ."\">
-                           ". $status ."
-                           </button>";
-
-        return $proper;
-    }
-
     public static function updateOrderStatus($postData) {
         $order = self::getOrderById($postData['product_id']);
         if (!is_null($order)) {
             $order->status = $postData['status'];
             if ($order->update(false)){
-                return true;
+                return [
+                    'status' => $postData['status'],
+                    'id' => $postData['product_id'],
+                ];
             } else {
                 return false;
             }
@@ -424,8 +377,8 @@ class Cart extends \yii\db\ActiveRecord
                 if (isset($product_code[$item]) && isset($count[$item]) && isset($prices[$item])) {
                     $result[] = [
                         "product_id"    => $item,
-                        "product_price" => $count[$item],
-                        "product_count" => $prices[$item],
+                        "product_price" => $prices[$item],
+                        "product_count" => $count[$item],
                     ];
                 }
             }
@@ -465,6 +418,163 @@ class Cart extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    private function getIdsProductFromProductInfoProperty($order_info) {
+        if (is_array($order_info) && !empty($order_info)) {
+            $ids = [];
+            foreach ($order_info as $product) {
+                if ($product['product_id']) {
+                    array_push($ids,$product['product_id']);
+                }
+            }
+            return $ids;
+        } else {
+            return false;
+        }
+    }
+
+    private function getProductsByIds($ids) {
+        return Product::find()->where(['in','id',$ids])->asArray()->indexBy('id')->all();
+    }
+
+    public function getTotalFullOrder() {
+        return count(self::find()->where(['not', ['order_id' => null]])->asArray()->all());
+    }
+
+    public function printOrderInfo() {
+        if (isset($this->product_info) && !empty($this->product_info)) {
+            $order_info = Json::decode($this->product_info);
+            $product_ids = $this->getIdsProductFromProductInfoProperty($order_info);
+            $products = $this->getProductsByIds($product_ids);
+            $render = '';
+            $total_sum = [];
+//            dd($order_info);
+            if (!is_null($products)) {
+                foreach ($order_info as $item) {
+                    if (isset($products[$item['product_id']])) {
+                        $render .= Html::a($products[$item['product_id']]['name'],['/product/view','alias' => $products[$item['product_id']]['alias']],['target' => '_blank']) . '<br> ';
+                        $render .= 'Кол-во: ' . $item['product_count'] . '<br>';
+                        $render .= 'Цена на момент заказа: ' . $item['product_price'] . ' грн. <br>';
+                        $render .= '---------------<br>';
+                        array_push($total_sum,$item['product_count'] * $item['product_price']);
+                    }
+                }
+                $render .= 'Всего на сумму: <b>' . number_format(array_sum($total_sum),2) . '</b> грн.';
+                return $render;
+            } else {
+                return 'Пусто';
+            }
+        } else {
+            return 'Пусто';
+        }
+    }
+
+    public function checkStatus($status = false,$id = false) {
+
+        if ($status && $id) {
+            $this->status = $status;
+            $this->id = $id;
+        }
+        $class = 'order-status';
+        $button_color = '';
+        $status = '';
+        $url = '"update-status"';
+
+        $statusList = self::getOrderStatusList();
+        $statusName = $statusList[$this->status];
+
+        switch ($this->status) {
+            case self::STATUS_ORDERED : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-ordered';
+                break;
+            case self::STATUS_COMPLETED : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-completed';
+                break;
+            case self::STATUS_IN_PROCESSING : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-in-completed';
+                break;
+            case self::STATUS_REFUSE : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-refuse';
+                break;
+            case self::STATUS_PENDING : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-pending';
+                break;
+            default : $status = 'не определен';
+        }
+
+        $checked_ordered = ($this->status == self::STATUS_ORDERED) ? ' checked' : '';
+        $checked_in_processing = ($this->status == self::STATUS_IN_PROCESSING) ? ' checked' : '';
+        $checked_pending = ($this->status == self::STATUS_PENDING) ? ' checked' : '';
+        $checked_refuse = ($this->status == self::STATUS_REFUSE) ? ' checked' : '';
+        $checked_completed = ($this->status == self::STATUS_COMPLETED) ? ' checked' : '';
+
+        $checkbox = "<ul class='checkbox-status' data-product-id='". $this->id ."'>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_ORDERED] ."' name='status' value='". self::STATUS_ORDERED ."'".  $checked_ordered .">" . $statusList[self::STATUS_ORDERED] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_IN_PROCESSING] ."' name='status' value='". self::STATUS_IN_PROCESSING."'".  $checked_in_processing .">" . $statusList[self::STATUS_IN_PROCESSING] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_PENDING] ."' name='status' value='". self::STATUS_PENDING ."'".  $checked_pending .">" . $statusList[self::STATUS_PENDING] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_REFUSE] ."' name='status' value='". self::STATUS_REFUSE ."'".  $checked_refuse .">" . $statusList[self::STATUS_REFUSE] . "</li>
+                        <li><input class='check' type='checkbox' data-name='". $statusList[self::STATUS_COMPLETED] ."' name='status' value='". self::STATUS_COMPLETED ."'".  $checked_completed .">" . $statusList[self::STATUS_COMPLETED] . "</li>
+                    </ul>";
+
+        $proper = "<span data-button-id='".$this->id."'><button type=\"button\"
+                           data-html=\"true\" 
+                           class=\"btn btn-default ". $button_color ."\" 
+                           data-container=\"body\" 
+                           data-toggle=\"popover\" 
+                           data-placement=\"left\" 
+                           data-content=\" ". $checkbox ."\">
+                           ". $status ."
+                           </button>
+                   </span>
+                <script>
+                    $(document).ready(function () {
+                
+                       $('.btn-default').on('click',function(){
+                           $(this).popover('show');
+                           var button = $(this);
+                           $('.check').change(function(){
+                               $('input[name=\"' + $(this).attr('name') +'\"]').removeAttr('checked');
+                               $(this).prop('checked', true);
+                               var old_data_content =  button.data('content');
+                               var status = $(this).val();
+                               var label = $(this).data('name');
+                               var product_id = $(this).parent().parent('ul').data('product-id');
+                               var class_status = checkStatus(status);
+                               $.ajax({
+                                   url: ". $url .",
+                                   type: \"POST\",
+                                   data: {_csrf: yii.getCsrfToken(),status: status,product_id: product_id},
+                                   success: function (res) {
+                                       if (res) {
+                                           button.popover('hide');
+                                           $(\"[data-button-id=\"+ product_id + \"]\").parent('td').html(res);
+                                       }
+                                   },
+                                   error: function () {
+                                       console.log('some error on cart controller .. ');
+                                   }
+                               });
+                           });
+                       });
+                
+                        function checkStatus(status) {
+                            var new_class = '';
+                            switch (parseInt(status)){
+                                case 1 : new_class = 'status-ordered';
+                                    break;
+                                case 5 : new_class = 'status-completed';
+                                    break;
+                                case 4 : new_class = 'status-in-completed';
+                                    break;
+                                case 3 : new_class = 'status-refuse';
+                                    break;
+                                case 2 : new_class = 'status-pending';
+                                    break;
+                            }
+                            return new_class;
+                        }
+                
+                
+                    });
+                </script>";
+
+        return $proper;
     }
 
 }

@@ -12,52 +12,53 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cart-view">
 
-    <p>
-        <?= Html::a('Обновить', ['update', 'id' => $model->id], ['class' => 'btn did btn-outline']) ?>
-        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
-            'class' => 'btn did btn-outline',
-            'data' => [
-                'confirm' => 'Удалить этот товар?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
+    <h2 style="text-align: center">Заказ <?php echo $model->order_id?></h2>
+<!--    <p>-->
+<!--        --><?php //echo Html::a('Удалить', ['delete', 'id' => $model->id], [
+//            'class' => 'btn did btn-outline',
+//            'data' => [
+//                'confirm' => 'Удалить этот товар?',
+//                'method' => 'post',
+//            ],
+//        ]) ?>
+<!--    </p>-->
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-//            'id',
             'order_id',
-//            'product_info:ntext',
             'customer_name',
             'customer_phone',
-//            'customer_email:email',
-//            'status',
             [
                 'attribute' => 'status',
                 'value' => function($model) {
-                    return $model->getStatus();
-                }
+                    return $model->checkStatus();
+                },
+                'format' => 'raw',
             ],
-//            'session_id',
-            'finished',
-            'create_at',
-            'update_at',
             'customer_l_name',
             'customer_o_name',
-//            'product_code',
             'address',
-//            'product_id',
-//            'count',
-//            'delivery',
             [
                 'attribute' => 'delivery',
                 'value' => function($model){
                     return $model->getDelivery();
                 }
             ],
-//            'prices',
-            'total_price',
+            [
+                'attribute' => 'product_info',
+                'format' => 'raw',
+                'value' => function($model){
+                    return $model->printOrderInfo();
+                },
+            ],
+            [
+                'headerOptions' => ['style' => 'min-width:100px;width:100px'],
+                'attribute' => 'total_price',
+                'value' => function($model){
+                    return $model->getTotal();
+                }
+            ],
+            'date_ordered',
         ],
     ]) ?>
 

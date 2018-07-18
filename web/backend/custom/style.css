@@ -9,7 +9,8 @@ body {
 .page-sidebar .page-sidebar-menu>li.active.open>a, .page-sidebar .page-sidebar-menu>li.active>a,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.active.open>a,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.active>a {
-    background-color: #eb605d !important;
+    /*background-color: #eb605d !important;*/
+    background-color: #c1b62b !important;
 }
 
 .page-logo img {
@@ -163,4 +164,22 @@ body {
 
 .status-pending:focus {
     background: #efc620; width: 100%;
+}
+
+.popover-content {
+    z-index: 100000000000;
+}
+
+.modal-backdrop.modal-backdrop.fade.in {
+    z-index: 1;
+}
+
+#order-view-modal {
+    z-index: 10;
+    padding-top: 25px;
+}
+
+.dashboard-stat .visual>i {
+    margin-left: 0px;
+    font-size: 60px;
 }

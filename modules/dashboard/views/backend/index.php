@@ -1,4 +1,24 @@
+<?php
+/* @var $count \app\modules\dashboard\models\Cart */
+?>
+
 <div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-counter="counterup" data-value="<?php echo $count?>"><?php echo $count?> </span> шт.
+                </div>
+                <div class="desc"> Всего заказов </div>
+            </div>
+            <a class="more" href="<?php echo \yii\helpers\Url::to(['cart/index'])?>"> Просмотр
+                <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="dashboard-stat blue">
             <div class="visual">
@@ -24,22 +44,6 @@
                 <div class="number">
                     <span data-counter="counterup" data-value="12,5">12,5</span>M$ </div>
                 <div class="desc"> Total Profit </div>
-            </div>
-            <a class="more" href="javascript:;"> View more
-                <i class="m-icon-swapright m-icon-white"></i>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="dashboard-stat green">
-            <div class="visual">
-                <i class="fa fa-shopping-cart"></i>
-            </div>
-            <div class="details">
-                <div class="number">
-                    <span data-counter="counterup" data-value="549">549</span>
-                </div>
-                <div class="desc"> New Orders </div>
             </div>
             <a class="more" href="javascript:;"> View more
                 <i class="m-icon-swapright m-icon-white"></i>

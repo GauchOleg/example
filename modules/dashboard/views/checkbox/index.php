@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //            'active',
             [
                 'headerOptions' => ['style' => 'width:50px'],
-                'attribute' => 'Включен',
+                'attribute' => 'active',
                 'value' => function($model) {
                     return $model->checkActive();
                 },

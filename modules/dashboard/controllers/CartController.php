@@ -13,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * CartController implements the CRUD actions for Cart model.
  */
-class CartController extends Controller
+class CartController extends BackendController
 {
     /**
      * {@inheritdoc}
@@ -37,6 +37,8 @@ class CartController extends Controller
     public function actionIndex()
     {
         $searchModel = new CartSearch();
+        $statusList = Cart::getOrderStatusList();
+        $deliveryList = Cart::getDeliveryList();
         $params = Yii::$app->request->queryParams;
 //        dd($params);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -44,6 +46,8 @@ class CartController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'statusList' => $statusList,
+            'deliveryList' => $deliveryList,
         ]);
     }
 
@@ -55,7 +59,7 @@ class CartController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderPartial('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -132,6 +136,8 @@ class CartController extends Controller
         if (!Yii::$app->request->isAjax) {
             throw new BadRequestHttpException();
         }
-        return Cart::updateOrderStatus(Yii::$app->request->post());
+        $cart = new Cart();
+        $status = Cart::updateOrderStatus(Yii::$app->request->post());
+        return $cart->checkStatus($status['status'],$status['id']);
     }
 }

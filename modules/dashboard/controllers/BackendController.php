@@ -2,6 +2,7 @@
 
 namespace app\modules\dashboard\controllers;
 
+use app\modules\dashboard\models\Cart;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
@@ -28,7 +29,11 @@ class BackendController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $cart = new Cart();
+        $count = $cart->getTotalFullOrder();
+        return $this->render('index',[
+            'count' => $count,
+        ]);
     }
 
 }
