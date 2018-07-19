@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\dashboard\searchModels\ProductSearch */
+/* @var $searchModel app\modules\dashboard\searchModels\SliderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Товары';
+$this->title = 'Слайдера';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="product-index">
+<div class="slider-index">
 
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -25,57 +25,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-//            'id',
-//            'category_id',
-            [
-                'attribute' => 'category_id',
-                'value' => function($model){
-                    return $model->getCategoryName();
-                },
-                'filter' => $categoryList
-            ],
-            'name',
-//            'alias',
-            'code',
-            [
-                'attribute' => 'checkboxes',
-                'value' => function($model){
-                    return $model->getCheckboxById();
-                },
-                'format' => 'raw'
-
-            ],
-            [
-                'attribute' => 'images',
-                'value' => function($model) use ($productImg) {
-                    return $productImg->getImg($model->id,false,false,'cart');
-                },
-                'format' => 'raw'
-
-            ],
-            [
-                'headerOptions' => ['style' => 'width:50px'],
-                'attribute' => 'new',
-                'value' => function($model) {
-                    return $model->checkNew();
-                },
-                'format' => 'raw',
-            ],
-            [
-                'headerOptions' => ['style' => 'width:50px'],
-                'attribute' => 'sale',
-                'value' => function($model) {
-                    return $model->checkSale();
-                },
-                'format' => 'raw',
-            ],
-            //'price',
-            //'text:ntext',
-            //'seo_title',
-            //'seo_keywords',
-            //'seo_description',
-            //'new',
-            //'sale',
+            'id',
+            'num_id',
+            'title',
+            'pre_description',
+            'description:ntext',
+            //'link',
+            //'status',
             //'create_at',
             //'update_at',
 

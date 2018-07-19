@@ -75,6 +75,14 @@
                     ],
                 ],
                 [
+                    'label' => '<i class="fa fa-sliders"></i> <span class="title"> ' . Yii::t('app', 'Слайдер') . '</span>',
+                    'url' => ['/dashboard/slider/index'],
+                    'active' => $module == 'dashboard' && $controller == 'slider',
+                    'options' => [
+                        'class' => 'start'
+                    ],
+                ],
+                [
                     'label' => '<i class="fa fa-cogs"></i> <span class="title"> ' . Yii::t('app', 'Настройки') . '</span>',
                     'url' => ['/dashboard/settings/index'],
                     'active' => $module == 'dashboard' && $controller == 'settings',

@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
+use yii\web\Cookie;
 
 /**
  * This is the model class for table "{{%cart}}".
@@ -46,6 +47,8 @@ class Cart extends \yii\db\ActiveRecord
     const DELIVERY_HOME         = 2;
     const DELIVERY_POST         = 3;
 
+    public $time_order;
+
     /**
      * {@inheritdoc}
      */
@@ -63,10 +66,13 @@ class Cart extends \yii\db\ActiveRecord
             [['status', 'finished'], 'integer'],
             [['create_at', 'update_at', 'product_info', 'date_ordered'], 'safe'],
             [['order_id', 'customer_name', 'customer_phone', 'customer_email', 'session_id'], 'string', 'max' => 255],
+            [['customer_email'],'email','message' => 'Проверте првильность ввода поля Email'],
 
             [['customer_l_name'], 'string'],
             [['customer_o_name', 'address', 'delivery', 'product_code'], 'string'],
             [['product_id','count','delivery', 'prices', 'total_price'], 'integer'],
+
+            [['time_order'],'safe'],
 
             [['customer_name', 'customer_phone', 'customer_l_name'],'required', 'message' => '{attribute} не может быть пустым'],
         ];
@@ -87,7 +93,7 @@ class Cart extends \yii\db\ActiveRecord
             'delivery'          => 'Способ доставки',
             'address'           => 'Адрес',
             'customer_phone'    => '* Телефон',
-            'customer_email'    => 'Customer Email',
+            'customer_email'    => 'Email',
             'status'            => 'Статус',
             'session_id'        => 'Session ID',
             'finished'          => 'Завершен',
@@ -95,6 +101,7 @@ class Cart extends \yii\db\ActiveRecord
             'update_at'         => 'Заказан',
             'total_price'       => 'Общая сумма',
             'date_ordered'      => 'Дата заказа',
+            'time_order'        => 'Время оформления заказа',
         ];
     }
 
@@ -129,6 +136,40 @@ class Cart extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    private function checkProperty($property) {
+        if (isset($property) && !is_null($property)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkOrderedTime() {
+        if ($this->checkProperty($this->create_at) && $this->checkProperty($this->date_ordered)) {
+            $update_at = strtotime($this->create_at);
+            $date_ordered = strtotime($this->date_ordered);
+            $second = $date_ordered - $update_at;
+            return $this->convertTime($second);
+        }
+    }
+
+    private function convertTime($time) {
+        $days = floor($time / 86400);
+        $hours = floor($time / 3600);
+        if ($hours > 24) {
+            $hours = $time - ($days * 86400);
+        }
+        $minutes = floor($time / 60);
+        if ($minutes > 60) {
+            $minutes = floor(($time - ($hours * 3600)) / 60);
+        }
+        $seconds = $time;
+        if ($seconds > 60) {
+            $seconds = $time - ($minutes * 60 + $hours * 3600 + $days * 86400);
+        }
+        return $days . 'д-' . $hours . 'ч-' . $minutes . 'м-' . $seconds . 'c';
     }
 
     private function getOrderById($id) {
@@ -249,8 +290,20 @@ class Cart extends \yii\db\ActiveRecord
         }
         $order_id = Yii::$app->session->get('order_id');
         if (is_null($order_id)){
-            $order_id = $this->getOrderId();
-            Yii::$app->session->set('order_id',$order_id);
+            $cookies = Yii::$app->request->cookies;
+            if (isset($cookies['order_id'])) {
+                $order_id = $cookies['order_id']->value;
+                Yii::$app->session->set('order_id',$order_id);
+            } else {
+                $order_id = $this->getOrderId();
+                Yii::$app->session->set('order_id',$order_id);
+                $new_cookie = new Cookie([
+                    'name' => 'order_id',
+                    'value' => $order_id,
+                    'expire' => time() + 86400 * 365,
+                ]);
+                Yii::$app->getResponse()->getCookies()->add($new_cookie);
+            }
         }
         $result = $this->saveOrder($dataProduct,$order_id,$count);
         return $result;
@@ -399,7 +452,7 @@ class Cart extends \yii\db\ActiveRecord
             $order = self::getOrderBySessionId($sessionId);
             $order->customer_name   = $post['Cart']['customer_name'];
             $order->customer_l_name = $post['Cart']['customer_l_name'];
-            $order->customer_o_name = $post['Cart']['customer_o_name'];
+            $order->customer_email  = $post['Cart']['customer_email'];
             $order->customer_phone  = $post['Cart']['customer_phone'];
             $order->delivery        = $post['Cart']['delivery'];
             $order->address         = $post['Cart']['address'];
@@ -411,6 +464,8 @@ class Cart extends \yii\db\ActiveRecord
             $order->date_ordered    = date('Y-m-d H:i:s');
             if ($order->update(false)) {
                 Yii::$app->session->remove('order_id');
+                $cookies = Yii::$app->response->cookies;
+                $cookies->remove('order_id');
                 return $order->order_id;
             } else {
                 return false;

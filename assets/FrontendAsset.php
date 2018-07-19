@@ -46,7 +46,8 @@ class FrontendAsset extends AssetBundle
         'js/respond.min.js',
 //        '//maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap',
         'js/app.js',
-        'magnific-popup/dist/jquery.magnific-popup.js'
+        'magnific-popup/dist/jquery.magnific-popup.js',
+        'js/jquery.maskedinput.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

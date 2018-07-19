@@ -2,21 +2,22 @@
 
 namespace app\modules\dashboard\controllers;
 
+use app\helpers\FileUploaderHelper;
 use Yii;
-use app\modules\dashboard\models\Category;
-use app\modules\dashboard\searchModels\CategorytSearch;
+use app\modules\dashboard\models\Slider;
+use app\modules\dashboard\searchModels\SliderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 
 /**
- * CategoryController implements the CRUD actions for Category model.
+ * SliderController implements the CRUD actions for Slider model.
  */
-class CategoryController extends BackendController
+class SliderController extends Controller
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -31,12 +32,12 @@ class CategoryController extends BackendController
     }
 
     /**
-     * Lists all Category models.
+     * Lists all Slider models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CategorytSearch();
+        $searchModel = new SliderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -46,7 +47,7 @@ class CategoryController extends BackendController
     }
 
     /**
-     * Displays a single Category model.
+     * Displays a single Slider model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -59,25 +60,29 @@ class CategoryController extends BackendController
     }
 
     /**
-     * Creates a new Category model.
+     * Creates a new Slider model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Category();
+        $model = new Slider();
+        $statusList = Slider::getStatusList();
+        $model->img = UploadedFile::getInstance($model,'img');
 
-        if ($model->uploadImage() && $model->load(Yii::$app->request->post()) && $model->save(false)) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->saveNewSlider();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'statusList' => $statusList,
         ]);
     }
 
     /**
-     * Updates an existing Category model.
+     * Updates an existing Slider model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,7 +92,7 @@ class CategoryController extends BackendController
     {
         $model = $this->findModel($id);
 
-        if ($model->uploadImage() && $model->load(Yii::$app->request->post()) && $model->save(false)) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -97,7 +102,7 @@ class CategoryController extends BackendController
     }
 
     /**
-     * Deletes an existing Category model.
+     * Deletes an existing Slider model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -111,29 +116,22 @@ class CategoryController extends BackendController
     }
 
     /**
-     * Finds the Category model based on its primary key value.
+     * Finds the Slider model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Category the loaded model
+     * @return Slider the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Category::findOne($id)) !== null) {
+        if (($model = Slider::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionDeleteImg() {
-        if (Yii::$app->request->isGet) {
-            $id = Yii::$app->request->get('img');
-            $model = Category::findOne($id);
-            if ($model->deleteImage()) {
-                return true;
-            }
-        }
+    public function actionDeleteImage() {
+        return 'dawda';
     }
-
 }

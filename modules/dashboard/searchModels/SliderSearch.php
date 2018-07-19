@@ -5,27 +5,26 @@ namespace app\modules\dashboard\searchModels;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\dashboard\models\Product;
+use app\modules\dashboard\models\Slider;
 
 /**
- * ProductSearch represents the model behind the search form of `app\modules\dashboard\models\Product`.
+ * SliderSearch represents the model behind the search form of `app\modules\dashboard\models\Slider`.
  */
-class ProductSearch extends Product
+class SliderSearch extends Slider
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'category_id'], 'integer'],
-            [['name', 'alias', 'code', 'text', 'seo_title', 'seo_keywords', 'seo_description', 'new', 'sale', 'create_at', 'update_at'], 'safe'],
-            [['price'], 'number'],
+            [['id', 'status'], 'integer'],
+            [['num_id', 'title', 'pre_description', 'description', 'link', 'create_at', 'update_at'], 'safe'],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function scenarios()
     {
@@ -42,7 +41,7 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find();
+        $query = Slider::find();
 
         // add conditions that should always apply here
 
@@ -61,21 +60,16 @@ class ProductSearch extends Product
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'category_id' => $this->category_id,
-            'price' => $this->price,
+            'status' => $this->status,
             'create_at' => $this->create_at,
             'update_at' => $this->update_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'alias', $this->alias])
-            ->andFilterWhere(['like', 'code', $this->code])
-            ->andFilterWhere(['like', 'text', $this->text])
-            ->andFilterWhere(['like', 'seo_title', $this->seo_title])
-            ->andFilterWhere(['like', 'seo_keywords', $this->seo_keywords])
-            ->andFilterWhere(['like', 'seo_description', $this->seo_description])
-            ->andFilterWhere(['like', 'new', $this->new])
-            ->andFilterWhere(['like', 'sale', $this->sale]);
+        $query->andFilterWhere(['like', 'num_id', $this->num_id])
+            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'pre_description', $this->pre_description])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'link', $this->link]);
 
         return $dataProvider;
     }

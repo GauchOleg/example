@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\dashboard\searchModels\CategorytSearch */
+/* @var $model app\modules\dashboard\searchModels\SliderSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="category-search">
+<div class="slider-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -20,21 +20,21 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'parent_id') ?>
+    <?= $form->field($model, 'num_id') ?>
 
-    <?= $form->field($model, 'name') ?>
+    <?= $form->field($model, 'title') ?>
 
-    <?= $form->field($model, 'alias') ?>
+    <?= $form->field($model, 'pre_description') ?>
 
-    <?= $form->field($model, 'image') ?>
+    <?= $form->field($model, 'description') ?>
 
-    <?php // echo $form->field($model, 'text') ?>
+    <?php // echo $form->field($model, 'link') ?>
 
-    <?php // echo $form->field($model, 'seo_title') ?>
+    <?php // echo $form->field($model, 'status') ?>
 
-    <?php // echo $form->field($model, 'seo_keywords') ?>
+    <?php // echo $form->field($model, 'create_at') ?>
 
-    <?php // echo $form->field($model, 'seo_description') ?>
+    <?php // echo $form->field($model, 'update_at') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

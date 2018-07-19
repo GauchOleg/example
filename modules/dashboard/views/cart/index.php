@@ -42,12 +42,13 @@ $this->registerJs($js);
                 'value' => 'order_id',
             ],
             [
-                'header' => 'ФИО',
+                'header' => 'Полное имя',
                 'attribute' => 'customer_name',
                 'value' => function($model){
                     return $model->getFullName();
                 }
             ],
+            'customer_email',
             [
                 'headerOptions' => ['style' => 'min-width:100px;width:100px'],
                 'header' => 'Телефон',
@@ -69,6 +70,13 @@ $this->registerJs($js);
                 }
             ],
             'date_ordered',
+            [
+                'attribute' => 'time_order',
+                'value' => function($model) {
+                    return $model->checkOrderedTime();
+                },
+                'format' => 'raw',
+            ],
             [
                 'headerOptions' => ['style' => 'min-width:160px;width:100px'],
                 'format' => 'raw',

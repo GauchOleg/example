@@ -64,7 +64,7 @@ use yii\helpers\Html;
             <div class="span4">
                 <?php echo $form->field($model,'customer_l_name')->input('text')?>
                 <?php echo $form->field($model,'customer_name')->input('text')?>
-                <?php echo $form->field($model,'customer_o_name')->input('text')?>
+                <?php echo $form->field($model,'customer_email')->input('text')?>
             </div>
             <div class="span4">
                 <?php echo $form->field($model,'customer_phone')->input('text')?>
@@ -88,6 +88,8 @@ use yii\helpers\Html;
 
 <script>
     $(document).ready(function () {
+
+        $("#cart-customer_phone").mask("+38(099) 999-99-99");
 
         $('.btn-cart-order').on('click', function () {
             $(this).css({'background':'black'});

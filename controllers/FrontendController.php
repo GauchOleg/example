@@ -9,12 +9,19 @@ class FrontendController extends \yii\web\Controller
     public function beforeAction($action)
     {
         $sessionId = Yii::$app->session->get('order_id');
+        $cart = new Cart();
         if (isset($sessionId) && !empty($sessionId)) {
-            $cart = new Cart();
             $count = $cart->getCountProductInBasked($sessionId);
             $this->view->params['in_cart'] = $count;
         } else {
-            $this->view->params['in_cart'] = null;
+            $cookies = Yii::$app->request->cookies;
+            if (isset($cookies['order_id'])) {
+                $count = $cart->getCountProductInBasked($cookies['order_id']->value);
+                $this->view->params['in_cart'] = $count;
+                Yii::$app->session->set('order_id',$cookies['order_id']->value);
+            } else {
+                $this->view->params['in_cart'] = null;
+            }
         }
         return parent::beforeAction($action);
     }
