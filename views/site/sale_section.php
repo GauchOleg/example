@@ -58,6 +58,9 @@ use app\modules\dashboard\models\Product;
                                 <div>
                                     <span>Код </span> <?php echo $item['code']?>
                                 </div>
+                                <div>
+                                    <?php echo Html::a('Перейти к товару',['product/view','alias' => $item['alias']],['class' => 'cart-link'])?>
+                                </div>
                             </div>
                             <p><?php echo $item['small_text']?></p>
                         </div>
@@ -71,12 +74,14 @@ use app\modules\dashboard\models\Product;
                     <?php foreach ($saleProduct as $item): ?>
                         <li class="span4 mix <?php echo ($item['sale'] == 1) ? 'photo' : 'web'; ?>">
                             <div class="thumbnail">
-                                <img src="<?php echo (isset($imgs[$item['id']])) ? $imgs[$item['id']]['alias'] : ProductImg::DEFAULT_IMG?>" alt="<?php echo $item['name']?> " style="height: 236px">
+                                <span class="sale-image">
+                                    <img src="<?php echo (isset($imgs[$item['id']])) ? $imgs[$item['id']]['alias'] : ProductImg::DEFAULT_IMG?>" alt="<?php echo $item['name']?> " style="height: 236px">
+                                </span>
                                 <a href="#single-project" class="more show_hide" rel="#slidingDiv<?php echo $item['id']?>">
                                     <i class="icon-plus"></i>
                                 </a>
-                                <h3><?php echo Html::a($item['name'],['product/view','alias' => $item['alias']],['class' => 'sale-section-link'])?></h3>
-                                <p><?php echo mb_strimwidth($item['small_text'],0,30)?>...</p>
+                                <h3><?php echo Html::a(mb_strimwidth($item['name'],0,30),['product/view','alias' => $item['alias']],['class' => 'sale-section-link'])?></h3>
+                                <p><?php echo Html::a($item['price'] . ' грн.',['product/view','alias' => $item['alias']],['class' => 'sale-section-link-price'])?></p>
                                 <div class="mask"></div>
                             </div>
                         </li>

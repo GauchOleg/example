@@ -391,7 +391,7 @@ class Product extends \yii\db\ActiveRecord
                 array_push($ids,$product['id']);
             }
         }
-        return ProductImg::find()->where(['in','product_id',$ids])->indexBy('product_id')->asArray()->all();
+        return ProductImg::find()->where(['in','product_id',$ids])->andWhere(['sort_id' => 1])->indexBy('product_id')->asArray()->all();
     }
 
     public static function getCategoryNameByProductId($product_id) {

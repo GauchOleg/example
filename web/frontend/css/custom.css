@@ -443,3 +443,15 @@
         transform: translateX(4%);
     }
 }
+
+.thumbnail {
+    background: white;
+}
+
+.sale-section-link-price {
+    color: green;
+}
+
+.sale-section-link-price:hover {
+    color: #00A0D1;
+}
