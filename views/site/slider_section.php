@@ -20,7 +20,7 @@
                         <h4><?php echo $slider['pre_description']?></h4>
                         <p><?php echo $slider['description']?></p>
 
-                        <?php if (!empty($slider['description'])) :?>
+                        <?php if (!empty($slider['link'])) :?>
                             <a href="<?php echo $slider['link']?>" class="da-link button">Перейти</a>
                         <?php endif; ?>
 

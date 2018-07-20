@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\modules\dashboard\models\Slider */
 /* @var $statusList app\modules\dashboard\models\Slider */
 
-$this->title = 'Create Slider';
+$this->title = 'Добавить слайдер';
 $this->params['breadcrumbs'][] = ['label' => 'Sliders', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
