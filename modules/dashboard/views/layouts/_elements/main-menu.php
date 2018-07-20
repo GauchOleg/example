@@ -83,6 +83,14 @@
                     ],
                 ],
                 [
+                    'label' => '<i class="fa fa-file-text"></i> <span class="title"> ' . Yii::t('app', 'Контент') . '</span>',
+                    'url' => ['/dashboard/content/index'],
+                    'active' => $module == 'dashboard' && $controller == 'content',
+                    'options' => [
+                        'class' => 'start'
+                    ],
+                ],
+                [
                     'label' => '<i class="fa fa-cogs"></i> <span class="title"> ' . Yii::t('app', 'Настройки') . '</span>',
                     'url' => ['/dashboard/settings/index'],
                     'active' => $module == 'dashboard' && $controller == 'settings',

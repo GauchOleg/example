@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Обновление слайдера "' .$mod
 
     <?= $this->render('_form', [
         'model' => $model,
+        'statusList' => $statusList,
     ]) ?>
 
 </div>

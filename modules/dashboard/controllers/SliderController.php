@@ -38,11 +38,13 @@ class SliderController extends Controller
     public function actionIndex()
     {
         $searchModel = new SliderSearch();
+        $statusList = Slider::getStatusList();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'statusList' => $statusList,
         ]);
     }
 
@@ -54,8 +56,10 @@ class SliderController extends Controller
      */
     public function actionView($id)
     {
+        $statusList = Slider::getStatusList();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'statusList' => $statusList,
         ]);
     }
 
@@ -91,13 +95,16 @@ class SliderController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $statusList = Slider::getStatusList();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->saveNewSlider();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'statusList' => $statusList,
         ]);
     }
 

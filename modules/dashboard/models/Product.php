@@ -332,6 +332,7 @@ class Product extends \yii\db\ActiveRecord
         }
     }
 
+    // TODO нужно переписать через связь
     public static function getCategoryByProductId($productId) {
         if (!is_null($productId) && $productId) {
             $product = self::findOne($productId);
@@ -375,8 +376,27 @@ class Product extends \yii\db\ActiveRecord
         return $params;
     }
 
-    public static function addActiveClass() {
-        
-//        return self::addActiveClass();
+    public static function getProductOnIndexPage() {
+        $sale = self::find()->where(['sale' => 1])->andWhere(['new' => 0])->orderBy('id')->limit(6)->asArray()->all();
+        $new = self::find()->where(['new' => 1])->andWhere(['sale' => 0])->orderBy('id')->limit(3)->asArray()->all();
+        $products = ArrayHelper::merge($sale,$new);
+        shuffle($products);
+        return $products;
+    }
+
+    public static function getImgByProductId($products) {
+        $ids = [];
+        foreach ($products as $product) {
+            if ($product['id']) {
+                array_push($ids,$product['id']);
+            }
+        }
+        return ProductImg::find()->where(['in','product_id',$ids])->indexBy('product_id')->asArray()->all();
+    }
+
+    public static function getCategoryNameByProductId($product_id) {
+        $product = self::findOne(['id' => $product_id]);
+        $category = Category::find()->where(['id' => $product['category_id']])->asArray()->one();
+        return $category['name'];
     }
 }

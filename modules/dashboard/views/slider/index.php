@@ -6,6 +6,7 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\dashboard\searchModels\SliderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $statusList \app\modules\dashboard\models\Slider @type array */
 
 $this->title = 'Слайдера';
 $this->params['breadcrumbs'][] = $this->title;
@@ -25,13 +26,27 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+//            'id',
             'num_id',
             'title',
             'pre_description',
             'description:ntext',
             //'link',
-            //'status',
+            [
+                'attribute' => 'status',
+                'filter' => $statusList,
+                'value' => function($model){
+                    return $model->checkStatus();
+                },
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'image',
+                'value' => function($model){
+                    return $model->getImage();
+                },
+                'format' => 'raw',
+            ],
             //'create_at',
             //'update_at',
 

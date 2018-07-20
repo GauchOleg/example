@@ -139,7 +139,7 @@ class ProductImg extends \yii\db\ActiveRecord
      */
     public function saveAll($data, $product_id) {
         if (!$data) {
-            $this->alias = null;
+            $this->alias = self::DEFAULT_IMG;
             $this->save(false);
             return true;
         }

@@ -183,3 +183,11 @@ body {
     margin-left: 0px;
     font-size: 60px;
 }
+
+.portlet.box.green-sharp>.portlet-title, .portlet.green-sharp, .portlet>.portlet-body.green-sharp {
+    background-color: #c5b620;
+}
+
+.portlet.box.green-sharp {
+    border: 1px solid #c5b620;
+}

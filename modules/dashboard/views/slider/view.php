@@ -33,8 +33,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'pre_description',
             'description:ntext',
             'link',
-            'status',
-            'create_at',
+            [
+                'attribute' => 'status',
+                'filter' => $statusList,
+                'value' => function($model){
+                    return $model->checkStatus();
+                },
+                'format' => 'raw',
+            ],
+//            'create_at',
+            [
+                'attribute' => 'image',
+                'value' => function($model){
+                    return $model->getImage();
+                },
+                'format' => 'raw',
+            ],
 //            'update_at',
         ],
     ]) ?>

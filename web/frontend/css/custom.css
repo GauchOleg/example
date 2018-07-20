@@ -288,6 +288,14 @@
     color: #00A0D1;
 }
 
+.sale-section-link {
+    color: #ffce1a;
+}
+
+.sale-section-link:hover {
+    color: #00A0D1;
+}
+
 .prod-cunt input {
     margin-bottom: 0;
     border-radius: 0;

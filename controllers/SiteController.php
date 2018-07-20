@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\modules\dashboard\models\Category;
+use app\modules\dashboard\models\MetaData;
 use app\modules\dashboard\models\Product;
+use app\modules\dashboard\models\Slider;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -63,10 +65,20 @@ class SiteController extends FrontendController
      */
     public function actionIndex()
     {
+        $meta = new MetaData();
         $allCategory = Category::getAllCategory();
-        return $this->render('index',compact([
-            'allCategory',
-        ]));
+        $allSliders = Slider::getAllActiveSliders();
+        $metaData = $meta->getAllData();
+        $saleProduct = Product::getProductOnIndexPage();
+        $imgs = Product::getImgByProductId($saleProduct);
+
+        return $this->render('index',[
+            'allCategory' => $allCategory,
+            'allSliders' => $allSliders,
+            'metaData' => $metaData,
+            'saleProduct' => $saleProduct,
+            'imgs' => $imgs,
+        ]);
     }
 
     public function actionCatalog() {
