@@ -6,7 +6,7 @@ Thumbs.db
 .DS_Store
 
 #for debug panel
-/web/index.php
+#/web/index.php
 
 # composer vendor dir
 /vendor/

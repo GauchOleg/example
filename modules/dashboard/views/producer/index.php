@@ -4,14 +4,13 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\dashboard\searchModels\SliderSearch */
+/* @var $searchModel app\modules\dashboard\searchModels\Producer */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $statusList \app\modules\dashboard\models\Slider @type array */
 
-$this->title = 'Слайдера';
+$this->title = 'Производители';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="slider-index">
+<div class="producer-index">
 
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -27,28 +26,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
 //            'id',
-            'num_id',
-            'title',
-            'pre_description',
+            'name',
+            'image',
             'description:ntext',
-            //'link',
-            [
-                'attribute' => 'status',
-                'filter' => $statusList,
-                'value' => function($model){
-                    return $model->checkStatus();
-                },
-                'format' => 'raw',
-            ],
-            [
-                'attribute' => 'image',
-                'value' => function($model){
-                    return $model->getImage();
-                },
-                'format' => 'raw',
-            ],
-            //'create_at',
-            //'update_at',
+            'active',
+            //'seo_title',
+            //'seo_keywords',
+            //'seo_description',
 
             [
                 'class' => 'yii\grid\ActionColumn',

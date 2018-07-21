@@ -9,9 +9,12 @@
             </div>
         </div>
         <div class="map-wrapper">
-            <div class="map-canvas" id="map-canvas">Loading map...</div>
+            <div class="map-canvas" >
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2565.3283735750347!2d36.24253377557608!3d49.98645272339257!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4127a08cd982aa13%3A0x29b96d156642b39c!2z0KfQtdGA0LLQvtC90L7RiNC60ZbQu9GM0L3QsCDQvdCw0LHQtdGA0LXQttC90LAsIDQsINCl0LDRgNC60ZbQsiwg0KXQsNGA0LrRltCy0YHRjNC60LAg0L7QsdC70LDRgdGC0YwsIDYxMDAw!5e0!3m2!1sru!2sua!4v1532158150299" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+            </div>
             <div class="container">
                 <div class="row-fluid">
+
                     <!--                    <div class="span5 contact-form centered">-->
                     <!--                        <h3>Say Hello</h3>-->
                     <!--                        <div id="successSend" class="alert alert-success invisible">-->
@@ -93,7 +96,8 @@
         <!--        </div>-->
     </div>
 </div>
-<script async="" defer="" type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeMap"></script>
-<script>
-    $('[data-id="cart"]').attr('href','/cart');
-</script>
+
+<!--<script async="" defer="" type="text/javascript" src="https://goo.gl/maps/2KdQ3BYUUSM2"></script>-->
+<!--<script>-->
+<!--    $('[data-id="cart"]').attr('href','/cart');-->
+<!--</script>-->

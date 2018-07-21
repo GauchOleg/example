@@ -2,19 +2,17 @@
 
 namespace app\modules\dashboard\controllers;
 
-use app\helpers\FileUploaderHelper;
 use Yii;
-use app\modules\dashboard\models\Slider;
-use app\modules\dashboard\searchModels\SliderSearch;
+use app\modules\dashboard\models\Producer;
+use app\modules\dashboard\searchModels\Producer as ProducerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
 
 /**
- * SliderController implements the CRUD actions for Slider model.
+ * ProducerController implements the CRUD actions for Producer model.
  */
-class SliderController extends Controller
+class ProducerController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -32,14 +30,14 @@ class SliderController extends Controller
     }
 
     /**
-     * Lists all Slider models.
+     * Lists all Producer models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SliderSearch();
-        $statusList = Slider::getStatusList();
+        $searchModel = new ProducerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $statusList = Producer::getStatusList();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -49,14 +47,15 @@ class SliderController extends Controller
     }
 
     /**
-     * Displays a single Slider model.
+     * Displays a single Producer model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        $statusList = Slider::getStatusList();
+        $statusList = Producer::getStatusList();
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
             'statusList' => $statusList,
@@ -64,18 +63,16 @@ class SliderController extends Controller
     }
 
     /**
-     * Creates a new Slider model.
+     * Creates a new Producer model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Slider();
-        $statusList = Slider::getStatusList();
-        $model->img = UploadedFile::getInstance($model,'img');
+        $model = new Producer();
+        $statusList = $model::getStatusList();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->saveNewSlider();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -86,7 +83,7 @@ class SliderController extends Controller
     }
 
     /**
-     * Updates an existing Slider model.
+     * Updates an existing Producer model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -95,10 +92,9 @@ class SliderController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $statusList = Slider::getStatusList();
+        $statusList = Producer::getStatusList();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->saveNewSlider();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -109,7 +105,7 @@ class SliderController extends Controller
     }
 
     /**
-     * Deletes an existing Slider model.
+     * Deletes an existing Producer model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -123,22 +119,18 @@ class SliderController extends Controller
     }
 
     /**
-     * Finds the Slider model based on its primary key value.
+     * Finds the Producer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Slider the loaded model
+     * @return Producer the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Slider::findOne($id)) !== null) {
+        if (($model = Producer::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    public function actionDeleteImage() {
-        return 'dawda';
     }
 }
