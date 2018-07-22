@@ -3,7 +3,7 @@
 namespace app\modules\dashboard\models;
 
 use Yii;
-
+use app\helpers\FileUploaderHelper;
 /**
  * This is the model class for table "producer".
  *
@@ -15,13 +15,14 @@ use Yii;
  * @property string $seo_title
  * @property string $seo_keywords
  * @property string $seo_description
+ * @property string $img
  */
 class Producer extends \yii\db\ActiveRecord
 {
     const STATUS_ACTIVE = true;
     const STATUS_DISABLE = false;
 
-    public $file;
+    public $img;
     /**
      * {@inheritdoc}
      */
@@ -40,7 +41,7 @@ class Producer extends \yii\db\ActiveRecord
             [['active'], 'integer'],
             [['name', 'image', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
 
-//            [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 1],
+            [['img'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 1],
         ];
     }
 
@@ -66,5 +67,21 @@ class Producer extends \yii\db\ActiveRecord
             self::STATUS_ACTIVE => 'Активный',
             self::STATUS_DISABLE => 'Отключен',
         ];
+    }
+
+    public function saveNewProvider() {
+        if ($this->img) {
+            $alias = Yii::getAlias('@webroot');
+            if (!is_dir($alias . '/uploads/provider/')) {
+                mkdir($alias . '/uploads/provider/',0777,true);
+            }
+            $path = '/uploads/provider/' . trim(strtolower(Yii::$app->security->generateRandomString(16)),'_') . '.' . $this->img->extension;
+            $this->img->saveAs($alias . $path);
+            $file = FileUploaderHelper::resize($alias . $path,400, 200);
+            if ($file) {
+                $this->image = $path;
+            }
+        }
+        $this->save(false);
     }
 }

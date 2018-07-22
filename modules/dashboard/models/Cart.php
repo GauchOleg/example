@@ -158,17 +158,17 @@ class Cart extends \yii\db\ActiveRecord
     private function convertTime($time) {
         $days = floor($time / 86400);
         $hours = floor($time / 3600);
-        if ($hours > 24) {
-            $hours = $time - ($days * 86400);
-        }
         $minutes = floor($time / 60);
-        if ($minutes > 60) {
-            $minutes = floor(($time - ($hours * 3600)) / 60);
+
+        if ($hours >= 24) {
+            $hours = floor(($time - ($days * 86400)) / 3600);
         }
-        $seconds = $time;
-        if ($seconds > 60) {
-            $seconds = $time - ($minutes * 60 + $hours * 3600 + $days * 86400);
+        if ($minutes > 59) {
+            $minutes = floor((($time - (($days * 86400) + ($hours * 3600)))) / 60);
         }
+
+        $seconds = $time - ($days * 86400 + $hours * 3600 + $minutes * 60);
+
         return $days . 'д-' . $hours . 'ч-' . $minutes . 'м-' . $seconds . 'c';
     }
 

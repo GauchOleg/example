@@ -72,7 +72,8 @@ class ProducerController extends Controller
         $model = new Producer();
         $statusList = $model::getStatusList();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->saveNewProvider();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -94,7 +95,8 @@ class ProducerController extends Controller
         $model = $this->findModel($id);
         $statusList = Producer::getStatusList();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->saveNewProvider();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
