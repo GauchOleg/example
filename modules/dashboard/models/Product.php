@@ -32,6 +32,8 @@ use yii\helpers\Url;
  */
 class Product extends \yii\db\ActiveRecord
 {
+    public $add_to_cart;
+
     /**
      * @inheritdoc
      */
@@ -85,6 +87,7 @@ class Product extends \yii\db\ActiveRecord
             'checkboxes' => 'Чекбоксы',
             'create_at' => 'Create At',
             'update_at' => 'Update At',
+            'add_to_cart' => 'В корзину',
         ];
     }
 
@@ -399,4 +402,37 @@ class Product extends \yii\db\ActiveRecord
         $category = Category::find()->where(['id' => $product['category_id']])->asArray()->one();
         return $category['name'];
     }
+
+    public function getLinkName() {
+        return Html::a($this->name,['product/view','alias' => $this->alias]);
+    }
+
+    public function getCategoryLink() {
+        return Html::a($this->category->name,['/category', 'id' => $this->category->alias]);
+    }
+
+    public function getPriceInView() {
+        if ($this->price) {
+            return $this->price . ' грн.';
+        } else {
+            return 'нет';
+        }
+    }
+
+    public function addToCart() {
+        return Html::a('В корзину','#',['class' => "btn btn-outline did add-cart", 'data-id' => $this->id]);
+    }
+
+    public static function getAllProductAsArray() {
+
+        return $data = ArrayHelper::map(self::find()->asArray()->all(),'id','name');
+
+        $result = [];
+        array_walk_recursive($data, function ($item, $key) use (&$result) {
+            $result[] = $item;
+        });
+
+        return $result;
+    }
+
 }

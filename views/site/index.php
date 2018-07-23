@@ -7,6 +7,8 @@
 /* @var $producers \app\modules\dashboard\models\Producer @type array */
 
 use yii\helpers\Url;
+
+$this->title = 'Магазин';
 ?>
 
 <?php echo $this->render('slider_section',[

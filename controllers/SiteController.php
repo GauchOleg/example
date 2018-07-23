@@ -6,14 +6,18 @@ use app\modules\dashboard\models\Category;
 use app\modules\dashboard\models\MetaData;
 use app\modules\dashboard\models\Producer;
 use app\modules\dashboard\models\Product;
+use app\modules\dashboard\models\ProductImg;
 use app\modules\dashboard\models\Slider;
+use app\modules\dashboard\searchModels\ProductSearch;
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\helpers\Json;
 
 class SiteController extends FrontendController
 {
@@ -101,6 +105,24 @@ class SiteController extends FrontendController
         ]);
     }
 
+    public function actionSearch() {
+
+        if (Yii::$app->request->isPost) {
+            throw new BadRequestHttpException();
+        }
+        $search = new ProductSearch();
+        $products = $search->searchByProduct(Yii::$app->request->get());
+        $categoryList = Category::getAllCategory();
+        $productImg = new ProductImg();
+
+        return $this->render('search',[
+            'products' => $products,
+            'categoryList' => $categoryList,
+            'productImg' => $productImg,
+        ]);
+
+    }
+
     /**
      * Login action.
      *
@@ -161,5 +183,17 @@ class SiteController extends FrontendController
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionAutoCompleteSearch() {
+        $term = Yii::$app->request->get('term');
+
+        $data = Product::find()
+            ->select(['name as value', 'name as  label'])
+            ->where(['like', 'name', $term])
+            ->limit(10)
+            ->asArray()
+            ->all();
+        echo Json::encode($data);
     }
 }

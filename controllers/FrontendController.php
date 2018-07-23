@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 use app\modules\dashboard\models\Cart;
+use app\modules\dashboard\models\Product;
+use app\modules\dashboard\searchModels\ProductSearch;
 use Yii;
 
 class FrontendController extends \yii\web\Controller
@@ -23,6 +25,9 @@ class FrontendController extends \yii\web\Controller
                 $this->view->params['in_cart'] = null;
             }
         }
+        $this->view->params['allProduct'] = Product::getAllProductAsArray();
+        $this->view->params['search'] = new ProductSearch();
+        
         return parent::beforeAction($action);
     }
 

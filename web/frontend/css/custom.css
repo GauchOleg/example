@@ -459,3 +459,32 @@
 .producer h1{
     padding-bottom: 15px;
 }
+
+.search table {
+    border: 1px solid #ffce00;
+}
+
+table.table-bordered a{
+    color: #ffce00;
+    text-decoration: underline;
+}
+
+.btn.btn-outline.did.add-cart {
+    border-color: #171717 !important;
+    color: #171717 !important;
+    background: white;
+    border-radius: 0;
+    width: 70%;
+}
+
+.btn.btn-outline.did.add-cart:hover {
+    border-color: #171717;
+    background-color: green;
+    color: #fff !important;
+    width: 70%;
+}
+
+.empty {
+    text-align: center;
+    padding: 10px;
+}

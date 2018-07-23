@@ -1,8 +1,14 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\jui\AutoComplete;
 
 $url = Yii::$app->request->url;
 $in_cart = $this->params['in_cart'];
+$search = $this->params['search'];
+$allProduct = $this->params['allProduct'];
+//dd($allProduct)
 ?>
 <div class="navbar">
     <div class="navbar-inner">
@@ -35,6 +41,33 @@ $in_cart = $this->params['in_cart'];
                 </ul>
             </div>
             <!-- End main navigation -->
+            <div class="row">
+                <div class="span12">
+                    <?php $form = ActiveForm::begin([
+                        'action' => '/site/search',
+                        'method' => 'get',
+                    ]); ?>
+
+                    <?php echo $form->field($search, 'search')->widget(\yii\jui\AutoComplete::classname(), [
+                        'clientOptions' => [
+                            'source' => Url::to(['site/auto-complete-search']),
+                            'minLength' => 3,
+//                            'autoFill' => true,
+                            'select'=> new \yii\web\JsExpression("function( event, ui ){
+                                window.location = '/search?q=' + encodeURIComponent(ui.item.value);
+                                }")
+                        ],
+                    ])->textInput(['maxlength' => true, 'placeholder'=>'Поиск по названию...'])->label('');
+                    ?>
+
+<!--                        --><?php //echo $form->field($search,'search')->textInput()->input('text', ['placeholder' => "Поиск по товарам"])->label(false)?>
+                    <?php ActiveForm::end(); ?>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+
+</script>

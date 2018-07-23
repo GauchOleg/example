@@ -12,6 +12,7 @@ use app\modules\dashboard\models\Product;
  */
 class ProductSearch extends Product
 {
+    public $search;
     /**
      * @inheritdoc
      */
@@ -21,6 +22,7 @@ class ProductSearch extends Product
             [['id', 'category_id'], 'integer'],
             [['name', 'alias', 'code', 'text', 'seo_title', 'seo_keywords', 'seo_description', 'new', 'sale', 'create_at', 'update_at'], 'safe'],
             [['price'], 'number'],
+            [['search'], 'string', 'min' => 3],
         ];
     }
 
@@ -58,6 +60,13 @@ class ProductSearch extends Product
             return $dataProvider;
         }
 
+        if (isset($this->search)) {
+            $query->andFilterWhere(
+                ['like', 'name', $this->search]
+            );
+            return $dataProvider;
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
@@ -75,8 +84,13 @@ class ProductSearch extends Product
             ->andFilterWhere(['like', 'seo_keywords', $this->seo_keywords])
             ->andFilterWhere(['like', 'seo_description', $this->seo_description])
             ->andFilterWhere(['like', 'new', $this->new])
-            ->andFilterWhere(['like', 'sale', $this->sale]);
+            ->andFilterWhere(['like', 'sale', $this->sale])
+            ->andFilterWhere(['like','search',$this->name]);
 
         return $dataProvider;
+    }
+
+    public function searchByProduct($params) {
+        return $this->search($params);
     }
 }
