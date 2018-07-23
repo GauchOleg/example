@@ -14,7 +14,7 @@ use yii\web\UploadedFile;
 /**
  * ProducerController implements the CRUD actions for Producer model.
  */
-class ProducerController extends Controller
+class ProducerController extends BackendController
 {
     /**
      * {@inheritdoc}
