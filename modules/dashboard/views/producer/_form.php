@@ -11,9 +11,11 @@ use yii\widgets\ActiveForm;
 
 <div class="producer-form">
 
-    <?php $form = ActiveForm::begin(
-        ['options' => ['enctype' => 'multipart/form-data']]
-    ); ?>
+    <?php $form = ActiveForm::begin([
+            'options' => [
+                'enctype' => 'multipart/form-data'
+            ]
+        ]);?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
@@ -32,7 +34,7 @@ use yii\widgets\ActiveForm;
                                     </div>
                                 </div>
                             </div>
-                            <input type="file" style="display: none;" id="file" name="Producer[img]" data-id="<?php echo $model->isNewRecord ? false : $model->id ?>" />
+                            <input type="file" style="display: none;" id="file" name="Producer[file]" data-id="<?php echo $model->isNewRecord ? false : $model->id ?>" />
                             <span class="btn did btn-outline file-btn" data-num="" id="load-img">Загрузить</span>
                             <span class="btn red btn-outline file-del-btn" data-model="" data-del="">Удалить</span>
                         </div>
@@ -98,11 +100,11 @@ use yii\widgets\ActiveForm;
                 $(".preload-img").attr('src','http://www.placehold.it/320x200/EFEFEF/AAAAAA&amp;text=no+image');
             } else {
                 $.ajax({
-                    url: 'priver/delete-image',
+                    url: 'delete-image',
                     data: {_csrf: yii.getCsrfToken(), id: id},
-                    type: 'json',
+                    type: 'POST',
                     success: function (res) {
-                        console.log(res);
+                        $(".preload-img").attr('src','http://www.placehold.it/320x200/EFEFEF/AAAAAA&amp;text=no+image');
                     },
                     error: function () {
                         console.log('global error');

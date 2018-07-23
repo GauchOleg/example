@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\modules\dashboard\models\Category;
 use app\modules\dashboard\models\MetaData;
+use app\modules\dashboard\models\Producer;
 use app\modules\dashboard\models\Product;
 use app\modules\dashboard\models\Slider;
 use Yii;
@@ -71,6 +72,7 @@ class SiteController extends FrontendController
         $metaData = $meta->getAllData();
         $saleProduct = Product::getProductOnIndexPage();
         $imgs = Product::getImgByProductId($saleProduct);
+        $producers = Producer::getAllActiveProducers();
 
         return $this->render('index',[
             'allCategory' => $allCategory,
@@ -78,6 +80,7 @@ class SiteController extends FrontendController
             'metaData' => $metaData,
             'saleProduct' => $saleProduct,
             'imgs' => $imgs,
+            'producers' => $producers,
         ]);
     }
 
@@ -87,6 +90,15 @@ class SiteController extends FrontendController
         return $this->render('catalog',[
                 'allCategory' => $allCategory,
             ]);
+    }
+
+    public function actionProducer($id) {
+        $producer = new Producer();
+        $model = $producer->getProducerById($id);
+
+        return $this->render('producer-view',[
+            'model' => $model,
+        ]);
     }
 
     /**

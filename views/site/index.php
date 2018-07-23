@@ -4,6 +4,7 @@
 /* @var $metaData \app\modules\dashboard\models\MetaData @type array */
 /* @var $saleProduct \app\modules\dashboard\controllers\ProductController @type array */
 /* @var $imgs \app\modules\dashboard\models\ProductImg @type array */
+/* @var $producers \app\modules\dashboard\models\Producer @type array */
 
 use yii\helpers\Url;
 ?>
@@ -30,8 +31,13 @@ use yii\helpers\Url;
 
 <?php echo $this->render('provider_section',[
     'metaData' => $metaData,
+    'producers' => $producers,
 ]);?>
 
 <?php echo $this->render('contact_section',[
     'metaData' => $metaData,
 ]); ?>
+
+<script>
+    $('[data-id="cart"]').attr('href','/cart');
+</script>

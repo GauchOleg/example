@@ -5,9 +5,11 @@ namespace app\modules\dashboard\controllers;
 use Yii;
 use app\modules\dashboard\models\Producer;
 use app\modules\dashboard\searchModels\Producer as ProducerSearch;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ProducerController implements the CRUD actions for Producer model.
@@ -71,7 +73,7 @@ class ProducerController extends Controller
     {
         $model = new Producer();
         $statusList = $model::getStatusList();
-
+        $model->file = UploadedFile::getInstance($model,'file');
         if ($model->load(Yii::$app->request->post())) {
             $model->saveNewProvider();
             return $this->redirect(['view', 'id' => $model->id]);
@@ -94,6 +96,7 @@ class ProducerController extends Controller
     {
         $model = $this->findModel($id);
         $statusList = Producer::getStatusList();
+        $model->file = UploadedFile::getInstance($model,'file');
 
         if ($model->load(Yii::$app->request->post())) {
             $model->saveNewProvider();
@@ -134,5 +137,18 @@ class ProducerController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionDeleteImage() {
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+        $post = Yii::$app->request->post();
+        $producer = new Producer();
+        if ($producer->deleteImage($post)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -455,3 +455,7 @@
 .sale-section-link-price:hover {
     color: #00A0D1;
 }
+
+.producer h1{
+    padding-bottom: 15px;
+}

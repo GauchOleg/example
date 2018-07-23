@@ -27,9 +27,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
 //            'id',
             'name',
-            'image',
             'description:ntext',
-            'active',
+//            'active',
+            [
+                'headerOptions' => ['style' => 'min-width:60px;width:60px'],
+                'attribute' => 'image',
+                'value' => function($model){
+                    return $model->getPhoto();
+                },
+                'format' => 'raw',
+            ],
+            [
+                'headerOptions' => ['style' => 'min-width:60px;width:60px'],
+                'attribute' => 'active',
+                'value' => function($model){
+                    return $model->getStatus();
+                },
+                'format' => 'raw',
+            ],
             //'seo_title',
             //'seo_keywords',
             //'seo_description',
