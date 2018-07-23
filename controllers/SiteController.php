@@ -110,6 +110,7 @@ class SiteController extends FrontendController
         if (Yii::$app->request->isPost) {
             throw new BadRequestHttpException();
         }
+//        dd(Yii::$app->request->get());
         $search = new ProductSearch();
         $products = $search->searchByProduct(Yii::$app->request->get());
         $categoryList = Category::getAllCategory();

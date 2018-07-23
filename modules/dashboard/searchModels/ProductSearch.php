@@ -91,6 +91,9 @@ class ProductSearch extends Product
     }
 
     public function searchByProduct($params) {
+        if (!isset($params['ProductSearch'])) {
+            $params['ProductSearch'] = $params;
+        }
         return $this->search($params);
     }
 }

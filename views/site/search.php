@@ -31,7 +31,6 @@ use yii\widgets\Pjax;
                     },
                     'format' => 'raw',
                 ],
-                'name',
                 'code',
                 [
                     'attribute' => 'images',

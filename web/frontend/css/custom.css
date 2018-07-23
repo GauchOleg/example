@@ -488,3 +488,10 @@ table.table-bordered a{
     text-align: center;
     padding: 10px;
 }
+.ui-autocomplete {
+    z-index:1200 !important;
+}
+
+.search {
+    padding-top: 15px;
+}

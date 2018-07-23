@@ -91,6 +91,14 @@
                     ],
                 ],
                 [
+                    'label' => '<i class="fa fa-registered"></i> <span class="title"> ' . Yii::t('app', 'Производители') . '</span>',
+                    'url' => ['/dashboard/producer/index'],
+                    'active' => $module == 'dashboard' && $controller == 'producer',
+                    'options' => [
+                        'class' => 'start'
+                    ],
+                ],
+                [
                     'label' => '<i class="fa fa-cogs"></i> <span class="title"> ' . Yii::t('app', 'Настройки') . '</span>',
                     'url' => ['/dashboard/settings/index'],
                     'active' => $module == 'dashboard' && $controller == 'settings',
