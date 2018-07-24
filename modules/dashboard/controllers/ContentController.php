@@ -3,6 +3,7 @@
 namespace app\modules\dashboard\controllers;
 
 use Yii;
+use yii\filters\VerbFilter;
 use app\modules\dashboard\models\MetaData;
 use yii\helpers\ArrayHelper;
 

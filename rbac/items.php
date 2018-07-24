@@ -6,18 +6,43 @@ return [
     'logout' => [
         'type' => 2,
     ],
-    'user' => [
+    'USER' => [
         'type' => 1,
-        'description' => 'Клиент',
+        'ruleName' => 'userGroup',
+        'children' => [
+            'guest',
+        ],
+    ],
+    'admin-all' => [
+        'type' => 1,
+        'ruleName' => 'userGroup',
+        'children' => [
+            'guest',
+        ],
+    ],
+    'admin-did' => [
+        'type' => 1,
+        'ruleName' => 'userGroup',
+        'children' => [
+            'guest',
+        ],
+    ],
+    'admin-mcb' => [
+        'type' => 1,
+        'ruleName' => 'userGroup',
         'children' => [
             'guest',
         ],
     ],
     'admin' => [
         'type' => 1,
-        'description' => 'Админ',
+        'ruleName' => 'userGroup',
         'children' => [
+            'USER',
             'PARTNER',
+            'admin-all',
+            'admin-did',
+            'admin-mcb'
         ],
     ],
     'guest' => [

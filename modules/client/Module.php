@@ -1,16 +1,16 @@
 <?php
 
-namespace app\modules\user;
+namespace app\modules\client;
 
 /**
- * user module definition class
+ * client module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'app\modules\user\controllers';
+    public $controllerNamespace = 'app\modules\client\controllers';
 
     /**
      * {@inheritdoc}
@@ -18,7 +18,8 @@ class Module extends \yii\base\Module
     public function init()
     {
         parent::init();
-        $this->layout = 'main.php';
+        $this->layout = '@app/modules/dashboard/views/layouts/main.php';
+
         // custom initialization code goes here
     }
 }

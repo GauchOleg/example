@@ -376,9 +376,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
                 $url = '/dashboard/index-backend/index';
                 break;
             case static::ROLE_USER:
-            case static::ROLE_ADMIN_DID:
-            case static::ROLE_ADMIN_MCB:
-            case static::ROLE_ADMIN_ALL:
             case static::ROLE_MOBILE_USER:
             default :
                 $url = Yii::$app->getModule('user')->loginSuccess;

@@ -24,6 +24,17 @@ $config = [
                 ],
             ],
         ],
+        'user' => [
+            'class' => 'yii\web\User',
+            'identityClass' => 'app\modules\user\models\User',
+            'loginUrl' => $params['baseUrl'] . '/user/default/login',
+            'enableAutoLogin' => false,
+            'enableSession' => false,
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+//            'defaultRoles' => ['admin', 'user'],
+        ],
         'db' => $db,
     ],
     'params' => $params,
