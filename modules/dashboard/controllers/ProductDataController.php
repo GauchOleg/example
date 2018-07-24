@@ -11,6 +11,20 @@ use yii\helpers\ArrayHelper;
 class ProductDataController extends BackendController
 {
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $array =  [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+        return ArrayHelper::merge($behaviors,$array);
+    }
+
     public function actionIndex()
     {
         return $this->render('index');

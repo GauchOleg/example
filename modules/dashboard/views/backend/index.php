@@ -1,5 +1,7 @@
 <?php
 /* @var $count \app\modules\dashboard\models\Cart */
+
+$this->title = "Главная"
 ?>
 
 <div class="row">

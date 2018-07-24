@@ -1,50 +1,58 @@
+<?php
+
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+?>
+
 <div class="row">
     <div class="col-md-4">
-        <form class="login-form" action="index.html" method="post" novalidate="novalidate">
-            <h3 class="form-title font-green">Sign In</h3>
-            <div class="alert alert-danger display-hide">
-                <button class="close" data-close="alert"></button>
-                <span> Enter any username and password. </span>
-            </div>
-            <div class="form-group">
-                <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                <label class="control-label visible-ie8 visible-ie9">Username</label>
-                <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"> </div>
-            <div class="form-group">
-                <label class="control-label visible-ie8 visible-ie9">Password</label>
-                <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"> </div>
-            <div class="form-actions">
-                <button type="submit" class="btn green uppercase">Login</button>
-                <label class="rememberme check mt-checkbox mt-checkbox-outline">
-                    <input type="checkbox" name="remember" value="1">Remember
-                    <span></span>
-                </label>
-                <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
-            </div>
-            <div class="login-options">
-                <h4>Or login with</h4>
-                <ul class="social-icons">
-                    <li>
-                        <a class="social-icon-color facebook" data-original-title="facebook" href="javascript:;"></a>
-                    </li>
-                    <li>
-                        <a class="social-icon-color twitter" data-original-title="Twitter" href="javascript:;"></a>
-                    </li>
-                    <li>
-                        <a class="social-icon-color googleplus" data-original-title="Goole Plus" href="javascript:;"></a>
-                    </li>
-                    <li>
-                        <a class="social-icon-color linkedin" data-original-title="Linkedin" href="javascript:;"></a>
-                    </li>
-                </ul>
-            </div>
-            <div class="create-account">
-                <p>
-                    <a href="javascript:;" id="register-btn" class="uppercase">Create an account</a>
-                </p>
-            </div>
-        </form>
+
+    </div>
+    <div class="col-md-4">
+                <div class="logo">
+            <a href="/">
+                <p>EUROSPORT FITNESS SYSTEM</p>
+            </a>
+        </div>
+
+        <div class="login-form">
+            <?php $form = ActiveForm::begin([
+                'action' => 'check-user-data',
+            ]) ?>
+
+            <?php if (Yii::$app->session->hasFlash('success')): ?>
+                <div class="alert alert-success alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    <h4><i class="icon fa fa-check"></i>Сохранено!</h4>
+                    <?= Yii::$app->session->getFlash('success') ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (Yii::$app->session->hasFlash('error')): ?>
+                <div class="alert alert-error alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    <h4>Ошибка!</h4>
+                    <?= Yii::$app->session->getFlash('error') ?>
+                </div>
+            <?php endif; ?>
+
+            <?php echo $form->field($model,'username')?>
+            <?php echo $form->field($model,'password')?>
+            <?php echo $form->field($model,'remember')->checkbox([ 'value' => '1', 'checked ' => true])->label(false)?>
+
+            <?php echo Html::submitButton('Вход',['class' => 'btn btn-outline did add-cart'])?>
+
+            <?php ActiveForm::end() ?>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+
     </div>
     </div>
 </div>
-<div class="copyright"> 2018 EUROSPORT FITNESS SYSTEM </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="copyright logo"> 2018 EUROSPORT FITNESS SYSTEM </div>
+    </div>
+</div>

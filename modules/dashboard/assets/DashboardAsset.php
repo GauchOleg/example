@@ -24,6 +24,7 @@ class DashboardAsset extends AssetBundle
         "layouts/layout/css/themes/darkblue.min.css",
         "layouts/layout/css/custom.min.css",
         "custom/style.css",
+        "css/custom.css",
     ];
     public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
 

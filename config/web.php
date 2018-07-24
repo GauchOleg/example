@@ -25,8 +25,17 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\modules\user\models\User',
+            'loginUrl' => $params['baseUrl'] . '/user/default/login',
             'enableAutoLogin' => true,
+            'identityCookie' => [
+                'name' => '_identity_http_',
+                'httpOnly' => true
+            ]
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+            'defaultRoles' => ['admin', 'user'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

@@ -49,6 +49,7 @@
                     'options' => [
                         'class' => 'start'
                     ],
+//                    'visible' => \Yii::$app->user->can('admin')
                 ],
                 [
                     'label' => '<i class="fa fa-list-ul"></i> <span class="title"> ' . Yii::t('app', 'Категории') . '</span>',

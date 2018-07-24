@@ -7,6 +7,7 @@ use app\modules\dashboard\models\Checkbox;
 use app\modules\dashboard\searchModels\CheckboxSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * CheckboxController implements the CRUD actions for Checkbox model.
@@ -18,7 +19,8 @@ class CheckboxController extends BackendController
      */
     public function behaviors()
     {
-        return [
+        $behaviors = parent::behaviors();
+        $array =  [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -26,6 +28,7 @@ class CheckboxController extends BackendController
                 ],
             ],
         ];
+        return ArrayHelper::merge($behaviors,$array);
     }
 
     /**

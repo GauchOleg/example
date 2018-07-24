@@ -4,9 +4,28 @@ namespace app\modules\dashboard\controllers;
 
 use Yii;
 use app\modules\dashboard\models\MetaData;
+use yii\helpers\ArrayHelper;
+
 
 class ContentController extends BackendController
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $array =  [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+        return ArrayHelper::merge($behaviors,$array);
+    }
+
     public function actionIndex()
     {
         $meta = new MetaData();

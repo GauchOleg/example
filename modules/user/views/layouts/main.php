@@ -1,9 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use app\modules\dashboard\assets\DashboardAsset;
 
 /* @var $this \yii\web\View */
@@ -29,10 +26,7 @@ DashboardAsset::register($this);
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="logo">
-                        <a href="/">
-                            <img src="../../../../frontend/images/logo.jpg" width="120" height="40" alt="Logo"> </a>
-                    </div>
+                    
                 </div>
             </div>
 

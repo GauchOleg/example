@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
 
 /**
  * CategoryController implements the CRUD actions for Category model.
@@ -20,7 +21,8 @@ class CategoryController extends BackendController
      */
     public function behaviors()
     {
-        return [
+        $behaviors = parent::behaviors();
+        $array =  [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -28,6 +30,7 @@ class CategoryController extends BackendController
                 ],
             ],
         ];
+        return ArrayHelper::merge($behaviors,$array);
     }
 
     /**

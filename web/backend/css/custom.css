@@ -12,3 +12,25 @@
     padding-right: 10px;
     font-size: 16px;
 }
+.login {
+    background-color: #c5c5c5 !important;
+}
+.login-form {
+    background: #9aa082;
+    padding: 20px;
+}
+.logo {
+    text-align: center;
+    padding-top: 40%;
+    padding-bottom: 20px;
+}
+.alert.alert-error.alert-dismissable {
+    border: 1px solid #964646;
+    color: #964646;
+}
+.form-group.field-user-username.required.has-success label{
+    color: #3c763d;
+}
+.form-group.field-user-password.required.has-success label{
+    color: #3c763d;
+}

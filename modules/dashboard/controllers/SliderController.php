@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
 
 /**
  * SliderController implements the CRUD actions for Slider model.
@@ -21,7 +22,8 @@ class SliderController extends BackendController
      */
     public function behaviors()
     {
-        return [
+        $behaviors = parent::behaviors();
+        $array =  [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -29,6 +31,7 @@ class SliderController extends BackendController
                 ],
             ],
         ];
+        return ArrayHelper::merge($behaviors,$array);
     }
 
     /**

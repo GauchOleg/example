@@ -25,10 +25,10 @@
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
                             <a href="page_user_profile_1.html">
-                                <i class="icon-user"></i> My Profile </a>
+                                <i class="icon-user"></i> <?php echo Yii::$app->user->getId() ?> </a>
                         </li>
                         <li>
-                            <a href="page_user_login_1.html">
+                            <a href="<?php echo \yii\helpers\Url::to(['/user/default/logout'])?>">
                                 <i class="icon-key"></i> Log Out </a>
                         </li>
                     </ul>

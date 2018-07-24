@@ -11,6 +11,7 @@ use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
 
 /**
  * ProductController implements the CRUD actions for Product model.
@@ -22,7 +23,8 @@ class ProductController extends BackendController
      */
     public function behaviors()
     {
-        return [
+        $behaviors = parent::behaviors();
+        $array =  [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -30,6 +32,7 @@ class ProductController extends BackendController
                 ],
             ],
         ];
+        return ArrayHelper::merge($behaviors,$array);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace app\modules\dashboard\controllers;
 use Yii;
 use app\modules\dashboard\models\Cart;
 use app\modules\dashboard\searchModels\Cart as CartSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -20,7 +21,8 @@ class CartController extends BackendController
      */
     public function behaviors()
     {
-        return [
+        $behaviors = parent::behaviors();
+        $array =  [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -28,6 +30,7 @@ class CartController extends BackendController
                 ],
             ],
         ];
+        return ArrayHelper::merge($behaviors,$array);
     }
 
     /**

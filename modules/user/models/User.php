@@ -27,13 +27,11 @@ use app\modules\booking\models\Staff;
  * @property string  $create_date
  * @property string  $referral_code
  * @property integer $status
+ * @property integer $remember
  */
 class User extends ActiveRecord implements \yii\web\IdentityInterface {
 
     const ROLE_ADMIN        = 1;    // for all and create other admins
-    const ROLE_ADMIN_ALL    = 11;    // for NB, NCS, DID, MCB & DIDWE services and create other admin (11 & 12)
-    const ROLE_ADMIN_DID    = 12;   // for NB, NCS, DID services
-    const ROLE_ADMIN_MCB    = 13;   // for MCB & DIDWE services
     const ROLE_USER         = 2;
     const ROLE_PARTNER      = 3;
     const ROLE_MOBILE_USER  = 4;
@@ -50,6 +48,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     protected $metaData;
     public $newPassword;
     public $_password;
+    public $remember;
 
     /** @inheritdoc */
     public static function tableName() {
@@ -79,12 +78,13 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     /** @inheritdoc */
     public function attributeLabels() {
         return [
-            'username'          => Yii::t('app', 'Username'),
+            'username'          => Yii::t('app', 'Логин'),
             'email'             => Yii::t('app', 'Email'),
             'role'              => Yii::t('app', 'Role'),
-            'password'          => Yii::t('app', 'Password'),
+            'password'          => Yii::t('app', 'Пароль'),
             'create_date'       => Yii::t('app', 'Registration time'),
             'status'            => Yii::t('app', 'Status'),
+            'remember'            => Yii::t('app', 'Запомнить меня'),
         ];
     }
 
@@ -112,7 +112,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             ['email', 'trim'],
             // password rules
             ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            ['password', 'string', 'min' => 5],
 
             // status rules
             [['status'], 'integer'],
@@ -121,7 +121,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
 
             [['auth_key'], 'string', 'max' => 32],
             [['access_token'], 'string', 'max' => 40],
-            [['last_login'], 'datetime']
+            [['last_login'], 'datetime'],
+
+            [['remember'], 'integer'],
+
         ];
     }
 
@@ -179,6 +182,26 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     /** @inheritdoc */
     public static function findIdentityByAccessToken($token, $type = null) {
         return static::findOne(['access_token' => $token]);
+    }
+
+    public function setAccessToken() {
+        if (isset($this->access_token)) {
+            Yii::$app->session->set('access_token',$this->access_token);
+        }
+    }
+
+    public function removeAccessToken() {
+        if (Yii::$app->session->get('access_token')) {
+            Yii::$app->session->remove('access_token');
+        }
+    }
+
+    public function getSessionToken() {
+        if (Yii::$app->session->get('access_token')) {
+            return Yii::$app->session->get('access_token');
+        } else {
+            return false;
+        }
     }
 
     /**
