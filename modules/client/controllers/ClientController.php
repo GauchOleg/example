@@ -10,7 +10,7 @@ class ClientController extends IndexController
 {
     public function actionIndex()
     {
-        if (Yii::$app->user->can('admin')) {
+        if (Yii::$app->user->identity->role == UserSearch::ROLE_ADMIN) {
             $searchModel = new UserSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             return $this->render('clients',[

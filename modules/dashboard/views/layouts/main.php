@@ -3,9 +3,8 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use app\modules\dashboard\assets\BackendGlobalAsset;
+use app\modules\user\models\User;
 use app\modules\dashboard\assets\DashboardAsset;
-use app\modules\dashboard\widgets\Alert;
 
 DashboardAsset::register($this);
 ?>
@@ -35,9 +34,9 @@ DashboardAsset::register($this);
 
         <!-- BEGIN SIDEBAR -->
         <?php
-        if(\Yii::$app->user->can('admin')){
+        if (Yii::$app->user->identity->role == User::ROLE_ADMIN) {
             echo $this->render('_elements/main-menu');
-        }else if (\Yii::$app->user->can('USER')){
+        }else if (Yii::$app->user->identity->role == User::ROLE_USER){
             echo $this->render('_elements/client-menu');
         }
         ?>

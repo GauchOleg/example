@@ -105,7 +105,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             ['username', 'string', 'min' => 3, 'max' => 60],
             ['username', 'trim'],
             // email rules
-            ['email', 'required'],
+//            ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 100],
             ['email', 'unique'],

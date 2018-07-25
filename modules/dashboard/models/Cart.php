@@ -2,6 +2,8 @@
 
 namespace app\modules\dashboard\models;
 
+use app\modules\user\models\User;
+use app\modules\user\models\UserMeta;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -463,6 +465,7 @@ class Cart extends \yii\db\ActiveRecord
             $order->product_info    = self::setJsonData($post,'info');
             $order->date_ordered    = date('Y-m-d H:i:s');
             if ($order->update(false)) {
+                self::addNewClient($order);
                 Yii::$app->session->remove('order_id');
                 $cookies = Yii::$app->response->cookies;
                 $cookies->remove('order_id');
@@ -472,6 +475,31 @@ class Cart extends \yii\db\ActiveRecord
             }
         } else {
             return false;
+        }
+    }
+
+    private function addNewClient($order) {
+        $user = new User();
+        $user->username = self::prepareClientPhone($order->customer_phone);
+        $user->email = ($order->customer_email) ? $order->customer_email : '';
+        $user->status = User::STATUS_APPROVED;
+        $user->role = User::ROLE_USER;
+        $user->password = self::prepareClientPhone($order->customer_phone);
+        $user->auth_key = Yii::$app->security->generateRandomString();
+        $user->referral_code = Yii::$app->security->generateRandomString(12);
+        $user->access_token = Yii::$app->security->generateRandomString(40);
+        if ($user->save(false)) {
+            $userMeta = new UserMeta();
+            $userMeta->user_id = $user->id;
+            $userMeta->meta_key = 'phone';
+            $userMeta->meta_value = $order->customer_phone;
+            $userMeta->save(false);
+        }
+    }
+
+    private function prepareClientPhone($phone) {
+        if (isset($phone)) {
+            return preg_replace('/-/','',preg_replace('/\) /','',preg_replace('/(\+38){1}(\(){1}/','',$phone)));
         }
     }
 
