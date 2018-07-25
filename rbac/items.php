@@ -6,7 +6,7 @@ return [
     'logout' => [
         'type' => 2,
     ],
-    'USER' => [
+    'user' => [
         'type' => 1,
         'ruleName' => 'userGroup',
         'children' => [
