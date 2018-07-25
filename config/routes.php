@@ -10,5 +10,5 @@ return [
     'dashboard/category' => 'dashboard/category/index',
     'dashboard/product' => 'dashboard/product/index',
     'dashboard/login' => 'user/default/login',
-    'client' => 'client/client/index',
+    'client/index' => 'client/client/index',
 ];

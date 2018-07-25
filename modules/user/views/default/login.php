@@ -17,7 +17,7 @@ use yii\helpers\Html;
 
         <div class="login-form">
             <?php $form = ActiveForm::begin([
-                'action' => 'check-user-data',
+                'action' => '/user/default/check-user-data',
             ]) ?>
 
             <?php if (Yii::$app->session->hasFlash('success')): ?>

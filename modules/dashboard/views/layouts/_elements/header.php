@@ -25,7 +25,7 @@
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
                             <a href="page_user_profile_1.html">
-                                <i class="icon-user"></i> <?php echo Yii::$app->user->getId() ?> </a>
+                                <i class="icon-user"></i> <?php echo \app\modules\user\models\User::getIdentityName(); ?> </a>
                         </li>
                         <li>
                             <a href="<?php echo \yii\helpers\Url::to(['/user/default/logout'])?>">

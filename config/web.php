@@ -26,7 +26,7 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\modules\user\models\User',
-            'loginUrl' => $params['baseUrl'] . '/user/default/login',
+            'loginUrl' => $params['baseUrl'] . '/dashboard/login',
             'enableAutoLogin' => true,
             'identityCookie' => [
                 'name' => '_identity_http_',

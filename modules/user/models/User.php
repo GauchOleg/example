@@ -83,7 +83,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             'role'              => Yii::t('app', 'Role'),
             'password'          => Yii::t('app', 'Пароль'),
             'create_date'       => Yii::t('app', 'Registration time'),
-            'status'            => Yii::t('app', 'Status'),
+            'status'            => Yii::t('app', 'Статус'),
             'remember'            => Yii::t('app', 'Запомнить меня'),
         ];
     }
@@ -189,6 +189,37 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             Yii::$app->session->set('access_token',$this->access_token);
         }
     }
+    
+    public function loginUser($model) {
+        Yii::$app->user->login($model);
+        if ($model->remember == 1) {
+            $this->setAccessToken();
+        }
+    }
+
+    public function logoutUser(){
+        Yii::$app->user->logout();
+        $this->removeAccessToken();
+    }
+
+    public function checkUserData($model) {
+        $user = $this->findUserByUsername($model->username);
+        if (is_null($user)) {
+            return 'user';
+        }
+        if (!Password::validate($model->password,$user->password)) {
+            return 'password';
+        }
+        return $user;
+    }
+
+    public function errorUserPassword() {
+        Yii::$app->session->setFlash('error','Не верный логин/пароль',true);
+    }
+
+    public function forbiddenUser() {
+        Yii::$app->session->setFlash('error','Доступ к Вашему аккаунту не возможен. Обратитесь к админимстрации сайта');
+    }
 
     public function removeAccessToken() {
         if (Yii::$app->session->get('access_token')) {
@@ -272,6 +303,20 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
         ];
     }
 
+    public function getRole() {
+        return $this->getRoleList()[$this->role];
+    }
+    
+    public static function getIdentityName(){
+        $user = Yii::$app->user->identity;
+        if (!$user) {
+            return false;
+        }
+        $role = self::getRoleList()[$user->role];
+        $userName =$user->username;
+        return $userName .', ' . $role;
+    }
+
     /**
      * Get status
      * @param boolean $html
@@ -306,7 +351,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
      */
     public static function getRoleList() {
         return [
-            static::ROLE_USER   => Yii::t('app', 'User'),
+            static::ROLE_USER   => Yii::t('app', 'Клиент'),
             static::ROLE_ADMIN  => Yii::t('app', 'Admin'),
         ];
     }
@@ -439,6 +484,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
 
     public function getInterests() {
         return isset($this->metaData->interests) ? $this->metaData->interests : null;
+    }
+
+    public function getAllUsers($currentUser) {
+        return $this->find()->where(['not',['id' => $currentUser]]);
     }
 
 }

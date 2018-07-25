@@ -23,7 +23,7 @@ class UserGroupRule extends Rule {
                     return $role == User::ROLE_ADMIN;
                     break;
                 case 'USER':
-                    return $role == User::ROLE_USER || $role == User::ROLE_ADMIN;
+                    return $role == User::ROLE_USER;
                     break;
             }
         }

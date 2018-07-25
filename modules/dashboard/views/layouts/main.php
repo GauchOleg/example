@@ -35,13 +35,11 @@ DashboardAsset::register($this);
 
         <!-- BEGIN SIDEBAR -->
         <?php
-//        if(\Yii::$app->user->can('admin') || Yii::$app->user->can('admin-did') || Yii::$app->user->can('admin-mcb') || Yii::$app->user->can('admin-all')){
+        if(\Yii::$app->user->can('admin')){
             echo $this->render('_elements/main-menu');
-//        }elseif(\Yii::$app->user->can('USER')){
-//            echo $this->render('_elements/staff-main-menu');
-//        }else{
-//            echo $this->render('_elements/client-main-menu');
-//        }
+        }else if (\Yii::$app->user->can('USER')){
+            echo $this->render('_elements/client-menu');
+        }
         ?>
         <!-- END SIDEBAR -->
 

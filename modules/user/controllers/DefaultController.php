@@ -20,11 +20,11 @@ class DefaultController extends Controller
     public function actionLogin() {
 
         if (Yii::$app->user->can('admin')) {
-            return $this->redirect('dashboard');
+            return $this->redirect('/dashboard');
         }
 
         if (Yii::$app->user->can('user')) {
-            return $this->redirect('client/client/index');
+            return $this->redirect('/client/index');
         }
 
         $model = new User();
@@ -34,35 +34,34 @@ class DefaultController extends Controller
     }
 
     public function actionCheckUserData() {
-
         if (!Yii::$app->request->isPost) {
             throw new BadRequestHttpException();
         }
-
         $model = new User();
         if ($model->load(Yii::$app->request->post())) {
-            if (!is_null($user = $model->findUserByUsername($model->username))) {
-                if ($user->role == User::ROLE_ADMIN && $user->status == User::STATUS_APPROVED) {
-                    Yii::$app->user->login($user);
-                    if ($model->remember == 1) {
-                        $model->setAccessToken();
-                    }
-                    return $this->redirect('/dashboard');
-                } else {
-//                    Yii::$app->session->setFlash('error','Доступ к Вашему аккаунту не возможен. Обратитесь к админимстрации сайта');
-                    return $this->redirect('/client');
-                }
+            $response = $model->checkUserData($model);
+            if ($response == 'user' || $response == 'password') {
+                $model->errorUserPassword();
+                return $this->redirect('/dashboard/login');
+            }
+            if ($response->role == User::ROLE_ADMIN && $response->status == User::STATUS_APPROVED) {
+                $model->loginUser($response);
+                return $this->redirect('/dashboard');
             } else {
-                Yii::$app->session->setFlash('error','Не верный логин/пароль',true);
-                return $this->redirect('login');
+                if ($response->status != User::STATUS_BLOCKED) {
+                    $model->loginUser($response);
+                    return $this->redirect('/client/index');
+                } else {
+                    $model->forbiddenUser();
+                    return $this->redirect('/dashboard/login');
+                }
             }
         }
     }
 
     public function actionLogout() {
         $model = new User();
-        Yii::$app->user->logout();
-        $model->removeAccessToken();
-        return $this->redirect('/user/default/login');
+        $model->logoutUser();
+        return $this->redirect('/dashboard/login');
     }
 }
