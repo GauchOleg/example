@@ -11,6 +11,12 @@ use Yii;
  * @property string $meta_key
  * @property string $meta_value
  */
+
+/*
+ * Use $meta_key in module client
+ * 'username','phone','image','first_name','last_name','about','site','spam'
+ */
+
 class MetaData extends \yii\db\ActiveRecord
 {
     const SUCCESS_MESSAGE = 'Данные успешно обновлены';

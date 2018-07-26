@@ -51,6 +51,14 @@
                     ],
 //                    'visible' => \Yii::$app->user->can('admin')
                 ],
+                [
+                    'label' => '<i class="fa fa-cogs"></i> <span class="title"> ' . Yii::t('app', 'Настройки') . '</span>',
+                    'url' => ['/client/settings/my'],
+                    'active' => $module == 'client' && $controller == 'settings',
+                    'options' => [
+                        'class' => 'start'
+                    ],
+                ],
             ]
         ]);
         ?>

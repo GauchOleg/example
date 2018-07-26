@@ -7,7 +7,8 @@ use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
 use app\modules\user\helpers\Password;
 use app\modules\user\models\UserMeta;
-use app\modules\booking\models\Staff;
+use yii\helpers\Json;
+
 //use app\modules\user\models\UserGroupRelations;
 //use app\helpers\MandrillEmailHelper;
 
@@ -28,6 +29,8 @@ use app\modules\booking\models\Staff;
  * @property string  $referral_code
  * @property integer $status
  * @property integer $remember
+ * @property string $new_password
+ * @property string $password_repeat
  */
 class User extends ActiveRecord implements \yii\web\IdentityInterface {
 
@@ -46,9 +49,12 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     const LOGIN_SCENARIO    = 'login';
 
     protected $metaData;
-    public $newPassword;
-    public $_password;
+//    public $newPassword;
+//    public $_password;
     public $remember;
+    
+    public $new_password;
+    public $password_repeat;
 
     /** @inheritdoc */
     public static function tableName() {
@@ -85,13 +91,16 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             'create_date'       => Yii::t('app', 'Registration time'),
             'status'            => Yii::t('app', 'Статус'),
             'remember'            => Yii::t('app', 'Запомнить меня'),
+            'new_password' => 'Новый пароль',
+            'password_repeat' => 'Еще раз новый пароль',
         ];
     }
 
     /** @inheritdoc */
     public function scenarios() {
         return\yii\helpers\ArrayHelper::merge([
-            static::LOGIN_SCENARIO     => ['username', 'email'],
+            static::LOGIN_SCENARIO      => ['username', 'email'],
+            static::UPDATE_SCENARIO     => ['password'],
         ], parent::scenarios());
     }
 
@@ -99,7 +108,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     public function rules() {
         return [
             // username rules
-            ['username', 'required'],
+//            ['username', 'required'],
             ['username', 'unique'],
             ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             ['username', 'string', 'min' => 3, 'max' => 60],
@@ -114,6 +123,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             ['password', 'required'],
             ['password', 'string', 'min' => 5],
 
+            ['new_password', 'string', 'min' => 5],
+            ['password_repeat', 'string', 'min' => 5],
+
+            ['password_repeat', 'compare' ,'compareAttribute' => 'new_password'],
+
             // status rules
             [['status'], 'integer'],
             // role rules
@@ -121,7 +135,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
 
             [['auth_key'], 'string', 'max' => 32],
             [['access_token'], 'string', 'max' => 40],
-            [['last_login'], 'datetime'],
+//            [['last_login'], 'datetime'],
 
             [['remember'], 'integer'],
 
@@ -129,31 +143,19 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     }
 
     /** @inheritdoc */
-    public function beforeValidate() {
-        if (!empty($this->newPassword)) {
-            $this->password = $this->newPassword;
-        }
-        return parent::beforeValidate();
-    }
+//    public function beforeValidate() {
+//        if (!empty($this->new_password)) {
+//            $this->password = $this->new_password;
+//        }
+//        return parent::beforeValidate();
+//    }
 
     /** @inheritdoc */
     public function beforeSave($insert) {
-        if ($insert) {
-            if ($this->scenario == static::CREATE_SCENARIO) {
-                $this->password = Password::hash($this->newPassword);
-            } else {
-                $this->password = Password::hash($this->password);
-            }
 
-            $this->create_date = date('Y-m-d H:i:s');
-        } else {
-            if (!empty($this->newPassword)) {
-                $this->password = Password::hash($this->newPassword);
-            }
-
-            if($this->status === static::STATUS_BLOCKED){
-                $this->auth_key = Yii::$app->security->generateRandomString();
-            }
+        if ($this->isNewRecord) {
+            $this->auth_key = Yii::$app->security->generateRandomString();
+            $this->password = Password::hash($this->password);
         }
 
         return parent::beforeSave($insert);
@@ -488,6 +490,41 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
 
     public function getAllUsers($currentUser) {
         return $this->find()->where(['not',['id' => $currentUser]]);
+    }
+
+    public function findUserById($id) {
+        return $this->findOne(['id' => $id]);
+    }
+
+    public function updatePassword($post) {
+        $model = $this->findUserById($post['User']['id']);
+//        dd($model);
+        if (!$model) {
+            return Json::encode(['error' => 'Пользователь не найден']);
+        }
+        if (!Password::validate($post['User']['password'],$model->password)) {
+            return Json::encode(['error' => 'Не вырный текущий пароль']);
+        }
+        $model->scenario = 'update';
+        $model->load($post);
+        $model->setAttribute('password',Password::hash($post['User']['new_password']));
+//        $model->password = Password::hash($post['User']['password']);
+        if ($model->update()) {
+            return Json::encode(['success' => 'Пароль успешно обновлнен']);
+        } else {
+            return Json::encode(['error' => 'Пароль не обновлнен']);
+        }
+    }
+
+    public function setFlash($jsonData) {
+        $data = Json::decode($jsonData);
+        if (key_exists('error',$data)) {
+            Yii::$app->session->setFlash('error',$data['error'],true);
+        }
+        if (key_exists('success',$data)) {
+            Yii::$app->session->setFlash('success',$data['success'],true);
+        }
+        return true;
     }
 
 }
