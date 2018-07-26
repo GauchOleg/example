@@ -2,9 +2,10 @@
 
 namespace app\modules\client\controllers;
 
-use app\modules\dashboard\searchModels\Cart;
 use Yii;
+use app\modules\dashboard\searchModels\Cart;
 use app\modules\user\models\searchModels\UserSearch;
+
 
 
 class ClientController extends IndexController
@@ -18,13 +19,16 @@ class ClientController extends IndexController
                 'dataProvider' => $dataProvider,
             ]);
         }
-        $phone = Yii::$app->user->identity->metaData->phone;
-        $cart = new Cart();
-        $params = ['Cart' => ['customer_phone' => $phone]];
-        $dataProvider = $cart->search($params);
+    }
 
-        return $this->render('index',[
-            'dataProvider' => $dataProvider,
+    public function actionHome() {
+
+        $user = Yii::$app->user->identity;
+        $countOrders = Cart::getTotalOrdersByPhone($user->metaData->phone);
+
+        return $this->render('clients-home',[
+            'user' => $user,
+            'countOrders' => $countOrders,
         ]);
     }
 

@@ -24,7 +24,7 @@ class DefaultController extends Controller
         }
 
         if (Yii::$app->user->can('user')) {
-            return $this->redirect('/client/index');
+            return $this->redirect('/client/home');
         }
 
         $model = new User();
@@ -50,7 +50,7 @@ class DefaultController extends Controller
             } else {
                 if ($response->status != User::STATUS_BLOCKED) {
                     $model->loginUser($response);
-                    return $this->redirect('/client/index');
+                    return $this->redirect('/client/home');
                 } else {
                     $model->forbiddenUser();
                     return $this->redirect('/dashboard/login');

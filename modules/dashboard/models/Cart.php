@@ -123,6 +123,10 @@ class Cart extends \yii\db\ActiveRecord
         }
     }
 
+    public static function getTotalOrdersByPhone($phone) {
+        return count(self::find()->where(['customer_phone' => $phone])->asArray()->all());
+    }
+
     public static function updateOrderStatus($postData) {
         $order = self::getOrderById($postData['product_id']);
         if (!is_null($order)) {
@@ -562,13 +566,13 @@ class Cart extends \yii\db\ActiveRecord
         }
     }
 
-    public function checkStatus($status = false,$id = false) {
+    public function checkStatus($status = false,$id = false,$client = false) {
 
         if ($status && $id) {
             $this->status = $status;
             $this->id = $id;
         }
-        $class = 'order-status';
+        $class = $client == true ? '' : 'order-status';
         $button_color = '';
         $status = '';
         $url = '"update-status"';
@@ -588,6 +592,10 @@ class Cart extends \yii\db\ActiveRecord
             case self::STATUS_PENDING : $status = '<span class="'. $class .'">'. $statusName .'</span>'; $button_color = 'status-pending';
                 break;
             default : $status = 'не определен';
+        }
+
+        if ($client) {
+            return "<span class='btn btn-default ". $button_color ."' style='width:100%;cursor:auto';>" . $status . "</span>";
         }
 
         $checked_ordered = ($this->status == self::STATUS_ORDERED) ? ' checked' : '';

@@ -24,7 +24,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
-                            <a href="page_user_profile_1.html">
+                            <a href="#">
                                 <i class="icon-user"></i> <?php echo \app\modules\user\models\User::getIdentityName(); ?> </a>
                         </li>
                         <li>

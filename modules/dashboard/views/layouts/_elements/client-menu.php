@@ -36,16 +36,16 @@
 
                 [
                     'label' => '<i class="icon-home"></i> <span class="title"> ' . Yii::t('app', 'Главная') . '</span>',
-                    'url' => ['/dashboard/backend/index'],
-                    'active' => $module == 'dashboard' && $controller == 'backend',
+                    'url' => ['/client/home'],
+                    'active' => $module == 'client' && $controller == 'client',
                     'options' => [
                         'class' => 'start'
                     ],
                 ],
                 [
                     'label' => '<i class="fa fa-cart-plus"></i> <span class="title"> ' . Yii::t('app', 'Заказы') . '</span>',
-                    'url' => ['/dashboard/cart/index'],
-                    'active' => $module == 'dashboard' && $controller == 'cart',
+                    'url' => ['/personal/orders'],
+                    'active' => $module == 'client' && $controller == 'personal',
                     'options' => [
                         'class' => 'start'
                     ],

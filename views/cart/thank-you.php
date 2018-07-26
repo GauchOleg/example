@@ -1,3 +1,9 @@
+<?php
+
+/* @var $this yii\web\View */
+
+$this->title = 'Страница благодарности'
+?>
 <div class="wrapper">
     <div id="cart-view">
         <div class="container center" id="cart" style="padding-top: 100px;">

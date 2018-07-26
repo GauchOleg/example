@@ -3,6 +3,7 @@
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
+$this->title = 'Личный кабинет';
 ?>
 
 <?= GridView::widget([
@@ -24,9 +25,10 @@ use yii\helpers\Html;
         ],
 
         [
+            'headerOptions' => ['style' => 'min-width:100px;width:100px'],
             'attribute' => 'status',
             'value' => function($model) {
-                return $model->checkStatus();
+                return $model->checkStatus(false,false,true);
             },
             'format' => 'raw',
         ],
@@ -39,3 +41,4 @@ use yii\helpers\Html;
         ],
     ],
 ]); ?>
+
