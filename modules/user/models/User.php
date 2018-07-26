@@ -503,7 +503,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             return Json::encode(['error' => 'Пользователь не найден']);
         }
         if (!Password::validate($post['User']['password'],$model->password)) {
-            return Json::encode(['error' => 'Не вырный текущий пароль']);
+            return Json::encode(['error' => 'Не правильный "Текущий пароль"']);
         }
         $model->scenario = 'update';
         $model->load($post);

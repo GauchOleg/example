@@ -13,6 +13,8 @@ use Yii;
  * @property string $meta_value
  *
  * @property Users $user
+ *
+ * use meta_key for client profile: 'first_name','last_name','add_phone','about','site'
  */
 class UserMeta extends \yii\db\ActiveRecord {
 
@@ -56,7 +58,7 @@ class UserMeta extends \yii\db\ActiveRecord {
     /**
      * Update user meta
      */
-    public static function updateUserMeta($userId, $key, $value){
+    private function updateUserMeta($userId, $key, $value){
         if(null === $model = static::find()->where(['user_id' => $userId, 'meta_key' => $key ])->one()){
             $model = new static();
             $model->user_id = $userId;
@@ -69,6 +71,16 @@ class UserMeta extends \yii\db\ActiveRecord {
                 'meta_value' => $value,
             ]);
         }
+    }
+
+    public function updateMetaData($post) {
+        $userId = $post['userId'];
+        unset($post['_csrf']);
+        unset($post['userId']);
+        foreach ($post as $key => $value) {
+            $this->updateUserMeta($userId,$key,$value);
+        }
+        return true;
     }
 
 }

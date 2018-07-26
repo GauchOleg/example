@@ -6,22 +6,22 @@
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-$this->title = 'Мои настройки'
+$this->title = 'Мои настройки';
 ?>
 
 <?php if (Yii::$app->session->hasFlash('success')): ?>
     <div class="alert alert-success alert-dismissable">
         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-        <h4><i class="icon fa fa-check"></i>Сохранено!</h4>
-        <?= Yii::$app->session->getFlash('success') ?>
+        <h4>Сохранено!</h4>
+        <i class="icon fa fa-check"></i> <?= Yii::$app->session->getFlash('success') ?>
     </div>
 <?php endif; ?>
 
 <?php if (Yii::$app->session->hasFlash('error')): ?>
     <div class="alert alert-error alert-dismissable">
         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-        <h4><i class="icon fa fa-check"></i>Ошибка!</h4>
-        <?= Yii::$app->session->getFlash('error') ?>
+        <h4>Ошибка!</h4>
+        <i class="icon fa fa-warning"></i> <?= Yii::$app->session->getFlash('error') ?>
     </div>
 <?php endif; ?>
 
@@ -56,13 +56,13 @@ $this->title = 'Мои настройки'
                                 <span class="caption-subject font-blue-madison bold uppercase">Мои данные</span>
                             </div>
                             <ul class="nav nav-tabs">
-                                <li class="">
+                                <li class="active">
                                     <a href="#tab_1_1" data-toggle="tab" aria-expanded="false">Персональная информация</a>
                                 </li>
                                 <li class="">
                                     <a href="#tab_1_2" data-toggle="tab" aria-expanded="false">Изменить аватар</a>
                                 </li>
-                                <li class="active">
+                                <li class="">
                                     <a href="#tab_1_3" data-toggle="tab" aria-expanded="true">Изменить пароль</a>
                                 </li>
                                 <li class="">
@@ -73,10 +73,9 @@ $this->title = 'Мои настройки'
                         <div class="portlet-body">
                             <div class="tab-content">
                                 <!-- PERSONAL INFO TAB -->
-                                <div class="tab-pane" id="tab_1_1">
+                                <div class="tab-pane active" id="tab_1_1">
                                     <?php $form = ActiveForm::begin([
                                         'options' => [
-                                            'id' => 'user-password',
                                             'enctype' => 'multipart/form-data',
                                             'method' => 'POST',
                                         ],
@@ -84,27 +83,27 @@ $this->title = 'Мои настройки'
                                     ])?>
                                         <div class="form-group">
                                             <label class="control-label">Имя</label>
-                                            <?php echo Html::input('text','username','',['placeholder' => 'Иванов', 'class' => 'form-control'])?>
+                                            <?php echo Html::input('text','first_name',isset($meta['first_name']['meta_value']) ? $meta['first_name']['meta_value'] : '',['placeholder' => 'Иванов', 'class' => 'form-control'])?>
 <!--                                            <input type="text" placeholder="Иванов" class="form-control">-->
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Фамилия</label>
-                                            <input type="text" placeholder="Иван" class="form-control">
+                                            <?php echo Html::input('text','last_name',isset($meta['last_name']['meta_value']) ? $meta['last_name']['meta_value'] : '',['placeholder' => 'Иван', 'class' => 'form-control'])?>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Номер телефона</label>
-                                            <input type="text" placeholder="+38 050-123-45-67" class="form-control">
+                                            <?php echo Html::input('text','add_phone',isset($meta['add_phone']['meta_value']) ? $meta['add_phone']['meta_value'] : '',['placeholder' => '+38(050)123-45-67', 'class' => 'form-control', 'id' => 'phone'])?>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">О себе</label>
-                                            <textarea class="form-control" rows="3" placeholder="Постоянный клиент"></textarea>
+                                            <?php echo Html::textarea('about',isset($meta['about']['meta_value']) ? $meta['about']['meta_value'] : '',['placeholder' => 'Постоянный клиент', 'class' => 'form-control', 'rows' => 3])?>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Мой сайт</label>
-                                            <input type="text" placeholder="http://www.mywebsite.com" class="form-control">
+                                            <?php echo Html::input('text','site',isset($meta['site']['meta_value']) ? $meta['site']['meta_value'] : '',['placeholder' => 'http://www.mywebsite.com', 'class' => 'form-control'])?>
                                         </div>
                                         <div class="margiv-top-10">
-                                            <?php echo Html::input('hidden','User[id]',$user->id)?>
+                                            <?php echo Html::input('hidden','userId',Yii::$app->user->identity->getId())?>
                                             <?php echo Html::button('Обновить',['class' => 'btn did btn-outline','type' => 'submit'])?>
                                         </div>
                                     <?php ActiveForm::end();?>
@@ -139,14 +138,14 @@ $this->title = 'Мои настройки'
                                 <!-- END CHANGE AVATAR TAB -->
 
                                 <!-- CHANGE PASSWORD TAB -->
-                                <div class="tab-pane active" id="tab_1_3">
+                                <div class="tab-pane" id="tab_1_3">
                                     <?php $form = ActiveForm::begin([
                                         'options' => [
-                                            'id' => 'user-password',
                                             'enctype' => 'multipart/form-data',
                                             'method' => 'POST',
                                         ],
                                         'action' => '/client/settings/update-password',
+                                        'enableClientValidation' => true
                                     ])?>
                                         <div class="form-group">
                                             <label class="control-label">Текущий пароль</label>
@@ -160,7 +159,7 @@ $this->title = 'Мои настройки'
                                             <label class="control-label">Еще раз новый пароль</label>
                                             <?php echo $form->field($user,'password_repeat')->passwordInput()->label(false)?>
                                         </div>
-                                        <?php echo Html::input('hidden','User[id]',$user->id)?>
+                                        <?php echo Html::input('hidden','User[id]',Yii::$app->user->identity->getId())?>
                                         <div class="margiv-top-10">
                                             <?= Html::submitButton('Обновить', ['class' => 'btn did btn-outline']) ?>
                                         </div>
@@ -209,3 +208,9 @@ $this->title = 'Мои настройки'
 <!--        <span class="btn did btn-outline file-btn" data-num="" id="load-img">Загрузить</span>-->
 <!--    </div>-->
 <!--</div>-->
+
+<script>
+    $(document).ready(function () {
+        $("#phone").mask("+38(099) 999-99-99");
+    });
+</script>

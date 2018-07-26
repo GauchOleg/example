@@ -3,6 +3,7 @@
 namespace app\modules\client\controllers;
 
 
+use app\modules\user\models\LoginForm;
 use app\modules\user\models\UserMeta;
 use Yii;
 use app\modules\dashboard\models\Cart;
@@ -22,7 +23,7 @@ class SettingsController extends IndexController
         $id = $identity->getId();
         $user = User::find()->where(['id' => $id])->one();
         $countOrders = Cart::getTotalOrdersByPhone($identity->metaData->phone);
-        $meta = UserMeta::findOne(['user_id' => $id]);
+        $meta = UserMeta::find()->where(['user_id' => $id])->asArray()->indexBy('meta_key')->all();
 
         return $this->render('my',[
             'user' => $user,
@@ -35,8 +36,10 @@ class SettingsController extends IndexController
         if (!Yii::$app->request->isPost) {
             throw new BadRequestHttpException();
         }
-        dd(Yii::$app->request->post());
-        $user = new User();
+        $meta = new UserMeta();
+        $meta->updateMetaData(Yii::$app->request->post());
+        Yii::$app->session->setFlash('success','Данные обновлены');
+        return $this->redirect('my');
     }
 
     public function actionUpdatePassword() {

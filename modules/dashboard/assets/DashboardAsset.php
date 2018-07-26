@@ -71,6 +71,7 @@ class DashboardAsset extends AssetBundle
         "layouts/layout/scripts/layout.min.js",
         "layouts/layout/scripts/demo.min.js",
         "layouts/global/scripts/quick-sidebar.min.js",
+        '/../frontend/js/jquery.maskedinput.min.js'
     ];
 
     public $depends = [
