@@ -52,7 +52,7 @@
 //                    'visible' => \Yii::$app->user->can('admin')
                 ],
                 [
-                    'label' => '<i class="fa fa-cart-plus"></i> <span class="title"> ' . Yii::t('app', 'Пользователи') . '</span>',
+                    'label' => '<i class="fa fa-users"></i> <span class="title"> ' . Yii::t('app', 'Пользователи') . '</span>',
                     'url' => ['/client/index'],
                     'active' => $module == 'client' && $controller == 'client',
                     'options' => [

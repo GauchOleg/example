@@ -9,6 +9,97 @@ use yii\helpers\Html;
 $this->title = 'Мои настройки';
 ?>
 
+<?php
+// start crop js
+$this->registerCssFile('/backend/css/image-uploader.css');
+
+$this->registerCssFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css');
+$this->registerCssFile('/backend/global/plugins/jcrop/css/jquery.Jcrop.min.css');
+
+$this->registerCssFile('/backend/global/plugins/dropzone/dropzone.min.css');
+$this->registerCssFile('/backend/global/plugins/dropzone/basic.min.css');
+
+$this->registerJsFile('/backend/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js');
+$this->registerJsFile('/backend/global/plugins/jcrop/js/jquery.color.js');
+$this->registerJsFile('/backend/global/plugins/jcrop/js/jquery.Jcrop.min.js');
+
+$this->registerJsFile('/backend/global/plugins/dropzone/dropzone.min.js');
+
+$this->registerJs("
+    $(document).on('change.bs.fileinput', function (e) {
+    
+        if (e.namespace != 'bs.fileinput') {
+            return;
+        }
+        var target = e.target;
+        var imgEl = $(target).find('img');
+        var src = imgEl[0].src;
+        var ration = $(target).data('ration');
+
+        if (typeof ration != 'undefined') {
+            ration = ration.split(':');
+            if (ration.length > 1) {
+                ration = ration[0] / ration[1];
+            }
+
+        } else {
+            ration = 1;
+        }
+
+        $('#js-image-crop').prop('src', src);
+        $('#static').modal('show');
+
+        if (typeof jcrop_api != 'undefined') {
+            jcrop_api.destroy();
+        }
+
+        $('#js-image-crop').Jcrop({
+            bgFade: true,
+            bgOpacity: .5,
+            setSelect: [60, 70, 540, 330],
+            boxWidth: 870,
+            boxHeight: 600,
+            aspectRatio: ration,
+            onSelect: function (e) {
+                $(target).find('input.crop_x').val(e.x);
+                $(target).find('input.crop_y').val(e.y);
+                $(target).find('input.crop_w').val(e.w);
+                $(target).find('input.crop_h').val(e.h);
+            }
+        }, function () {
+            jcrop_api = this;
+        });
+
+    });
+    
+    $(document).ready(function(){
+        $('#delImg').on('click', function(element){
+            var id = $(this).attr(\"data-id\");
+            $.ajax({
+                url: '/client/settings/delete-img',
+                data: {userId: id, _csrf: yii.getCsrfToken()},
+                type: 'POST',
+                success: function(res){
+                    if(res) {
+//                    console.log(res);
+//                    return false;
+                        $(\"#avatar\").attr('src', 'http://www.placehold.it/200x200/EFEFEF/AAAAAA&amp?text=no+image');
+                        $(\"#avatar-first\").attr('src', 'http://www.placehold.it/200x200/EFEFEF/AAAAAA&amp?text=no+image');
+                    } else {
+                        console.log('Что-то не то ...');
+                    }
+                },
+                error: function(){
+                    console.log('Глобальные траблы.. ');
+                }
+            });
+        });
+    });
+    
+   
+        ");
+?>
+
 <?php if (Yii::$app->session->hasFlash('success')): ?>
     <div class="alert alert-success alert-dismissable">
         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
@@ -30,9 +121,9 @@ $this->title = 'Мои настройки';
         <!-- profile start -->
         <div class="portlet light profile-sidebar-portlet bordered">
             <div class="profile-userpic">
-                <img src="/backend/layouts/layout/img/avatar3_small.jpg" class="img-responsive" alt=""> </div>
+                <img id='avatar-first'src="<?php echo !empty($meta['image']['meta_value']) ? $meta['image']['meta_value'] : 'http://www.placehold.it/200x200/EFEFEF/AAAAAA&amp;text=no+image'?>" class="img-responsive" alt=""> </div>
             <div class="profile-usertitle">
-                <div class="profile-usertitle-name"> username : </div>
+                <div class="profile-usertitle-name"> username : <?php echo $user->username?></div>
             </div>
             <div class="profile-usermenu">
                 <ul class="nav">
@@ -115,22 +206,42 @@ $this->title = 'Мои настройки';
                                     <div class="row">
                                         <div id="photo">
                                             <div class="col-md-3" data-col="">
-                                                <div class="new" data-id="" class="product-gallery">
-                                                    <div class="form-group">
-                                                        <div class="portlet light bordered">
-                                                            <div class="portlet-body">
-                                                                <div class="row">
-                                                                    <div class="col-md-4">
-                                                                        <img class="preload-img" src="<?php echo /*($model->image) ? $model->image :*/ 'http://www.placehold.it/180x200/EFEFEF/AAAAAA&amp;text=no+image'?>" alt="Новое фото" style="display: block; max-height: 200px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <input type="file" style="display: none;" id="file" name="Slider[img]" data-id="<?php echo 1/*$model->isNewRecord ? false : $model->id */?>" />
+                                                <?php $form = ActiveForm::begin([
+                                                    'options' => [
+                                                        'enctype' => 'multipart/form-data',
+                                                        'method' => 'POST',
+                                                    ],
+                                                    'action' => '/client/settings/update-image',
+                                                ])?>
+                                                <!-- block img -->
+                                                <div class="form-group">
+                                                    <div class="form-group <?php echo ($model->hasErrors('image')) ? 'has-error' : '' ?>" style="margin: 0 2px">
+                                                        <div class="fileinput fileinput-<?= isset($meta['image']['meta_value']) ? 'exists' : 'new' ?>" data-provides="fileinput" data-ration="200:200">
+                                                            <div class="fileinput-preview thumbnail exerciseImgPreview" data-trigger="fileinput">
+                                                                <img id="avatar" src="<?= !empty($meta['image']['meta_value']) ? $meta['image']['meta_value'] : 'http://www.placehold.it/200x200/EFEFEF/AAAAAA&amp;text=no+image' ?>"> </div>
+                                                            <div>
+                                                            <span class="btn green btn-outline btn-file"> <span class="fileinput-new"> <?= Yii::t('app', 'Выбрать') ?> </span> <span class="fileinput-exists"> <?= Yii::t('app', 'Изменить') ?> </span>
+                                                                <?= Html::activeFileInput($model, 'image', ['class' => 'js-file-input']) ?>
+                                                                <?= Html::hiddenInput('img[x]', null, ['class' => 'crop_x']) ?>
+                                                                <?= Html::hiddenInput('img[y]', null, ['class' => 'crop_y']) ?>
+                                                                <?= Html::hiddenInput('img[w]', null, ['class' => 'crop_w']) ?>
+                                                                <?= Html::hiddenInput('img[h]', null, ['class' => 'crop_h']) ?>
+                                                            </span>
+                                                                <!--                    --><?php //echo Html::button('Удалить', ['class' => 'btn red btn-outline','id' => 'delImg', 'data-id' => $model->id]) ?>
+                                                                <span class="btn red btn-outline del-img" data-id="<?=Yii::$app->user->identity->getId()?>" id="delImg"><?= Yii::t('app', 'Удалить') ?> </span>
+                                                                <?php if (isset($mainOriginalImage) && !empty($mainOriginalImage)): ?>
+                                                                    <?= Html::a('<i class="fa fa-eye"></i> ' . Yii::t('app', 'Original'), $mainOriginalImage, ['target' => '_blank', 'class' => 'btn btn-outline blue']) ?>
+                                                                <?php endif; ?> </div> <?php if ($model->hasErrors('image')): ?> <div class="help-block"><?php echo array_shift($model->getErrors('image')) ?></div>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span class="btn did btn-outline file-btn" data-num="" id="load-img">Загрузить</span>
-                                                <span class="btn red btn-outline file-del-btn" data-model="" data-del="">Удалить</span>
+                                                <div class="margiv-top-10">
+                                                    <?php echo Html::input('hidden','userId',Yii::$app->user->identity->getId())?>
+                                                    <?php echo Html::button('Обновить',['class' => 'btn did btn-outline','type' => 'submit'])?>
+                                                </div>
+                                                <!-- end block img -->
+                                                <?php ActiveForm::end();?>
                                             </div>
                                         </div>
                                     </div>
@@ -169,29 +280,29 @@ $this->title = 'Мои настройки';
 
                                 <!-- PRIVACY SETTINGS TAB -->
                                 <div class="tab-pane" id="tab_1_4">
-<!--                                    <form action="#">-->
+                                    <?php $form = ActiveForm::begin([
+                                        'options' => [
+                                            'enctype' => 'multipart/form-data',
+                                            'method' => 'POST',
+                                        ],
+                                        'action' => '/client/settings/update-profile',
+                                    ])?>
                                         <table class="table table-light table-hover">
                                             <tbody><tr>
                                                 <td> Подписаться на акции и распродажи </td>
                                                 <td>
                                                     <div class="mt-radio-inline">
-                                                        <label class="mt-radio">
-                                                            <input type="radio" name="optionsRadios1" value="option1"> Да
-                                                            <span></span>
-                                                        </label>
-                                                        <label class="mt-radio">
-                                                            <input type="radio" name="optionsRadios1" value="option2" checked=""> Нет
-                                                            <span></span>
-                                                        </label>
+                                                        <?php echo Html::radioList('spam',isset($meta['spam']['meta_value']) ? $meta['spam']['meta_value'] : 2,[1 => 'Да', 2 => 'Нет'],['class' => 'mt-radio'])?>
                                                     </div>
                                                 </td>
                                             </tr>
                                             </tbody></table>
                                         <!--end profile-settings-->
                                         <div class="margin-top-10">
-                                            <?php echo Html::submitButton('Обновить',['class' => 'btn did btn-outline'])?>
+                                            <?php echo Html::input('hidden','userId',Yii::$app->user->identity->getId())?>
+                                            <?php echo Html::button('Обновить',['class' => 'btn did btn-outline','type' => 'submit'])?>
                                         </div>
-<!--                                    </form>-->
+                                    <?php ActiveForm::end(); ?>
                                 </div>
                                 <!-- END PRIVACY SETTINGS TAB -->
                             </div>
@@ -208,6 +319,26 @@ $this->title = 'Мои настройки';
 <!--        <span class="btn did btn-outline file-btn" data-num="" id="load-img">Загрузить</span>-->
 <!--    </div>-->
 <!--</div>-->
+
+<div id="static" class="modal fade bs-modal-lg" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title"><?= Yii::t('app', 'Image Cropping') ?></h4> </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 responsive-1024">
+                        <img src="" id="js-image-crop" alt="Jcrop Example" style="display: block; visibility: visible; width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn green"><?= Yii::t('app', 'Crop') ?></button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {

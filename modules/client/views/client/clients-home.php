@@ -12,8 +12,12 @@
                     <td><?php echo $user->username?></td>
                 </tr>
                 <tr>
-                    <td>Номер телефона</td>
+                    <td>Основной номер тел.</td>
                     <td><?php echo $user->metaData->phone?></td>
+                </tr>
+                <tr>
+                    <td>Дополнительный тел.</td>
+                    <td><?php echo (isset($user->metaData->add_phone) && !empty($user->metaData->add_phone) ? $user->metaData->add_phone : 'не установлен')?></td>
                 </tr>
                 <tr>
                     <td>Дата регистрации</td>

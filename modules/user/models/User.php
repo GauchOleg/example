@@ -156,6 +156,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
         if ($this->isNewRecord) {
             $this->auth_key = Yii::$app->security->generateRandomString();
             $this->password = Password::hash($this->password);
+            $this->create_date = date('Y-m-d H:i:s');
         }
 
         return parent::beforeSave($insert);

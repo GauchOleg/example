@@ -24,6 +24,10 @@ class ClientController extends IndexController
     public function actionHome() {
 
         $user = Yii::$app->user->identity;
+        if  (empty($user->metaData->phone)) {
+            Yii::$app->session->setFlash('error','Профиль не найден',true);
+            return $this->redirect('/dashboard/login');
+        }
         $countOrders = Cart::getTotalOrdersByPhone($user->metaData->phone);
 
         return $this->render('clients-home',[

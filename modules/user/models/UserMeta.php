@@ -3,7 +3,8 @@
 namespace app\modules\user\models;
 
 use Yii;
-
+use yii\web\UploadedFile;
+use app\helpers\FileUploaderHelper;
 /**
  * This is the model class for table "{{%user_meta}}".
  *
@@ -14,10 +15,11 @@ use Yii;
  *
  * @property Users $user
  *
- * use meta_key for client profile: 'first_name','last_name','add_phone','about','site'
+ * use meta_key for client profile: 'first_name','last_name','add_phone','about','site','image','spam'
  */
 class UserMeta extends \yii\db\ActiveRecord {
 
+    public $image;
     /**
      * @inheritdoc
      */
@@ -32,7 +34,8 @@ class UserMeta extends \yii\db\ActiveRecord {
         return [
             [['user_id'], 'integer'],
             [['meta_key', 'meta_value'], 'required'],
-            [['meta_key'], 'string', 'max' => 255]
+            [['meta_key'], 'string', 'max' => 255],
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
         ];
     }
 
@@ -81,6 +84,46 @@ class UserMeta extends \yii\db\ActiveRecord {
             $this->updateUserMeta($userId,$key,$value);
         }
         return true;
+    }
+
+    public function uploadImage($post) {
+        $userId = $post['userId'];
+        unset($post['_csrf']);
+        unset($post['userId']);
+        $image = UploadedFile::getInstance($this, 'image');
+        if ($image instanceof UploadedFile) {
+            if (null !== $image = FileUploaderHelper::saveAs($image, 'uploads' . DIRECTORY_SEPARATOR . 'users', explode('x', '200x200'), Yii::$app->request->post('img'))) {
+                $this->updateUserMeta($userId,'image',$image['thumbSrc']);
+                $basePath = Yii::getAlias('@webroot');
+                if (is_file($basePath . $image['imgSrc'])) {
+                    unlink($basePath . $image['imgSrc']);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    private function getValueByKeyAndUserId($userId,$key) {
+        return $this->find()->where(['user_id' => $userId])->andWhere(['meta_key' => $key])->one();
+    }
+
+    public function deleteImageByUserId($post) {
+        $userId = $post ['userId'];
+        $model = $this->getValueByKeyAndUserId($userId,'image');
+        if (is_file($file = Yii::getAlias('@webroot') . $model->meta_value)) {
+            unlink($file);
+        } else {
+            return false;
+        }
+        if (!is_null($this->updateUserMeta($userId,'image',''))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

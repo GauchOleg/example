@@ -37,7 +37,7 @@ use yii\helpers\Html;
             <?php endif; ?>
 
             <?php echo $form->field($model,'username')?>
-            <?php echo $form->field($model,'password')?>
+            <?php echo $form->field($model,'password')->passwordInput()?>
             <?php echo $form->field($model,'remember')->checkbox([ 'value' => '1', 'checked ' => true])->label(false)?>
 
             <?php echo Html::submitButton('Вход',['class' => 'btn btn-outline did add-cart'])?>
