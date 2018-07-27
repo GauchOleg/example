@@ -2,11 +2,13 @@
 
 namespace app\modules\user\models;
 
+use app\modules\dashboard\models\MetaData;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
 use app\modules\user\helpers\Password;
 use app\modules\user\models\UserMeta;
+use yii\helpers\Html;
 use yii\helpers\Json;
 
 //use app\modules\user\models\UserGroupRelations;
@@ -49,12 +51,13 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     const LOGIN_SCENARIO    = 'login';
 
     protected $metaData;
-//    public $newPassword;
-//    public $_password;
+
     public $remember;
     
     public $new_password;
     public $password_repeat;
+
+    public $image;
 
     /** @inheritdoc */
     public static function tableName() {
@@ -86,13 +89,20 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
         return [
             'username'          => Yii::t('app', 'Логин'),
             'email'             => Yii::t('app', 'Email'),
-            'role'              => Yii::t('app', 'Role'),
+            'role'              => Yii::t('app', 'Роль'),
             'password'          => Yii::t('app', 'Пароль'),
             'create_date'       => Yii::t('app', 'Registration time'),
             'status'            => Yii::t('app', 'Статус'),
             'remember'            => Yii::t('app', 'Запомнить меня'),
             'new_password' => 'Новый пароль',
             'password_repeat' => 'Еще раз новый пароль',
+            'image' => 'Аватар',
+            'add_phone' => 'Доп.тел.',
+            'spam' => 'Подписан на рассылку',
+            'about' => 'О себе',
+            'site' => 'Веб сайт',
+            'first_name' => 'Имя',
+            'last_name' => 'Фамилия',
         ];
     }
 
@@ -528,4 +538,51 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
         return true;
     }
 
+    private function getMetaDataByUserId() {
+        return UserMeta::find()->where(['user_id' => $this->id])->asArray()->indexBy('meta_key')->all();
+    }
+
+    public function getMetaImage() {
+        $metaData = $this->getMetaDataByUserId();
+        $img = isset($metaData['image']['meta_value']) ? $metaData['image']['meta_value'] : 'http://www.placehold.it/50x50/EFEFEF/AAAAAA&amp;text=no+image';
+        return Html::img($img,['style' => 'width:50px']);
+    }
+
+    public function getAddPhone() {
+        $metaData = $this->getMetaDataByUserId();
+        return isset($metaData['add_phone']['meta_value']) ? $metaData['add_phone']['meta_value'] : 'не установлен';
+    }
+
+    public function getSpam() {
+        $metaData = $this->getMetaDataByUserId();
+        if (isset($metaData['spam']['meta_value'])) {
+            switch ($metaData['spam']['meta_value']) {
+                case 1 : return '<span style="color: green">да</span>';
+                    break;
+                case 2 : return '<span style="color: red">нет</span>';
+            }
+        } else {
+            return '<span style="color: red">нет</span>';
+        }
+    }
+
+    public function getMetaAbout() {
+        $metaData = $this->getMetaDataByUserId();
+        return isset($metaData['about']['meta_value']) ? $metaData['about']['meta_value'] : 'не установлен';
+    }
+
+    public function getMetaSite() {
+        $metaData = $this->getMetaDataByUserId();
+        return isset($metaData['site']['meta_value']) ? $metaData['site']['meta_value'] : 'не установлен';
+    }
+
+    public function getMetaFirstName() {
+        $metaData = $this->getMetaDataByUserId();
+        return isset($metaData['first_name']['meta_value']) ? $metaData['first_name']['meta_value'] : 'не установлен';
+    }
+
+    public function getMetaLastName() {
+        $metaData = $this->getMetaDataByUserId();
+        return isset($metaData['last_name']['meta_value']) ? $metaData['last_name']['meta_value'] : 'не установлен';
+    }
 }

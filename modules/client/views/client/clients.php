@@ -5,7 +5,16 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$this->title = 'Пльзователи'
+$this->title = 'Пльзователи';
+
+$js = <<< JS
+    $('.view-modal-btn').click(function(e) {
+        e.preventDefault();
+        $('#order-view-modal').modal('show').find('.modal-body').load($(this).attr('href'));
+    });
+JS;
+$this->registerJs($js);
+
 ?>
 
 <?= GridView::widget([
@@ -13,7 +22,19 @@ $this->title = 'Пльзователи'
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],
 
-        'username',
+        [
+            'headerOptions' => ['style' => 'width:100px'],
+            'attribute' => 'username',
+            'value' => 'username',
+        ],
+        [
+            'headerOptions' => ['style' => 'width:50px'],
+            'attribute' => 'image',
+            'value' => function($model) {
+                return $model->getMetaImage();
+            },
+            'format' => 'raw',
+        ],
         'email',
 //        'role',
         [
@@ -33,8 +54,8 @@ $this->title = 'Пльзователи'
 
         [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{notifications} {delete}',
-            'headerOptions' => ['style' => 'min-width:100px;width:100px'],
+            'template' => '{notifications} {view} {delete}',
+            'headerOptions' => ['style' => 'min-width:220px;width:220px'],
             'header' => '',
             'buttons' => [
                 'view' => function($url, $model, $key) {
@@ -55,4 +76,10 @@ $this->title = 'Пльзователи'
     ],
 ]); ?>
 
-
+<?php
+yii\bootstrap\Modal::begin([
+//    'header' => 'Просмотр',
+    'id' =>'order-view-modal',
+]);
+yii\bootstrap\Modal::end();
+?>
