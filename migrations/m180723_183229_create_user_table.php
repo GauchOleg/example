@@ -57,7 +57,7 @@ class m180723_183229_create_user_table extends Migration
 
         $this->createIndex('referral_code_unique', '{{%users}}', ['referral_code'], true);
         $this->createIndex('username_unique', '{{%users}}', ['username'], true);
-        $this->createIndex('email_unique', '{{%users}}', ['email'], true);
+//        $this->createIndex('email_unique', '{{%users}}', ['email'], true);
     }
 
     /**

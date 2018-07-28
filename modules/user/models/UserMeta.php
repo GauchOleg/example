@@ -126,4 +126,30 @@ class UserMeta extends \yii\db\ActiveRecord {
         }
     }
 
+    /*
+     * @var $order is model Cart
+     * @var $userId is identity User id
+     */
+    public function addNewClient($order,$userId) {
+        if (isset($order->customer_phone)) {
+            $this->user_id = $userId;
+            $this->meta_key = 'phone';
+            $this->meta_value = $order->customer_phone;
+            $this->save();
+        }
+        if (isset($order->customer_name)) {
+            $this->user_id = $userId;
+            $this->meta_key = 'first_name';
+            $this->meta_value = $order->customer_name;
+            $this->save();
+        }
+        if (isset($order->customer_l_name)) {
+            $this->user_id = $userId;
+            $this->meta_key = 'last_name';
+            $this->meta_value = $order->customer_l_name;
+            $this->save();
+        }
+        return true;
+    }
+
 }

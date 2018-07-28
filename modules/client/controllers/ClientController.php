@@ -28,6 +28,7 @@ class ClientController extends IndexController
         $user = Yii::$app->user->identity;
         if  (empty($user->metaData->phone)) {
             Yii::$app->session->setFlash('error','Профиль не найден',true);
+            Yii::$app->user->logout($user);
             return $this->redirect('/dashboard/login');
         }
         $countOrders = Cart::getTotalOrdersByPhone($user->metaData->phone);

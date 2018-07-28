@@ -489,7 +489,7 @@ class Cart extends \yii\db\ActiveRecord
         }
         $user = new User();
         $user->username = $phone;
-        $user->email = ($order->customer_email) ? $order->customer_email : '';
+//        $user->email = self::checkEmail($order->customer_email);
         $user->status = User::STATUS_APPROVED;
         $user->role = User::ROLE_USER;
         $user->password = $phone;
@@ -503,6 +503,19 @@ class Cart extends \yii\db\ActiveRecord
             $userMeta->meta_value = $order->customer_phone;
             $userMeta->save(false);
         }
+    }
+
+    private function checkEmail($email) {
+        if (empty($email)) {
+            return '';
+        }
+        $user = new User();
+        if ($user->find()->where(['email' => $email])->one() == null) {
+            return $email;
+        } else {
+            return '';
+        }
+
     }
     
     private function findUserByPhone($phone) {

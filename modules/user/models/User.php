@@ -118,7 +118,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     public function rules() {
         return [
             // username rules
-//            ['username', 'required'],
+            ['username', 'required'],
             ['username', 'unique'],
             ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             ['username', 'string', 'min' => 3, 'max' => 60],
