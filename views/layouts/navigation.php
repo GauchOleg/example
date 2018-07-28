@@ -20,26 +20,24 @@ $allProduct = $this->params['allProduct'];
                         <!-- This is website logo -->
                     </a>
                 </div>
-                <div class="span2">
-                    <div class="search">
-                        <?php $form = ActiveForm::begin([
-                            'action' => '/site/search',
-                            'method' => 'get',
-                        ]); ?>
+                <div class="span2 search">
+                    <?php $form = ActiveForm::begin([
+                        'action' => '/site/search',
+                        'method' => 'get',
+                    ]); ?>
 
-                        <?php echo $form->field($search, 'search')->widget(\yii\jui\AutoComplete::classname(), [
-                            'clientOptions' => [
-                                'source' => Url::to(['site/auto-complete-search']),
-                                'minLength' => 3,
+                    <?php echo $form->field($search, 'search')->widget(\yii\jui\AutoComplete::classname(), [
+                        'clientOptions' => [
+                            'source' => Url::to(['site/auto-complete-search']),
+                            'minLength' => 3,
 //                            'autoFill' => true,
-                                'select'=> new \yii\web\JsExpression("function( event, ui ){
+                            'select'=> new \yii\web\JsExpression("function( event, ui ){
                                 window.location = '/search?search=' + encodeURIComponent(ui.item.value);
                                 }")
-                            ],
-                        ])->textInput(['maxlength' => true, 'placeholder'=>'Поиск по названию...'])->label('');
-                        ?>
-                        <?php ActiveForm::end(); ?>
-                    </div>
+                        ],
+                    ])->textInput(['maxlength' => true, 'placeholder'=>'Поиск по названию...'])->label('');
+                    ?>
+                    <?php ActiveForm::end(); ?>
                 </div>
                 <div class="6">
                     <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -56,6 +54,7 @@ $allProduct = $this->params['allProduct'];
                             <li><a data-id="clients" href="#clients">О нас</a></li>
                             <!--                    <li><a href="#price">Price</a></li>-->
                             <li><a data-id="contact" href="#contact">Контакты</a></li>
+                            <li><a href="<?php echo Url::to(['dashboard/login'])?>">Вход</a></li>
                             <?php if (isset($in_cart) && !empty($in_cart)) :?>
                                 <span class="badge badge-success count-products"><span id="in-cart"><?php echo $in_cart?></span></span>
                             <?php endif;?>

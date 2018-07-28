@@ -501,7 +501,13 @@ class Cart extends \yii\db\ActiveRecord
             $userMeta->user_id = $user->id;
             $userMeta->meta_key = 'phone';
             $userMeta->meta_value = $order->customer_phone;
-            $userMeta->save(false);
+            if ($userMeta->save(false) && !empty($order->customer_email)) {
+                $userMeta = new UserMeta();
+                $userMeta->user_id = $user->id;
+                $userMeta->meta_key = 'email';
+                $userMeta->meta_value = $order->customer_email;
+                $userMeta->save(false);
+            }
         }
     }
 

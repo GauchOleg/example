@@ -103,7 +103,7 @@ $this->registerJs("
 <?php if (Yii::$app->session->hasFlash('success')): ?>
     <div class="alert alert-success alert-dismissable">
         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-        <h4>Сохранено!</h4>
+<!--        <h4>Сохранено!</h4>-->
         <i class="icon fa fa-check"></i> <?= Yii::$app->session->getFlash('success') ?>
     </div>
 <?php endif; ?>
@@ -185,6 +185,10 @@ $this->registerJs("
                                             <label class="control-label">Номер телефона</label>
                                             <?php echo Html::input('text','add_phone',isset($meta['add_phone']['meta_value']) ? $meta['add_phone']['meta_value'] : '',['placeholder' => '+38(050)123-45-67', 'class' => 'form-control', 'id' => 'phone'])?>
                                         </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Email</label>
+                                        <?php echo Html::input('text','email',isset($meta['email']['meta_value']) ? $meta['email']['meta_value'] : '',['placeholder' => 'eurosport@gmail.com', 'class' => 'form-control',])?>
+                                    </div>
                                         <div class="form-group">
                                             <label class="control-label">О себе</label>
                                             <?php echo Html::textarea('about',isset($meta['about']['meta_value']) ? $meta['about']['meta_value'] : '',['placeholder' => 'Постоянный клиент', 'class' => 'form-control', 'rows' => 3])?>

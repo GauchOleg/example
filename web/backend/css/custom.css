@@ -34,3 +34,15 @@
 .form-group.field-user-password.required.has-success label{
     color: #3c763d;
 }
+.form-group.field-loginform-email.has-success label{
+    color: #3c763d;
+}
+.form-group.field-loginform-phone.required.has-success label {
+    color: #3c763d;
+}
+.form-group.field-loginform-password.required.has-success label {
+    color: #3c763d;
+}
+.change-status {
+    cursor: pointer;
+}

@@ -15,7 +15,7 @@ use app\helpers\FileUploaderHelper;
  *
  * @property Users $user
  *
- * use meta_key for client profile: 'first_name','last_name','add_phone','about','site','image','spam'
+ * use meta_key for client profile: 'first_name','last_name','add_phone','about','site','image','spam','email'
  */
 class UserMeta extends \yii\db\ActiveRecord {
 
@@ -107,7 +107,7 @@ class UserMeta extends \yii\db\ActiveRecord {
         }
     }
 
-    private function getValueByKeyAndUserId($userId,$key) {
+    public function getValueByKeyAndUserId($userId,$key) {
         return $this->find()->where(['user_id' => $userId])->andWhere(['meta_key' => $key])->one();
     }
 

@@ -5,7 +5,7 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$this->title = 'Пльзователи';
+$this->title = 'Пользователи';
 
 $js = <<< JS
     $('.view-modal-btn').click(function(e) {
@@ -45,9 +45,10 @@ $this->registerJs($js);
             'format' => 'raw',
         ],
         [
+            'headerOptions' => ['style' => 'width:100px'],
             'attribute' => 'status',
             'value' => function($model) {
-                return $model->getStatus();
+                return $model->getStatus(true);
             },
             'format' => 'raw',
         ],
@@ -82,4 +83,17 @@ yii\bootstrap\Modal::begin([
     'id' =>'order-view-modal',
 ]);
 yii\bootstrap\Modal::end();
+
+yii\bootstrap\Modal::begin([
+//    'header' => 'Просмотр',
+    'id' =>'client-status-modal',
+]);
+yii\bootstrap\Modal::end();
 ?>
+
+<script>
+    $('.change-status').on('click', function(e) {
+        e.preventDefault();
+        $('#client-status-modal').modal('show').find('.modal-body').load($(this).attr('href'));
+    });
+</script>

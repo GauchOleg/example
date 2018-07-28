@@ -2,7 +2,8 @@
 /* @var $user \app\modules\user\models\User */
 /* @var $countOrders @type integer @method \app\modules\dashboard\models\Cart::getTotalOrdersByPhone() */
 ?>
-
+<h3><?php echo isset($user->metaData->email) ? '' : 'Для восстановления доступа к аккаунту используеться "email", заполните поле "email" во вкладке "настройки" '?></h3>
+<br>
 <div class="row">
     <div class="col-md-4">
         <table class="table table-condensed">

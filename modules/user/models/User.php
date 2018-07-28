@@ -10,6 +10,7 @@ use app\modules\user\helpers\Password;
 use app\modules\user\models\UserMeta;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\helpers\Url;
 
 //use app\modules\user\models\UserGroupRelations;
 //use app\helpers\MandrillEmailHelper;
@@ -93,7 +94,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
             'password'          => Yii::t('app', 'Пароль'),
             'create_date'       => Yii::t('app', 'Registration time'),
             'status'            => Yii::t('app', 'Статус'),
-            'remember'            => Yii::t('app', 'Запомнить меня'),
+            'remember'            => Yii::t('app', 'Запомнить'),
             'new_password' => 'Новый пароль',
             'password_repeat' => 'Еще раз новый пароль',
             'image' => 'Аватар',
@@ -350,13 +351,14 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
                         $status = 'info';
                         break;
                 }
-                return "<span class=\"label label-sm label-$status\">{$data[$this->status]}</span>";
+                return "<a href='". Url::to(['/user/default/change-status?id='.$this->id]) ."' class=\"label label-sm label-$status change-status\">{$data[$this->status]}</a>";
             }
             return $data[$this->status];
         }
 
         return 'unknown';
     }
+
 
     /**
      * Get role list
