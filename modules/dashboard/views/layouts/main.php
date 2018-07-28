@@ -16,7 +16,11 @@ DashboardAsset::register($this);
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
-        <link rel="shortcut icon" href="/favico.png" type="image/png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/frontend/images/ico/apple-touch-icon-144.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/frontend/images/ico/apple-touch-icon-114.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/frontend/images/apple-touch-icon-72.png">
+        <link rel="apple-touch-icon-precomposed" href="/frontend/images/ico/apple-touch-icon-57.png">
+        <link rel="shortcut icon" href="/frontend/images/ico/favicon.ico">
         <?php $this->head() ?>
     </head>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
