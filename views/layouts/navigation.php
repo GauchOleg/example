@@ -54,7 +54,11 @@ $allProduct = $this->params['allProduct'];
                             <li><a data-id="clients" href="#clients">О нас</a></li>
                             <!--                    <li><a href="#price">Price</a></li>-->
                             <li><a data-id="contact" href="#contact">Контакты</a></li>
-                            <li><a href="<?php echo Url::to(['dashboard/login'])?>">Вход</a></li>
+                            <?php if (Yii::$app->user->identity == null): ?>
+                                <li><a href="<?php echo Url::to(['dashboard/login'])?>">Вход</a></li>
+                            <?php else: ?>
+                                <li><a href="<?php echo Url::to(['dashboard/logout'])?>" style="color: green;">Выход</a></li>
+                            <?php endif; ?>
                             <?php if (isset($in_cart) && !empty($in_cart)) :?>
                                 <span class="badge badge-success count-products"><span id="in-cart"><?php echo $in_cart?></span></span>
                             <?php endif;?>

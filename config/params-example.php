@@ -4,4 +4,5 @@ return [
     'admin' => 'shop@martlet-auto.com.ua',
     'sms_login' => '',
     'sms_password' => '',
+    'only_host' => 'eurosport.test',
 ];

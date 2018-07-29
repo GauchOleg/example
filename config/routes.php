@@ -10,6 +10,7 @@ return [
     'dashboard/category' => 'dashboard/category/index',
     'dashboard/product' => 'dashboard/product/index',
     'dashboard/login' => 'user/default/login',
+    'dashboard/logout' => 'user/default/logout',
     'dashboard/register' => 'user/default/register',
     'dashboard/reset' => 'user/default/reset',
     'client/<action>' => 'client/client/<action>',

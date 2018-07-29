@@ -509,8 +509,8 @@ class Cart extends \yii\db\ActiveRecord
                 $userMeta->meta_key = 'email';
                 $userMeta->meta_value = $order->customer_email;
                 $userMeta->save(false);
-                self::sendMessage($order,$phone);
             }
+            self::sendMessage($order,$phone);
         }
     }
 
@@ -519,10 +519,9 @@ class Cart extends \yii\db\ActiveRecord
         if ($oldClient) {
             $message = 'Ваш заказ '. $order->id .'принят.';
         } else {
-            $message = 'Заказ принят. Отследить заказ: логин/пароль: '.$phone;
+            $message = "Заказ принят. \nОтследить заказ: \nВаш логин и пароль: ".$phone . "\n" . Yii::$app->params['only_host'];
         }
         SMSHelper::sendSMS($sendNumber,$message);
-
     }
 
     private function checkEmail($email) {

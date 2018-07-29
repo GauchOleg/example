@@ -21,7 +21,7 @@ class SMSHelper {
             'login' => $login,
             'psw' => $password,
             'phones' => $phone,
-            'cost' => 1, // get cost
+//            'cost' => 1, // get cost
             'time' => 0,
             'sender' => 'eurosport',
             'flash' => 1,
