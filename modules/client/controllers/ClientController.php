@@ -2,6 +2,7 @@
 
 namespace app\modules\client\controllers;
 
+use app\modules\user\models\User;
 use Yii;
 use app\modules\dashboard\searchModels\Cart;
 use app\modules\user\models\searchModels\UserSearch;
@@ -46,6 +47,18 @@ class ClientController extends IndexController
         return $this->renderPartial('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    public function actionDelete($id) {
+        $identity = Yii::$app->user->identity;
+        if (is_null($identity) || !$identity || $identity->role != User::ROLE_ADMIN) {
+            throw new ForbiddenHttpException();
+        }
+        $user = new User();
+        $user->deleteAllUserData($id);
+        $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('success','Пользователь был успешно удален');
+        return $this->redirect('/client/client/index');
     }
 
     /**

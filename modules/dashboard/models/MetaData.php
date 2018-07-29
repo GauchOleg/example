@@ -71,4 +71,21 @@ class MetaData extends \yii\db\ActiveRecord
         }
         return true;
     }
+
+    public function getSeo() {
+        $all = self::getAllData();
+        $seo = [];
+        foreach ($all as $item) {
+            if ($item['meta_key'] == 'seo_title') {
+                $seo['seo_title'] = $item['meta_value'];
+            }
+            if ($item['meta_key'] == 'seo_keywords') {
+                $seo['seo_keywords'] = $item['meta_value'];
+            }
+            if ($item['meta_key'] == 'seo_description') {
+                $seo['seo_description'] = $item['meta_value'];
+            }
+        }
+        return $seo;
+    }
 }

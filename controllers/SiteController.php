@@ -71,6 +71,7 @@ class SiteController extends FrontendController
     public function actionIndex()
     {
         $meta = new MetaData();
+        $seo = $meta->getSeo();
         $allCategory = Category::getAllCategory();
         $allSliders = Slider::getAllActiveSliders();
         $metaData = $meta->getAllData();
@@ -85,6 +86,7 @@ class SiteController extends FrontendController
             'saleProduct' => $saleProduct,
             'imgs' => $imgs,
             'producers' => $producers,
+            'seo' => $seo,
         ]);
     }
 

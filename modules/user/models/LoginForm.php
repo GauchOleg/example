@@ -79,7 +79,7 @@ class LoginForm extends Model {
         if ($user->findUserByUsername($phone) == null) {
             return true;
         } else {
-            return true;
+            return false;
         }
     }
 

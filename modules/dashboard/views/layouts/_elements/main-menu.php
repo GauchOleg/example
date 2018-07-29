@@ -109,13 +109,21 @@
                     ],
                 ],
                 [
-                    'label' => '<i class="fa fa-cogs"></i> <span class="title"> ' . Yii::t('app', 'Настройки') . '</span>',
-                    'url' => ['/dashboard/settings/index'],
-                    'active' => $module == 'dashboard' && $controller == 'settings',
+                    'label' => '<i class="fa fa-commenting"></i> <span class="title"> ' . Yii::t('app', 'Комментарии') . '</span>',
+                    'url' => ['/dashboard/comment/index'],
+                    'active' => $module == 'dashboard' && $controller == 'comment',
                     'options' => [
                         'class' => 'start'
                     ],
                 ],
+//                [
+//                    'label' => '<i class="fa fa-cogs"></i> <span class="title"> ' . Yii::t('app', 'Настройки') . '</span>',
+//                    'url' => ['/dashboard/settings/index'],
+//                    'active' => $module == 'dashboard' && $controller == 'settings',
+//                    'options' => [
+//                        'class' => 'start'
+//                    ],
+//                ],
             ]
         ]);
         ?>

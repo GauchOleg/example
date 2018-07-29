@@ -506,7 +506,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     }
 
     public function findUserById($id) {
-        return $this->findOne(['id' => $id]);
+        return $this->findOne($id);
     }
 
     public function updatePassword($post) {
@@ -586,5 +586,18 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface {
     public function getMetaLastName() {
         $metaData = $this->getMetaDataByUserId();
         return isset($metaData['last_name']['meta_value']) ? $metaData['last_name']['meta_value'] : 'не установлен';
+    }
+    
+    public function deleteAllUserData($userId) {
+        $userMeta = new UserMeta();
+        $image = $userMeta->getValueByKeyAndUserId($userId,'image');
+        if (!is_null($image)) {
+            unlink(Yii::getAlias('@webroot').$image->meta_value);
+        }
+        $meta = UserMeta::findOne($userId);
+        if (!is_null($meta)) {
+            $meta->deleteAll(['user_id' => $userId]);
+        }
+        return true;
     }
 }

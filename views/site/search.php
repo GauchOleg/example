@@ -8,7 +8,7 @@ use yii\widgets\Pjax;
 
 
 <div class="section primary-section catalog-section" id="cart-view">
-    <div class="container search">
+    <div class="container">
 
         <?php Pjax::begin(); ?>
         <?= GridView::widget([

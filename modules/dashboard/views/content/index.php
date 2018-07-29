@@ -46,6 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
     'metaData' => $metaData,
 ])?>
 
+<?php echo $this->render('section-seo',[
+    'metaData' => $metaData,
+])?>
 <div class="form-group">
     <?= Html::submitButton('Обновить', ['class' => 'btn did btn-outline']) ?>
 </div>
