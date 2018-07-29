@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\SMSHelper;
 use app\modules\dashboard\models\Cart;
 use app\modules\dashboard\models\Product;
 use Yii;
@@ -63,5 +64,12 @@ class CartController extends FrontendController
     public function actionThankYou() {
         return $this->render('thank-you');
     }
+
+//    public function actionTest() {
+//        $phone = 380950424384;
+//        $message = 'Заказ принят. Отследить заказ: логин/пароль: 0950424384';
+//        $res = SMSHelper::sendSMS($phone,$message);
+//        print_r($res);
+//    }
 
 }

@@ -2,6 +2,7 @@
 
 namespace app\modules\dashboard\models;
 
+use app\helpers\SMSHelper;
 use app\modules\user\models\User;
 use app\modules\user\models\UserMeta;
 use Yii;
@@ -485,6 +486,7 @@ class Cart extends \yii\db\ActiveRecord
     private function addNewClient($order) {
         $phone = self::prepareClientPhone($order->customer_phone);
         if (self::findUserByPhone($phone)) {
+            $this->sendMessage($order,$phone,true);
             return;
         }
         $user = new User();
@@ -507,8 +509,20 @@ class Cart extends \yii\db\ActiveRecord
                 $userMeta->meta_key = 'email';
                 $userMeta->meta_value = $order->customer_email;
                 $userMeta->save(false);
+                self::sendMessage($order,$phone);
             }
         }
+    }
+
+    public function sendMessage($order,$phone,$oldClient = false) {
+        $sendNumber = 38 . $phone;
+        if ($oldClient) {
+            $message = 'Ваш заказ '. $order->id .'принят.';
+        } else {
+            $message = 'Заказ принят. Отследить заказ: логин/пароль: '.$phone;
+        }
+        SMSHelper::sendSMS($sendNumber,$message);
+
     }
 
     private function checkEmail($email) {
