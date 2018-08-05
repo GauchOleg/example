@@ -1,11 +1,14 @@
+<?php
+/* @var $metaData \app\modules\dashboard\models\Producer @type array */
+?>
 <!-- Contact section start -->
 <div id="contact" class="contact">
     <div class="section secondary-section">
         <div class="container">
             <div class="title">
-                <h1>Адресс</h1>
-                <p>г. Харьков, ул. Красношкольная набережная, 4</p>
-                <p>050-591-555-0</p>
+                <h2><?php echo isset($metaData['contact_title']['meta_value']) ? $metaData['contact_title']['meta_value'] : ''?></h2>
+                <p><?php echo isset($metaData['contact_address']['meta_value']) ? $metaData['contact_address']['meta_value'] : ''?></p>
+                <p><?php echo isset($metaData['contact_phone']['meta_value']) ? $metaData['contact_phone']['meta_value'] : ''?></p>
             </div>
         </div>
         <div class="map-wrapper">
