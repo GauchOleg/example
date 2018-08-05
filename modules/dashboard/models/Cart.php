@@ -517,7 +517,7 @@ class Cart extends \yii\db\ActiveRecord
     public function sendMessage($order,$phone,$oldClient = false) {
         $sendNumber = 38 . $phone;
         if ($oldClient) {
-            $message = 'Ваш заказ '. $order->order_id .' принят.';
+            $message = 'Ваш заказ '. $order->order_id .' принят.' . "\n" . Yii::$app->params['only_host'];;
         } else {
             $message = "Заказ принят. \nОтследить заказ: \nВаш логин и пароль: ".$phone . "\n" . Yii::$app->params['only_host'];
         }
