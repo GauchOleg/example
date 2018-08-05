@@ -486,7 +486,7 @@ class Cart extends \yii\db\ActiveRecord
     private function addNewClient($order) {
         $phone = self::prepareClientPhone($order->customer_phone);
         if (self::findUserByPhone($phone)) {
-            $this->sendMessage($order,$phone,true);
+            self::sendMessage($order,$phone,true);
             return;
         }
         $user = new User();
@@ -517,7 +517,7 @@ class Cart extends \yii\db\ActiveRecord
     public function sendMessage($order,$phone,$oldClient = false) {
         $sendNumber = 38 . $phone;
         if ($oldClient) {
-            $message = 'Ваш заказ '. $order->id .'принят.';
+            $message = 'Ваш заказ '. $order->order_id .' принят.';
         } else {
             $message = "Заказ принят. \nОтследить заказ: \nВаш логин и пароль: ".$phone . "\n" . Yii::$app->params['only_host'];
         }
